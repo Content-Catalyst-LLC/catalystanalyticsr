@@ -1,0 +1,21 @@
+Package: catalystanalyticsr
+Type: Package
+Title: Sustainable Development Scenario Engine for the Catalyst Suite
+Version: 0.1.3
+Authors@R: c(person("Tariq", "Ahmad", email = "tariq@thecontentcatalyst.net", role = c("aut", "cre")))
+Description: Catalyst Analytics R is a sustainable-development analytics engine that simulates vector
+    dynamical systems (calculus), computes inclusive-wealth indicators (e.g., Adjusted Net Savings),
+    evaluates planetary-boundary constraints (e.g., carbon budgets), and produces reproducible tables,
+    plots, and export bundles for the broader Catalyst product suite.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    ggplot2,
+    jsonlite,
+    grid,
+    rlang
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+RoxygenNote: 7.3.3
