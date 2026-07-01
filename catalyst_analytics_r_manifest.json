@@ -1,0 +1,21 @@
+{
+  "repository": "catalystanalyticsr",
+  "platform_module": "Catalyst Analytics R",
+  "wordpress_shortcode": "[catalyst_analytics_r_demo]",
+  "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
+  "layers": [
+    "R package",
+    "scenario modeling",
+    "indicator computation",
+    "carbon budget review",
+    "WordPress demo",
+    "JSON exports"
+  ],
+  "method_path": "question → assumptions → scenario → model → indicators → output → interpretation → review",
+  "boundaries": [
+    "educational decision support",
+    "not a forecast",
+    "not compliance advice",
+    "not professional advice"
+  ]
+}

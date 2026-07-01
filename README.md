@@ -1,50 +1,102 @@
 # Catalyst Analytics R
 
-A sustainable-development analytics engine (R package) for the Catalyst suite.
+Catalyst Analytics R is the reproducible analytics layer for the Sustainable Catalyst platform. It provides an R package for sustainable-development scenario modeling, indicator computation, carbon-budget review, adjusted-net-savings style reasoning, plots, and export bundles.
 
-**What it does (v0.1):**
-- Simulates a simple calculus-based dynamical system (vector ODE) via RK4 or Euler
-- Computes Adjusted Net Savings (ANS)
-- Integrates emissions against a carbon budget
-- Produces ggplot2 graphs
-- Exports CSV bundles + a JSON manifest for cross-product ingestion
+The repository also includes a WordPress demo plugin so the public Catalyst Analytics R page can show a browser-based exploratory scenario tool without requiring a server-side R runtime.
 
+## What this repository supports
 
-## Quickstart (dev)
+- Scenario simulation with R package functions.
+- Adjusted Net Savings style indicator logic.
+- Carbon-budget comparison.
+- SDG-style indicator summaries.
+- Plotting and export bundles.
+- Browser-based WordPress demo: `[catalyst_analytics_r_demo]`.
+- JSON export schema for shareable scenario records.
+- Documentation for methodology, reproducibility, and review.
+
+## Repository structure
+
+```text
+R/                                  R package functions
+man/                                R package documentation
+tests/testthat/                     R package tests
+wordpress/catalyst-analytics-r-demo WordPress shortcode demo plugin
+docs/                               Methodology and implementation docs
+schemas/                            JSON schema for exported demo records
+data/                               Sample scenario inputs
+examples/                           Example scenario records
+outputs/                            Example outputs
+python/                             Lightweight brief generator
+.github/workflows/                  CI checks
+```
+
+## WordPress demo
+
+Install the plugin from `wordpress/catalyst-analytics-r-demo` or upload the generated zip from `dist/catalyst-analytics-r-demo.zip`.
+
+Use this shortcode on the Catalyst Analytics R page:
+
+```text
+[catalyst_analytics_r_demo]
+```
+
+The demo lets visitors adjust a simplified sustainable-development scenario and review:
+
+- Produced capital trajectory
+- Human capital trajectory
+- Natural capital trajectory
+- Cumulative emissions
+- Adjusted-savings style estimate
+- Emissions budget status
+- Composite scenario score
+- JSON export
+
+The browser demo is educational and exploratory. It is not a forecast, compliance tool, or substitute for professional analysis.
+
+## R package quickstart
 
 ```r
-# From the package root:
-# install.packages(c("ggplot2","jsonlite","testthat","devtools"))
+# From package root
+# install.packages(c("ggplot2", "jsonlite", "testthat", "devtools"))
+
 devtools::load_all()
 
-# One-call demo (dummy data, stable outputs)
 run <- catalyst_demo()
 
-# Friendly summary (prints automatically)
 run
 summary(run)
 
-# Show plots
-plot(run)                       # default: trajectory
+plot(run)
 plot(run, which = "sdg_dashboard")
 plot(run, which = "phase_plane")
 plot(run, which = "sensitivity_heatmap")
 
-# See variable meanings + units
 catalyst_glossary()
 
-# Export a bundle (CSVs + PNGs + manifest.json)
-catalyst_export(run, dir = "demo_out", run_id = "video_demo", zip = FALSE, overwrite = TRUE)
-
-# (Raw export option) export just a simulation result:
-times <- seq(0, 20, by = 1)
-x0 <- c(K = 1, H = 1, N = 1, C = 0, P = 1, A = 1)
-raw <- simulate_dynamics(times, x0, return_long = TRUE)
-export_catalyst_bundle(raw, dir = "demo_out", run_id = "raw_only", zip = FALSE, overwrite = TRUE)
+catalyst_export(
+  run,
+  dir = "demo_out",
+  run_id = "video_demo",
+  zip = FALSE,
+  overwrite = TRUE
+)
 ```
 
-## Video demo runbook
-See `inst/demo/demo_video_runbook.R` for a 2-3 minute script you can copy/paste.
+## Methodology
+
+Catalyst Analytics R follows the Sustainable Catalyst methodology:
+
+```text
+question → assumptions → scenario → model → indicators → output → interpretation → review
+```
+
+The goal is not to produce certainty. The goal is to make assumptions visible, calculations reproducible, outputs exportable, and interpretation reviewable.
+
+## Boundaries
+
+Catalyst Analytics R is an educational, open-source, decision-support package. It does not provide legal, financial, investment, engineering, environmental, compliance, scientific, or professional advice. Outputs depend on data quality, assumptions, model design, and interpretation.
 
 ## License
-MIT
+
+MIT. See `LICENSE`.

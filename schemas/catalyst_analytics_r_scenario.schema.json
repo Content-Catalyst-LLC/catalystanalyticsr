@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-scenario.schema.json",
+  "title": "Catalyst Analytics R Demo Export",
+  "type": "object",
+  "required": ["demo", "generated_at", "inputs", "final", "composite_score", "budget_ratio", "interpretation_notes", "trajectory"],
+  "properties": {
+    "demo": { "type": "string" },
+    "generated_at": { "type": "string" },
+    "inputs": {
+      "type": "object",
+      "required": ["scenarioName", "years", "savings", "emissionsIntensity", "adaptation", "restoration", "humanInvestment", "initialCapital", "initialHuman", "initialNatural", "emissionsBudget"]
+    },
+    "final": { "type": "object" },
+    "composite_score": { "type": "number" },
+    "budget_ratio": { "type": "number" },
+    "interpretation_notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "trajectory": {
+      "type": "array",
+      "items": { "type": "object" }
+    }
+  }
+}
