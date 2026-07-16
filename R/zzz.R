@@ -1,4 +1,4 @@
-# zzz.R — package startup hooks / internal helpers
+# zzz.R -- package startup hooks / internal helpers
 
 .onLoad <- function(libname, pkgname) {
   invisible(NULL)

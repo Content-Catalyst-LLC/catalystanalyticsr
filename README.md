@@ -24,7 +24,7 @@ tests/testthat/                     R package tests
 wordpress/catalyst-analytics-r-demo WordPress shortcode demo plugin
 docs/                               Methodology and implementation docs
 schemas/                            JSON schema for exported demo records
-data/                               Sample scenario inputs
+inst/extdata/                       Packaged sample scenario inputs
 examples/                           Example scenario records
 outputs/                            Example outputs
 python/                             Lightweight brief generator
@@ -52,7 +52,15 @@ The demo lets visitors adjust a simplified sustainable-development scenario and 
 - Composite scenario score
 - JSON export
 
-The browser demo is educational and exploratory. It is not a forecast, compliance tool, or substitute for professional analysis.
+The browser demo is educational and exploratory. It uses a simplified browser engine with conceptual—not numerical—parity to the R package. It is not a forecast, compliance tool, or substitute for professional analysis.
+
+## Release versions
+
+- Repository and R package: **0.1.4**
+- WordPress demo plugin: **1.0.1**
+- Browser export schema: **1.0.0**
+
+See `RELEASE_CONTRACT.md` and `docs/releases/v0.1.4.md`.
 
 ## R package quickstart
 

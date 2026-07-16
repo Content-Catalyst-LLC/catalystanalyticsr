@@ -14,7 +14,7 @@ A named list of internal constants.
 }
 \description{
 Helper that returns internal constants used across the package.
-Kept as a function (instead of a constant) to satisfy CS50R documentation checks.
+Returns stable package constants used by examples, validation, and release checks.
 }
 \examples{
 catalyst_globals()

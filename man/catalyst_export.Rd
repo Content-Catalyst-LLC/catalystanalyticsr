@@ -4,43 +4,24 @@
 \alias{catalyst_export}
 \title{Export a Catalyst run as a portable bundle}
 \usage{
-catalyst_export(
-  results,
-  dir = tempdir(),
-  run_id = "demo",
-  zip = TRUE,
-  overwrite = FALSE,
-  open = FALSE,
-  quiet = FALSE
-)
+catalyst_export(results, dir = tempdir(), run_id = "demo", zip = TRUE,
+  overwrite = FALSE, open = FALSE, quiet = FALSE)
 }
 \arguments{
-\item{results}{A `catalyst_run` object (or compatible list) returned by}
-
-\item{dir}{Output directory to write into.}
-
-\item{run_id}{Optional run id used to name the bundle directory.}
-
-\item{zip}{Logical. If TRUE, also write a zip file.}
-
-\item{overwrite}{Logical. If TRUE, overwrite existing output.}
-
-\item{open}{Logical. If TRUE, open the output folder (macOS: Finder).}
-
-\item{quiet}{Logical. If TRUE, suppress friendly messages.}
+\item{results}{A \code{catalyst_run} object or compatible result list.}
+\item{dir}{Output directory.}
+\item{run_id}{Optional run identifier used in bundle names.}
+\item{zip}{Logical. If TRUE, also create a zip archive.}
+\item{overwrite}{Logical. If TRUE, replace existing output.}
+\item{open}{Logical. If TRUE, open the output folder on macOS.}
+\item{quiet}{Logical. If TRUE, suppress informational messages.}
 }
-\value{
-Invisibly returns paths written (and/or bundle metadata).
-}
-\description{
-A convenience wrapper around [export_catalyst_bundle()] that writes key
-outputs from a `catalyst_run` object (or compatible list) to a folder
-}
+\value{Invisibly returns bundle paths, manifest, and written-file inventory.}
+\description{Convenience wrapper around \code{export_catalyst_bundle()}.}
 \examples{
 times <- seq(0, 5, by = 1)
 x0 <- c(K = 1, H = 1, N = 1, C = 0, P = 1, A = 1)
 res <- catalyst_run(times, x0, include_phase_plane = FALSE, include_sensitivity = FALSE)
-# Write into a temp directory for the example
-out <- catalyst_export(res, dir = tempdir(), run_id = "demo", quiet = TRUE)
+out <- catalyst_export(res, dir = tempdir(), run_id = "demo", zip = FALSE, quiet = TRUE)
 out
 }

@@ -13,7 +13,7 @@ sdg_indicators(trajectory_wide)
 A data.frame with columns: t, scenario, indicator, value, unit, direction.
 }
 \description{
-This function intentionally keeps the indicator set small and stable for the CS50R demo.
+This function keeps the indicator set small and stable for the public package demo.
 It returns a tidy (long) table that is easy to plot and export.
 }
 \examples{

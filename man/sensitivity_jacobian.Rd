@@ -32,7 +32,7 @@ A long data.frame with columns: state, param, value, t.
 \description{
 Computes a Jacobian-style sensitivity matrix for the KH-NC-PA vector field
 with respect to model parameters. This is intended as a lightweight,
-reproducible sensitivity diagnostic for the CS50R demo.
+reproducible sensitivity diagnostic for the public package demo.
 }
 \examples{
 state <- c(K = 1, H = 1, N = 1, C = 0, P = 1, A = 1)

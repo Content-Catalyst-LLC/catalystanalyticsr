@@ -1,12 +1,9 @@
 .khncpa_as_state <- function(x) {
-  # Normalize state to a named numeric vector.
-  if (is.list(x)) {
-    x <- unlist(x)
-  }
-  if (!is.numeric(x) || is.null(names(x))) {
-    stop("State must be a named numeric vector (or list coercible to one).")
-  }
-  x
+  if (is.list(x)) x <- unlist(x)
+  .validate_state(x, "state")
+  as.numeric_state <- as.numeric(x[.khncpa_required_states()])
+  names(as.numeric_state) <- .khncpa_required_states()
+  as.numeric_state
 }
 
 .khncpa_required_states <- function() c("K", "H", "N", "C", "P", "A")
@@ -15,7 +12,7 @@
   x0 <- .khncpa_as_state(x0)
   base <- list(
     alpha = 0.30,
-    beta  = 0.30,
+    beta = 0.30,
     gamma = 0.10,
     deltaK = 0.05,
     deltaH = 0.03,
@@ -32,17 +29,48 @@
     abatement_cost_scale = 0.02
   )
 
+  .validate_params(params)
   if (is.null(params)) params <- list()
-  if (!is.list(params)) stop("`params` must be a list.")
-  utils::modifyList(base, params)
+  unknown <- setdiff(names(params), names(base))
+  if (length(unknown) > 0L) {
+    stop(sprintf("Unknown model parameter(s): %s.", paste(unknown, collapse = ", ")), call. = FALSE)
+  }
+  out <- utils::modifyList(base, params)
+
+  scalar_names <- setdiff(names(out), "Pmax")
+  invalid <- scalar_names[!vapply(out[scalar_names], function(value) {
+    is.numeric(value) && length(value) == 1L && is.finite(value)
+  }, logical(1))]
+  if (length(invalid) > 0L) {
+    stop(sprintf("Model parameters must be finite numeric scalars: %s.", paste(invalid, collapse = ", ")), call. = FALSE)
+  }
+
+  nonnegative <- c(
+    "alpha", "beta", "gamma", "deltaK", "deltaH", "Nmax", "regen",
+    "depletion_intensity", "emissions_intensity", "absorption", "damage_scale",
+    "pop_growth", "tech_growth", "abatement_cost_scale"
+  )
+  if (any(unlist(out[nonnegative], use.names = FALSE) < 0)) {
+    stop("Model rate, scale, and elasticity parameters cannot be negative.", call. = FALSE)
+  }
+  if ((out$alpha + out$beta + out$gamma) > 1) {
+    stop("`alpha + beta + gamma` must be <= 1.", call. = FALSE)
+  }
+  if (out$Nmax <= 0) stop("`Nmax` must be greater than zero.", call. = FALSE)
+  if (!is.na(out$Pmax) && (!is.numeric(out$Pmax) || length(out$Pmax) != 1L || !is.finite(out$Pmax) || out$Pmax <= 0)) {
+    stop("`Pmax` must be NA or a single positive finite number.", call. = FALSE)
+  }
+  out
 }
 
 .khncpa_get_u <- function(policy, name, t, x) {
-  if (is.null(policy) || !is.list(policy)) stop("`policy` must be a list.")
-  if (!name %in% names(policy)) stop(sprintf("Missing policy value `%s`.", name))
+  .validate_policy(policy)
   u <- policy[[name]]
-  if (is.function(u)) return(as.numeric(u(t, x)))
-  as.numeric(u)
+  value <- if (is.function(u)) u(t, x) else u
+  if (!is.numeric(value) || length(value) != 1L || !is.finite(value)) {
+    stop(sprintf("Policy `%s` must evaluate to one finite numeric value.", name), call. = FALSE)
+  }
+  as.numeric(value)
 }
 
 .khncpa_flows_from_state <- function(t, x, policy, p) {
@@ -59,12 +87,11 @@
   e <- .khncpa_get_u(policy, "e", t, x)
   a <- .khncpa_get_u(policy, "a", t, x)
 
-  if (any(!is.finite(c(s, e, a)))) stop("Non-finite policy values encountered.")
-  if (s < 0 || e < 0) stop("Policy values `s` and `e` must be >= 0.")
-  if (a < 0 || a > 1) stop("Policy value `a` (abatement) must be within [0, 1].")
-  if ((s + e) > 0.95) stop("Policy values `s + e` must be <= 0.95 (leave room for consumption).")
+  if (s < 0 || e < 0) stop("Policy values `s` and `e` must be >= 0.", call. = FALSE)
+  if (a < 0 || a > 1) stop("Policy value `a` (abatement) must be within [0, 1].", call. = FALSE)
+  if ((s + e) > 0.95) stop("Policy values `s + e` must be <= 0.95.", call. = FALSE)
 
-  expoP <- max(1 - p$alpha - p$beta - p$gamma, 0)
+  expoP <- 1 - p$alpha - p$beta - p$gamma
   Y <- A * (K ^ p$alpha) * (H ^ p$beta) * (N ^ p$gamma) * (P ^ expoP)
 
   abate_cost <- p$abatement_cost_scale * (a ^ 2) * Y
@@ -105,13 +132,11 @@
   dH <- fl$education - p$deltaH * H
   dN <- p$regen * (p$Nmax - N) - fl$depletion
   dC <- fl$emissions - p$absorption * (C - p$C0)
-
-  if (is.na(p$Pmax)) {
-    dP <- p$pop_growth * P
+  dP <- if (is.na(p$Pmax)) {
+    p$pop_growth * P
   } else {
-    dP <- p$pop_growth * P * (1 - P / p$Pmax)
+    p$pop_growth * P * (1 - P / p$Pmax)
   }
-
   dA <- p$tech_growth * A
 
   c(K = dK, H = dH, N = dN, C = dC, P = dP, A = dA)

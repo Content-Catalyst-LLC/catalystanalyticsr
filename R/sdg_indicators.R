@@ -1,6 +1,6 @@
 #' Compute a small set of SDG-adjacent indicators from a trajectory
 #'
-#' This function intentionally keeps the indicator set small and stable for the CS50R demo.
+#' This function intentionally keeps the indicator set small and stable for the public package demo.
 #' It returns a tidy (long) table that is easy to plot and export.
 #'
 #' @param trajectory_wide Data.frame from simulate_dynamics() (trajectory_wide).

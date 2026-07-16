@@ -1,26 +1,77 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-scenario.schema.json",
-  "title": "Catalyst Analytics R Demo Export",
+  "title": "Catalyst Analytics R Browser Scenario Input",
   "type": "object",
-  "required": ["demo", "generated_at", "inputs", "final", "composite_score", "budget_ratio", "interpretation_notes", "trajectory"],
+  "additionalProperties": false,
+  "required": [
+    "scenarioName",
+    "years",
+    "savings",
+    "emissionsIntensity",
+    "adaptation",
+    "restoration",
+    "humanInvestment",
+    "initialCapital",
+    "initialHuman",
+    "initialNatural",
+    "emissionsBudget"
+  ],
   "properties": {
-    "demo": { "type": "string" },
-    "generated_at": { "type": "string" },
-    "inputs": {
-      "type": "object",
-      "required": ["scenarioName", "years", "savings", "emissionsIntensity", "adaptation", "restoration", "humanInvestment", "initialCapital", "initialHuman", "initialNatural", "emissionsBudget"]
+    "scenarioName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
     },
-    "final": { "type": "object" },
-    "composite_score": { "type": "number" },
-    "budget_ratio": { "type": "number" },
-    "interpretation_notes": {
-      "type": "array",
-      "items": { "type": "string" }
+    "years": {
+      "type": "integer",
+      "minimum": 5,
+      "maximum": 40
     },
-    "trajectory": {
-      "type": "array",
-      "items": { "type": "object" }
+    "savings": {
+      "type": "number",
+      "minimum": 0.05,
+      "maximum": 0.45
+    },
+    "emissionsIntensity": {
+      "type": "number",
+      "minimum": 0.01,
+      "maximum": 0.2
+    },
+    "adaptation": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 0.25
+    },
+    "restoration": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 0.2
+    },
+    "humanInvestment": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 0.2
+    },
+    "initialCapital": {
+      "type": "number",
+      "minimum": 10,
+      "maximum": 1000
+    },
+    "initialHuman": {
+      "type": "number",
+      "minimum": 10,
+      "maximum": 1000
+    },
+    "initialNatural": {
+      "type": "number",
+      "minimum": 10,
+      "maximum": 1000
+    },
+    "emissionsBudget": {
+      "type": "number",
+      "minimum": 10,
+      "maximum": 1000
     }
   }
 }

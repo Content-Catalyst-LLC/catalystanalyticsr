@@ -2,7 +2,7 @@
 #'
 #' Computes a Jacobian-style sensitivity matrix for the KH-NC-PA vector field
 #' with respect to model parameters. This is intended as a lightweight,
-#' reproducible sensitivity diagnostic for the CS50R demo.
+#' reproducible sensitivity diagnostic for the public package demo.
 #'
 #' @param state Named numeric vector of states (K,H,N,C,P,A) at which to evaluate sensitivities.
 #' @param params List of parameter overrides.
@@ -40,8 +40,6 @@ sensitivity_jacobian <- function(
   if (!is.character(params_to_test)) stop("`params_to_test` must be a character vector.")
   params_to_test <- intersect(params_to_test, p_names)
   if (length(params_to_test) == 0) stop("No valid parameters selected in `params_to_test`.")
-
-  base_f <- .khncpa_deriv(t, state, policy, p0)
 
   out <- list()
   k <- 1
@@ -81,11 +79,6 @@ sensitivity_jacobian <- function(
 #' @return A ggplot object.
 #' @export
 #'
-#' @examples
-#' times <- seq(0, 5, by = 1)
-#' x0 <- c(K = 1, H = 1, N = 1, C = 0, P = 1, A = 1)
-#' run <- catalyst_run(times, x0, include_phase_plane = FALSE, include_sensitivity = TRUE)
-#' plot_sensitivity_heatmap(run$sensitivities)
 #' @examples
 #' times <- seq(0, 5, by = 1)
 #' x0 <- c(K = 1, H = 1, N = 1, C = 0, P = 1, A = 1)

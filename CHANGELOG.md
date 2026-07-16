@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.4 — Repository Integrity and Package Contract Repair
+
+- Repaired duplicate functions and duplicated documentation blocks.
+- Replaced placeholder tests with behavioral package tests.
+- Added shared input validation and stricter model parameter contracts.
+- Corrected export metadata, parameter, policy, and file-inventory outputs.
+- Added versioned scenario-input and browser-export schemas.
+- Moved raw package JSON resources to `inst/extdata`.
+- Added repository release checks and expanded CI.
+- Updated the WordPress demo to v1.0.1 with an explicit conceptual-parity boundary.
+- Corrected the deterministic demo test to compare numeric trajectories while preserving distinct scenario labels.
+- Removed non-ASCII characters from R source and added an ASCII portability contract.
+- Added `.Rbuildignore` exclusions for repository-only directories and generated caches.
+- Disabled pytest cache creation during release checks.
+
 ## 2026-07-01
 
 ### Added

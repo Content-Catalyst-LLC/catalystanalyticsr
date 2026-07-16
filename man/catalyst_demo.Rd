@@ -2,7 +2,7 @@
 % Please edit documentation in R/catalyst_run.R
 \name{catalyst_demo}
 \alias{catalyst_demo}
-\title{Run a stable demo with dummy data}
+\title{Run a stable demonstration scenario}
 \usage{
 catalyst_demo(
   seed = 42L,
@@ -12,25 +12,14 @@ catalyst_demo(
 )
 }
 \arguments{
-\item{seed}{Integer seed for reproducibility.}
-
-\item{budget_mode}{Budget behavior: "auto" (default), "pass" (within budget),
-"fail" (over budget), or "custom" (use emissions_budget).}
-
-\item{headroom}{Fractional slack used when budget_mode is "auto"/"pass"/"fail".}
-
-\item{emissions_budget}{Optional numeric budget (required when budget_mode = "custom").}
+\item{seed}{Integer seed retained for reproducibility.}
+\item{budget_mode}{Budget behavior: "auto", "pass", "fail", or "custom".}
+\item{headroom}{Fractional budget slack for automatic modes.}
+\item{emissions_budget}{Numeric budget required for custom mode.}
 }
-\value{
-A "catalyst_run" object.
-}
-\description{
-Run a stable demo with dummy data
-}
+\value{A \code{catalyst_run} object.}
+\description{Runs a stable demonstration scenario with a reproducible emissions-budget status.}
 \examples{
-x <- catalyst_demo()
-print(x)
-plot(x, which = "trajectory")
 x <- catalyst_demo()
 print(x)
 plot(x, which = "trajectory")

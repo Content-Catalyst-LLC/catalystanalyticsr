@@ -12,27 +12,14 @@
 }
 \arguments{
 \item{x}{A \code{catalyst_run} object.}
-
-\item{which}{Which plot to display. One of \code{"trajectory"}, \code{"sdg_dashboard"},
-\code{"phase_plane"}, \code{"sensitivity_heatmap"}, or \code{"all"}.}
-
-\item{...}{Passed through (unused currently).}
+\item{which}{Plot to display.}
+\item{...}{Unused.}
 }
-\value{
-Invisibly returns the selected ggplot object (or a list of plots when `which = "all"`).
-
-Invisibly returns the selected ggplot object (or a list of plots when `which = "all"`).
-}
-\description{
-S3 method for plotting a \code{catalyst_run} object.
-
-S3 method for plotting a \code{catalyst_run} object.
-}
+\value{Invisibly returns the selected ggplot or plot list.}
+\description{Displays one or all plots stored on a \code{catalyst_run}.}
 \examples{
 \dontrun{
 x <- catalyst_demo()
 plot(x, which = "trajectory")
 }
-x <- catalyst_demo()
-plot(x, which = "trajectory")
 }

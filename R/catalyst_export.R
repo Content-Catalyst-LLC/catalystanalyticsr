@@ -1,24 +1,23 @@
 #' Export a Catalyst run as a portable bundle
 #'
-#' A convenience wrapper around [export_catalyst_bundle()] that writes key
-#' outputs from a `catalyst_run` object (or compatible list) to a folder
-#' @param results A `catalyst_run` object (or compatible list) returned by
-#' @param dir Output directory to write into.
-#' @param run_id Optional run id used to name the bundle directory.
-#' @param zip Logical. If TRUE, also write a zip file.
-#' @param overwrite Logical. If TRUE, overwrite existing output.
-#' @param open Logical. If TRUE, open the output folder (macOS: Finder).
-#' @param quiet Logical. If TRUE, suppress friendly messages.
+#' Convenience wrapper around [export_catalyst_bundle()] for a `catalyst_run`
+#' object or compatible result list.
 #'
-#' @return Invisibly returns paths written (and/or bundle metadata).
+#' @param results A `catalyst_run` object or compatible result list.
+#' @param dir Output directory.
+#' @param run_id Optional run identifier used in bundle names.
+#' @param zip Logical. If TRUE, also create a zip archive.
+#' @param overwrite Logical. If TRUE, replace existing output.
+#' @param open Logical. If TRUE, open the output folder on macOS.
+#' @param quiet Logical. If TRUE, suppress informational messages.
+#' @return Invisibly returns bundle paths, manifest, and written-file inventory.
 #' @export
 #'
 #' @examples
 #' times <- seq(0, 5, by = 1)
 #' x0 <- c(K = 1, H = 1, N = 1, C = 0, P = 1, A = 1)
 #' res <- catalyst_run(times, x0, include_phase_plane = FALSE, include_sensitivity = FALSE)
-#' # Write into a temp directory for the example
-#' out <- catalyst_export(res, dir = tempdir(), run_id = "demo", quiet = TRUE)
+#' out <- catalyst_export(res, dir = tempdir(), run_id = "demo", zip = FALSE, quiet = TRUE)
 #' out
 catalyst_export <- function(
   results,

@@ -1,18 +1,17 @@
 #' Simulate dynamics
 #'
-#' One-step wrapper that runs the KH-NC-PA model over `times` and returns
-#' both wide and long trajectories for plotting/export.
+#' Runs the KH-NC-PA model over `times` and returns wide and optional long
+#' trajectories for analysis, plotting, and export.
 #'
 #' @param times Numeric vector of time points.
 #' @param x0 Named numeric vector of initial state (K,H,N,C,P,A).
 #' @param policy List of policy controls (s,e,a).
 #' @param params List of parameter overrides.
-#' @param model Which dynamics model to run. Currently only "khncpa" is supported.
+#' @param model Dynamics model. Currently only "khncpa" is supported.
 #' @param method Integration method ("rk4" or "euler").
-#' @param scenario Scenario label.
-#' @param return_long Logical. If TRUE, also return a long version.
-#'
-#' @return A list with `trajectory_wide`, and if `return_long=TRUE`, `trajectory_long`, plus `meta`.
+#' @param scenario Non-empty scenario label.
+#' @param return_long Logical. If TRUE, also return a long trajectory.
+#' @return A list with `trajectory_wide`, optional `trajectory_long`, and `meta`.
 #' @export
 #'
 #' @examples
@@ -31,82 +30,60 @@ simulate_dynamics <- function(
   return_long = TRUE
 ) {
   method <- match.arg(method)
-
-  if (!is.numeric(times) || length(times) < 2) {
-    stop("`times` must be a numeric vector with length >= 2.")
-  }
-  if (is.unsorted(times, strictly = TRUE)) {
-    stop("`times` must be strictly increasing.")
-  }
-  if (!is.numeric(x0) || is.null(names(x0))) {
-    stop("`x0` must be a named numeric vector.")
-  }
+  model <- match.arg(model, "khncpa")
+  .validate_times(times)
+  x0 <- .validate_state(x0, "x0")
+  .validate_policy(policy)
+  .validate_params(params)
+  .assert_single_string(scenario, "scenario")
+  .assert_flag(return_long, "return_long")
 
   required_states <- .khncpa_required_states()
-  if (!all(required_states %in% names(x0))) {
-    stop("`x0` must include names: K, H, N, C, P, A.")
-  }
-
   p <- .khncpa_build_params(params, x0)
 
-  # Integration loop
   n <- length(times)
   states <- matrix(NA_real_, nrow = n, ncol = length(required_states))
   colnames(states) <- required_states
   states[1, ] <- as.numeric(x0[required_states])
 
-  # Derived series
-  Y <- rep(NA_real_, n)
-  emissions <- rep(NA_real_, n)
-  depletion <- rep(NA_real_, n)
-  damages <- rep(NA_real_, n)
-  savings <- rep(NA_real_, n)
-  education <- rep(NA_real_, n)
-  consumption <- rep(NA_real_, n)
-  abatement <- rep(NA_real_, n)
-  ans_series <- rep(NA_real_, n)
+  Y <- emissions <- depletion <- damages <- savings <- education <-
+    consumption <- abatement <- ans_series <- rep(NA_real_, n)
 
-  # Evaluate flows at initial time
-  fl0 <- .khncpa_flows_from_state(times[1], states[1, ], policy, p)
-  Y[1] <- fl0$Y
-  emissions[1] <- fl0$emissions
-  depletion[1] <- fl0$depletion
-  damages[1] <- fl0$damages
-  savings[1] <- fl0$savings
-  education[1] <- fl0$education
-  consumption[1] <- fl0$consumption
-  abatement[1] <- fl0$a
-  ans_series[1] <- ans(savings[1], education[1], depletion[1], damages[1])
+  record_flows <- function(i, time) {
+    fl <- .khncpa_flows_from_state(time, states[i, ], policy, p)
+    Y[i] <<- fl$Y
+    emissions[i] <<- fl$emissions
+    depletion[i] <<- fl$depletion
+    damages[i] <<- fl$damages
+    savings[i] <<- fl$savings
+    education[i] <<- fl$education
+    consumption[i] <<- fl$consumption
+    abatement[i] <<- fl$a
+    ans_series[i] <<- ans(fl$savings, fl$education, fl$depletion, fl$damages)
+  }
+  record_flows(1L, times[1L])
 
-  for (i in 1:(n - 1)) {
+  for (i in seq_len(n - 1L)) {
     t <- times[i]
-    h <- times[i + 1] - times[i]
-    xi <- as.list(states[i, ])
+    h <- times[i + 1L] - times[i]
+    xi <- states[i, ]
 
-    if (method == "euler") {
+    xnext <- if (method == "euler") {
       k1 <- .khncpa_deriv(t, xi, policy, p)
-      xnext <- states[i, ] + h * k1
+      xi + h * k1
     } else {
       k1 <- .khncpa_deriv(t, xi, policy, p)
-      k2 <- .khncpa_deriv(t + h/2, as.list(states[i, ] + (h/2) * k1), policy, p)
-      k3 <- .khncpa_deriv(t + h/2, as.list(states[i, ] + (h/2) * k2), policy, p)
-      k4 <- .khncpa_deriv(t + h,   as.list(states[i, ] + h * k3), policy, p)
-      xnext <- states[i, ] + (h/6) * (k1 + 2*k2 + 2*k3 + k4)
+      k2 <- .khncpa_deriv(t + h / 2, xi + (h / 2) * k1, policy, p)
+      k3 <- .khncpa_deriv(t + h / 2, xi + (h / 2) * k2, policy, p)
+      k4 <- .khncpa_deriv(t + h, xi + h * k3, policy, p)
+      xi + (h / 6) * (k1 + 2 * k2 + 2 * k3 + k4)
     }
 
-    states[i + 1, ] <- as.numeric(xnext)
-
-    # Derived flows at t_{i+1}
-    fl <- .khncpa_flows_from_state(times[i + 1], states[i + 1, ], policy, p)
-    Y[i + 1] <- fl$Y
-    emissions[i + 1] <- fl$emissions
-    depletion[i + 1] <- fl$depletion
-    damages[i + 1] <- fl$damages
-    savings[i + 1] <- fl$savings
-    education[i + 1] <- fl$education
-    consumption[i + 1] <- fl$consumption
-    abatement[i + 1] <- fl$a
-    ans_series[i + 1] <- ans(savings[i + 1], education[i + 1], depletion[i + 1], damages[i + 1])
+    if (any(!is.finite(xnext))) {
+      stop(sprintf("Non-finite state generated at time %s.", times[i + 1L]), call. = FALSE)
+    }
+    states[i + 1L, ] <- as.numeric(xnext)
+    record_flows(i + 1L, times[i + 1L])
   }
 
   trajectory_wide <- data.frame(
@@ -126,50 +103,53 @@ simulate_dynamics <- function(
     emissions = emissions,
     depletion = depletion,
     damages = damages,
-    ans = ans_series
+    ans = ans_series,
+    stringsAsFactors = FALSE
+  )
+
+  meta <- list(
+    package_version = .catalyst_package_version(),
+    model = model,
+    model_contract_version = catalyst_globals()$model_contract_version,
+    integration_method = method,
+    scenario = scenario,
+    time_start = times[1L],
+    time_end = times[n],
+    time_steps = n,
+    initial_state = as.list(x0[required_states]),
+    params = p,
+    policy = policy
   )
 
   if (!return_long) {
-    return(list(
-      trajectory_wide = trajectory_wide,
-      meta = list(model = model, params = p, policy = policy)
-    ))
+    return(list(trajectory_wide = trajectory_wide, meta = meta))
   }
 
-  # Long format for plotting/export (no extra dependencies)
-  metric_cols <- c("gdp", "consumption", "ans", "emissions", "damages", "depletion", "K", "H", "N", "C", "P", "A")
-  long_list <- lapply(metric_cols, function(m) {
+  metric_cols <- c(
+    "gdp", "consumption", "ans", "emissions", "damages", "depletion",
+    "K", "H", "N", "C", "P", "A"
+  )
+  units <- c(
+    gdp = "index", consumption = "index", ans = "index",
+    emissions = "tCO2e_index", damages = "index", depletion = "index",
+    K = "index", H = "index", N = "index", C = "index",
+    P = "people_index", A = "index"
+  )
+  trajectory_long <- do.call(rbind, lapply(metric_cols, function(metric) {
     data.frame(
       t = trajectory_wide$t,
       scenario = trajectory_wide$scenario,
-      metric = m,
-      value = trajectory_wide[[m]],
-      unit = NA_character_,
+      metric = metric,
+      value = trajectory_wide[[metric]],
+      unit = unname(units[[metric]]),
       stringsAsFactors = FALSE
     )
-  })
-  trajectory_long <- do.call(rbind, long_list)
-
-  # Simple unit hints (customize later)
-  units <- list(
-    gdp = "index",
-    consumption = "index",
-    ans = "index",
-    emissions = "tCO2e_index",
-    damages = "index",
-    depletion = "index",
-    K = "index",
-    H = "index",
-    N = "index",
-    C = "index",
-    P = "people_index",
-    A = "index"
-  )
-  trajectory_long$unit <- unname(unlist(units[trajectory_long$metric]))
+  }))
+  rownames(trajectory_long) <- NULL
 
   list(
     trajectory_wide = trajectory_wide,
     trajectory_long = trajectory_long,
-    meta = list(model = model, params = p, policy = policy)
+    meta = meta
   )
 }

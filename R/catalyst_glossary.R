@@ -11,6 +11,7 @@
 #' @examples
 #' catalyst_glossary()
 catalyst_glossary <- function(include_internal = FALSE) {
+  .assert_flag(include_internal, "include_internal")
   
   df <- data.frame(
     name = c(
@@ -67,7 +68,7 @@ catalyst_glossary <- function(include_internal = FALSE) {
   )
   
   if (isTRUE(include_internal)) {
-    # Placeholder for future internal/helper entries. Kept empty for CS50R demo stability.
+    # Reserved for future internal/helper entries; none are exposed in v0.1.4.
   }
   
   df

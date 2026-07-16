@@ -159,14 +159,22 @@
   function downloadJSON(root) {
     var run = root._scarRun || simulate(read(root.querySelector('[data-scar-form]')));
     var payload = {
+      schema_version: '1.0.0',
       demo: 'Catalyst Analytics R Demo',
+      demo_version: '1.0.1',
+      engine: {
+        type: 'browser_simplified',
+        compatible_repository_version: '0.1.4',
+        parity_status: 'conceptual_only'
+      },
       generated_at: new Date().toISOString(),
       inputs: run.inputs,
       final: run.final,
       composite_score: run.score,
       budget_ratio: round(run.budgetRatio, 3),
       interpretation_notes: noteList(run),
-      trajectory: run.trajectory
+      trajectory: run.trajectory,
+      boundary: { forecast: false, compliance: false, professional_advice: false }
     };
     var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     var a = document.createElement('a');

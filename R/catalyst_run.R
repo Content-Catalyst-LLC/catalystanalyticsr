@@ -1,7 +1,7 @@
 #' Run a complete Catalyst Analytics scenario
 #'
-#' This is the "front door" for the package: one function that runs the model,
-#' produces tidy outputs, makes plots, and returns a single structured result.
+#' The package front door: run the model, compute indicators, produce plots,
+#' and return one structured `catalyst_run` object.
 #'
 #' @param times Numeric vector of times.
 #' @param x0 Named numeric vector of initial states (K,H,N,C,P,A).
@@ -9,13 +9,13 @@
 #' @param params List of model parameters.
 #' @param scenario Scenario label.
 #' @param method Integration method.
-#' @param emissions_budget Optional single numeric budget for total allowed cumulative emissions (same units as the model's `emissions`). If provided, carbon_budget() is computed.
-#' @param carbon_budget_value Deprecated alias for `emissions_budget` (kept for backwards compatibility).
+#' @param emissions_budget Optional non-negative cumulative emissions budget.
+#' @param carbon_budget_value Deprecated alias for `emissions_budget`.
 #' @param include_phase_plane Logical. If TRUE, compute a phase plane.
 #' @param include_sensitivity Logical. If TRUE, compute Jacobian sensitivities.
-#'
-#' @return A list with class "catalyst_run".
+#' @return A list with class `catalyst_run`.
 #' @export
+#'
 #' @examples
 #' times <- seq(0, 10, by = 1)
 #' x0 <- c(K = 1, H = 1, N = 1, C = 0, P = 1, A = 1)
@@ -34,6 +34,16 @@ catalyst_run <- function(
   include_sensitivity = TRUE
 ) {
   method <- match.arg(method)
+  .assert_flag(include_phase_plane, "include_phase_plane")
+  .assert_flag(include_sensitivity, "include_sensitivity")
+
+  if (!is.null(emissions_budget) && !is.null(carbon_budget_value)) {
+    stop("Provide only one of `emissions_budget` or `carbon_budget_value`.", call. = FALSE)
+  }
+  if (is.null(emissions_budget)) emissions_budget <- carbon_budget_value
+  if (!is.null(emissions_budget)) {
+    .assert_scalar_number(emissions_budget, "emissions_budget", lower = 0)
+  }
 
   res <- simulate_dynamics(
     times = times,
@@ -45,30 +55,29 @@ catalyst_run <- function(
     return_long = TRUE
   )
 
-  # Tidy indicator layer
   sdg <- sdg_indicators(res$trajectory_wide)
-
-  # Carbon budget check (optional)
-  if (!is.null(emissions_budget) && !is.null(carbon_budget_value)) {
-    stop("Provide only one of `emissions_budget` or `carbon_budget_value` (legacy alias).")
-  }
-  if (is.null(emissions_budget)) emissions_budget <- carbon_budget_value
-
-  cb <- NULL
-  if (!is.null(emissions_budget)) {
-    cb <- carbon_budget(res$trajectory_wide, budget = emissions_budget)
+  cb <- if (is.null(emissions_budget)) NULL else {
+    carbon_budget(res$trajectory_wide, budget = emissions_budget)
   }
 
-  # Phase plane + overlay (optional)
+  state0 <- as.numeric(res$trajectory_wide[1, c("K", "H", "N", "C", "P", "A")])
+  names(state0) <- c("K", "H", "N", "C", "P", "A")
+
   pp <- NULL
-  if (isTRUE(include_phase_plane)) {
-    state0 <- as.numeric(res$trajectory_wide[1, c("K", "H", "N", "C", "P", "A")])
-    names(state0) <- c("K", "H", "N", "C", "P", "A")
+  if (include_phase_plane) {
+    safe_range <- function(values) {
+      value_range <- range(values, finite = TRUE)
+      if (diff(value_range) == 0) {
+        pad <- max(abs(value_range[1]) * 0.05, 0.05)
+        value_range <- value_range + c(-pad, pad)
+      }
+      value_range
+    }
     pp <- phase_plane(
       x_var = "K",
       y_var = "C",
-      x_range = c(min(res$trajectory_wide$K, na.rm = TRUE), max(res$trajectory_wide$K, na.rm = TRUE)),
-      y_range = c(min(res$trajectory_wide$C, na.rm = TRUE), max(res$trajectory_wide$C, na.rm = TRUE)),
+      x_range = safe_range(res$trajectory_wide$K),
+      y_range = safe_range(res$trajectory_wide$C),
       n = 15,
       t = times[1],
       state_fixed = state0,
@@ -78,57 +87,37 @@ catalyst_run <- function(
     )
   }
 
-  # Sensitivity Jacobian (optional)
-  sens <- NULL
-  if (isTRUE(include_sensitivity)) {
-    state0 <- as.numeric(res$trajectory_wide[1, c("K", "H", "N", "C", "P", "A")])
-    names(state0) <- c("K", "H", "N", "C", "P", "A")
-    sens <- sensitivity_jacobian(
-      state = state0,
-      params = params,
-      t = times[1],
-      policy = policy
-    )
-  }
+  sens <- if (include_sensitivity) {
+    sensitivity_jacobian(state = state0, params = params, t = times[1], policy = policy)
+  } else NULL
 
-  # Friendly scorecard (start/end + deltas)
   make_score <- function(df, cols) {
-    if (!is.data.frame(df) || nrow(df) < 1) return(NULL)
     start <- df[1, , drop = FALSE]
     end <- df[nrow(df), , drop = FALSE]
-    out <- list()
-    k <- 1
-    for (nm in cols) {
-      if (!nm %in% names(df)) next
-      s <- as.numeric(start[[nm]])
-      e <- as.numeric(end[[nm]])
-      out[[k]] <- data.frame(
-        metric = nm,
-        start = s,
-        end = e,
-        change = e - s,
-        pct_change = if (is.finite(s) && s != 0) (e - s) / s else NA_real_,
+    rows <- lapply(cols[cols %in% names(df)], function(metric) {
+      start_value <- as.numeric(start[[metric]])
+      end_value <- as.numeric(end[[metric]])
+      data.frame(
+        metric = metric,
+        start = start_value,
+        end = end_value,
+        change = end_value - start_value,
+        pct_change = if (is.finite(start_value) && start_value != 0) {
+          (end_value - start_value) / start_value
+        } else NA_real_,
         stringsAsFactors = FALSE
       )
-      k <- k + 1
-    }
-    if (length(out) == 0) return(NULL)
-    do.call(rbind, out)
+    })
+    if (length(rows) == 0L) NULL else do.call(rbind, rows)
   }
-  scorecard <- make_score(res$trajectory_wide, c("gdp","emissions","ans","N","C"))
+  scorecard <- make_score(res$trajectory_wide, c("gdp", "emissions", "ans", "N", "C"))
 
-
-  # Plots
   plots <- list(
     trajectory = plot_trajectory(res$trajectory_long, metrics = c("gdp", "emissions", "ans")),
     sdg_dashboard = plot_sdg_dashboard(sdg)
   )
-  if (!is.null(pp)) {
-    plots$phase_plane <- plot_phase_plane(pp, trajectory_wide = res$trajectory_wide)
-  }
-  if (!is.null(sens)) {
-    plots$sensitivity_heatmap <- plot_sensitivity_heatmap(sens)
-  }
+  if (!is.null(pp)) plots$phase_plane <- plot_phase_plane(pp, res$trajectory_wide)
+  if (!is.null(sens)) plots$sensitivity_heatmap <- plot_sensitivity_heatmap(sens)
 
   out <- list(
     trajectory_wide = res$trajectory_wide,
@@ -145,21 +134,15 @@ catalyst_run <- function(
   out
 }
 
-# end of catalyst_run() ...
-
-#' Run a stable demo with dummy data
+#' Run a stable demonstration scenario
 #'
-#' @param seed Integer seed for reproducibility.
-#' @param budget_mode Budget behavior: "auto" (default), "pass" (within budget),
-#'   "fail" (over budget), or "custom" (use emissions_budget).
-#' @param headroom Fractional slack used when budget_mode is "auto"/"pass"/"fail".
-#' @param emissions_budget Optional numeric budget (required when budget_mode = "custom").
-#' @return A "catalyst_run" object.
-#' @examples
-#' x <- catalyst_demo()
-#' print(x)
-#' plot(x, which = "trajectory")
+#' @param seed Integer seed retained for reproducibility.
+#' @param budget_mode Budget behavior: "auto", "pass", "fail", or "custom".
+#' @param headroom Fractional budget slack for automatic modes.
+#' @param emissions_budget Numeric budget required for custom mode.
+#' @return A `catalyst_run` object.
 #' @export
+#'
 #' @examples
 #' x <- catalyst_demo()
 #' print(x)
@@ -170,33 +153,34 @@ catalyst_demo <- function(
   headroom = 0.05,
   emissions_budget = NULL
 ) {
-  # Deterministic model, but keeping a seed makes the demo reproducible
-  # if you later add randomized dummy inputs (e.g., shocks, noise).
+  .assert_scalar_number(seed, "seed")
+  .assert_scalar_number(headroom, "headroom", lower = 0, upper = 0.99)
   set.seed(as.integer(seed))
+  budget_mode <- match.arg(budget_mode)
 
   times <- seq(0, 20, by = 1)
   x0 <- c(K = 1, H = 1, N = 1, C = 0, P = 1, A = 1)
-
-  # Compute a baseline cumulative emissions level so the default budget is meaningful
   base <- simulate_dynamics(times, x0, return_long = FALSE)
-  cum_e <- carbon_budget(base$trajectory_wide, budget = 1e12)$cumulative_emissions
+  cumulative <- carbon_budget(base$trajectory_wide, budget = 1e12)$cumulative_emissions
 
-  budget_mode <- match.arg(budget_mode)
-
-  budget <- emissions_budget
-  if (is.null(budget)) {
-    if (budget_mode %in% c("auto", "pass")) {
-      budget <- cum_e * (1 + headroom)
-    } else if (budget_mode == "fail") {
-      budget <- cum_e * (1 - headroom)
-    } else {
-      stop("For budget_mode = 'custom', please supply emissions_budget = ...")
+  if (budget_mode == "custom") {
+    if (is.null(emissions_budget)) {
+      stop("For `budget_mode = 'custom'`, supply `emissions_budget`.", call. = FALSE)
     }
+    .assert_scalar_number(emissions_budget, "emissions_budget", lower = 0)
+    budget <- emissions_budget
+  } else if (!is.null(emissions_budget)) {
+    stop("`emissions_budget` is only used when `budget_mode = 'custom'`.", call. = FALSE)
+  } else if (budget_mode %in% c("auto", "pass")) {
+    budget <- cumulative * (1 + headroom)
+  } else {
+    budget <- cumulative * (1 - headroom)
   }
 
   catalyst_run(
     times = times,
     x0 = x0,
+    scenario = paste0("demo_", budget_mode),
     emissions_budget = budget,
     include_phase_plane = TRUE,
     include_sensitivity = TRUE

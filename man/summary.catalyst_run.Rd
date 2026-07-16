@@ -2,26 +2,15 @@
 % Please edit documentation in R/s3_catalyst_run.R
 \name{summary.catalyst_run}
 \alias{summary.catalyst_run}
-\title{Summary of a Catalyst run}
-\usage{
-\method{summary}{catalyst_run}(object, ...)
-}
+\title{Summarize a Catalyst run}
+\usage{\method{summary}{catalyst_run}(object, ...)}
 \arguments{
 \item{object}{A \code{catalyst_run} object.}
-
 \item{...}{Unused.}
 }
-\value{
-Invisibly returns \code{object}.
-}
-\description{
-S3 method for summarizing a \code{catalyst_run} object.
-
-S3 method for summarizing a \code{catalyst_run} object.
-}
+\value{Invisibly returns \code{object}.}
+\description{Prints the run summary and reports the size of each structured output.}
 \examples{
-x <- catalyst_demo()
-summary(x)
 x <- catalyst_demo()
 summary(x)
 }

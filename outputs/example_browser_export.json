@@ -1,5 +1,12 @@
 {
+  "schema_version": "1.0.0",
   "demo": "Catalyst Analytics R Demo",
+  "demo_version": "1.0.1",
+  "engine": {
+    "type": "browser_simplified",
+    "compatible_repository_version": "0.1.4",
+    "parity_status": "conceptual_only"
+  },
   "generated_at": "2026-07-01T00:00:00.000Z",
   "inputs": {
     "scenarioName": "Policy pathway",
@@ -30,5 +37,10 @@
     "Final-period adjusted savings are positive.",
     "Treat this as an exploratory demo, not a forecast or professional analysis."
   ],
-  "trajectory": []
+  "trajectory": [],
+  "boundary": {
+    "forecast": false,
+    "compliance": false,
+    "professional_advice": false
+  }
 }
