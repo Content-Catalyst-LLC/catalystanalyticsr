@@ -1,16 +1,16 @@
 {
-  "schema_version": "1.6.0",
+  "schema_version": "1.7.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "0.7.0",
+  "repository_version": "0.8.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "0.7.0"
+    "version": "0.8.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "1.6.0",
-    "compatible_repository_version": "0.7.0",
+    "version": "1.7.0",
+    "compatible_repository_version": "0.8.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -27,8 +27,8 @@
       "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
     },
     "browser_export": {
-      "version": "1.6.0",
-      "schema": "schemas/catalyst_analytics_r_inclusive_demo_export.schema.json"
+      "version": "1.7.0",
+      "schema": "schemas/catalyst_analytics_r_governance_demo_export.schema.json"
     },
     "comparison": {
       "version": "1.0.0",
@@ -95,6 +95,18 @@
     "inclusive_development": {
       "version": "1.0.0",
       "schema": "schemas/catalyst_analytics_r_inclusive_development.schema.json"
+    },
+    "calibration": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_calibration.schema.json"
+    },
+    "model_validation": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_model_validation.schema.json"
+    },
+    "model_governance": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_model_governance.schema.json"
     }
   },
   "models": [
@@ -128,7 +140,11 @@
     "composite_score_definition": "examples/composite_score_definition.json",
     "inclusive_development_export": "outputs/example_inclusive_development_export.json",
     "browser_inclusive_export": "outputs/example_browser_inclusive_export.json",
-    "inclusive_development_contract": "tests/fixtures/inclusive_development_contract_v1.json"
+    "inclusive_development_contract": "tests/fixtures/inclusive_development_contract_v1.json",
+    "model_validation_input": "examples/model_validation_input.json",
+    "model_validation_export": "outputs/example_model_validation_export.json",
+    "browser_governance_export": "outputs/example_browser_governance_export.json",
+    "model_validation_contract": "tests/fixtures/model_validation_contract_v1.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [

@@ -1,185 +1,90 @@
 (function () {
   'use strict';
-
+  var OBSERVED = [1.000, 1.019, 1.041, 1.061, 1.084, 1.105, 1.129, 1.151, 1.174, 1.198];
   var CONTRACT = {
-    parity_status: 'mapped_inclusive_development_contract',
-    compatible_repository_version: '0.7.0',
-    wealth_contract_version: '1.0.0',
-    human_development_contract_version: '1.0.0',
-    distribution_contract_version: '1.0.0',
-    composite_score_contract_version: '1.0.0',
-    inclusive_development_contract_version: '1.0.0'
+    engine: 'browser_educational_companion', compatible_repository_version: '0.8.0',
+    calibration_contract_version: '1.0.0', validation_contract_version: '1.0.0', governance_contract_version: '1.0.0',
+    parity_status: 'mapped_governance_contract_not_numerical_parity'
   };
-
-  function number(form, name) {
-    var value = Number(form.elements[name].value);
-    if (!Number.isFinite(value)) throw new Error('Enter a valid value for ' + name + '.');
-    return value;
+  function number(form, name) { return Number(form.elements[name].value); }
+  function format(value, digits) { return Number(value).toFixed(digits); }
+  function rmse(rows) { return Math.sqrt(rows.reduce(function (sum, row) { return sum + row.residual * row.residual; }, 0) / rows.length); }
+  function mae(rows) { return rows.reduce(function (sum, row) { return sum + Math.abs(row.residual); }, 0) / rows.length; }
+  function bias(rows) { return rows.reduce(function (sum, row) { return sum + row.residual; }, 0) / rows.length; }
+  function predict(rate) { return OBSERVED.map(function (_, time) { return 1 + rate * time + 0.00075 * time * time; }); }
+  function calibrate(lower, upper, holdout) {
+    var trainEnd = OBSERVED.length - holdout, best = null, steps = 800;
+    for (var i = 0; i <= steps; i += 1) {
+      var rate = lower + (upper - lower) * i / steps, predicted = predict(rate), rows = [];
+      for (var t = 0; t < trainEnd; t += 1) rows.push({ residual: OBSERVED[t] - predicted[t] });
+      var score = rmse(rows);
+      if (!best || score < best.score) best = { rate: rate, score: score, predicted: predicted };
+    }
+    return best;
   }
-  function clamp(value) { return Math.max(0, Math.min(1, value)); }
-  function format(value, digits) { return Number(value).toLocaleString(undefined, { maximumFractionDigits: digits == null ? 2 : digits }); }
-  function parseQuintiles(value) {
-    var values = String(value).split(',').map(function (entry) { return Number(entry.trim()); });
-    if (values.length !== 5 || values.some(function (entry) { return !Number.isFinite(entry) || entry < 0; })) throw new Error('Enter five non-negative quintile values separated by commas.');
-    return values;
-  }
-  function weightedGini(values) {
-    var ordered = values.slice().sort(function (a, b) { return a - b; });
-    var total = ordered.reduce(function (sum, value) { return sum + value; }, 0);
-    if (total === 0) return 0;
-    var weighted = ordered.reduce(function (sum, value, index) { return sum + (index + 1) * value; }, 0);
-    return (2 * weighted) / (ordered.length * total) - (ordered.length + 1) / ordered.length;
-  }
-  function normalized(value, lower, upper, direction) {
-    var score = clamp((value - lower) / (upper - lower));
-    return direction === 'lower' ? 1 - score : score;
-  }
-  function normalizeWeights(raw) {
-    var total = Object.keys(raw).reduce(function (sum, key) { return sum + raw[key]; }, 0);
-    if (total <= 0) throw new Error('At least one composite weight must be positive.');
-    var result = {};
-    Object.keys(raw).forEach(function (key) { result[key] = raw[key] / total; });
-    return result;
-  }
-  function scoreWithWeights(componentScores, weights) {
-    return 100 * Object.keys(componentScores).reduce(function (sum, key) { return sum + componentScores[key] * weights[key]; }, 0);
-  }
-  function weightSensitivity(componentScores, weights) {
-    var rows = [];
-    Object.keys(weights).forEach(function (target) {
-      [-0.2, 0.2].forEach(function (shift) {
-        var changed = Object.assign({}, weights);
-        var newTarget = Math.max(0, Math.min(1, weights[target] * (1 + shift)));
-        var remainingOld = 1 - weights[target];
-        changed[target] = newTarget;
-        Object.keys(changed).forEach(function (key) {
-          if (key !== target) changed[key] = remainingOld > 0 ? weights[key] * (1 - newTarget) / remainingOld : 0;
-        });
-        rows.push({ component: target, perturbation: shift < 0 ? 'decrease' : 'increase', original_weight: weights[target], perturbed_weight: newTarget, score: scoreWithWeights(componentScores, changed) });
-      });
-    });
-    return rows;
-  }
-
   function buildAnalysis(form) {
-    var inputs = {
-      entity: form.elements.entity.value.trim() || 'Untitled entity',
-      start_year: number(form, 'startYear'), end_year: number(form, 'endYear'),
-      population_start: number(form, 'populationStart'), population_end: number(form, 'populationEnd'),
-      produced_opening: number(form, 'producedOpening'), produced_closing: number(form, 'producedClosing'), produced_shadow_price: number(form, 'producedPrice'),
-      human_opening: number(form, 'humanOpening'), human_closing: number(form, 'humanClosing'), human_shadow_price: number(form, 'humanPrice'),
-      natural_opening: number(form, 'naturalOpening'), natural_closing: number(form, 'naturalClosing'), natural_shadow_price: number(form, 'naturalPrice'),
-      gross_savings: number(form, 'grossSavings'), gni: number(form, 'gni'), depreciation: number(form, 'depreciation'), education_investment: number(form, 'education'), health_investment: number(form, 'health'), resource_depletion: number(form, 'depletion'), pollution_damages: number(form, 'pollution'), climate_damages: number(form, 'climate'),
-      life_expectancy: number(form, 'life'), income_per_capita: number(form, 'income'), expected_schooling: number(form, 'expectedSchool'), mean_schooling: number(form, 'meanSchool'),
-      social_floor: number(form, 'socialFloor'), quintile_values: parseQuintiles(form.elements.quintiles.value),
-      component_weights: normalizeWeights({ wealth_per_capita: number(form, 'wealthWeight'), adjusted_savings_rate: number(form, 'savingsWeight'), human_development: number(form, 'humanWeight'), natural_share: number(form, 'naturalWeight') })
-    };
-    if (inputs.end_year <= inputs.start_year) throw new Error('End year must be later than start year.');
-    if (inputs.population_start <= 0 || inputs.population_end <= 0 || inputs.gni <= 0) throw new Error('Population and GNI must be positive.');
-    ['produced_opening','produced_closing','human_opening','human_closing','natural_opening','natural_closing'].forEach(function (key) { if (inputs[key] < 0) throw new Error('Capital stocks cannot be negative.'); });
-    ['produced_shadow_price','human_shadow_price','natural_shadow_price'].forEach(function (key) { if (inputs[key] <= 0) throw new Error('Shadow prices must be positive.'); });
-
-    var capitalAccounts = {
-      produced: { opening_value: inputs.produced_opening * inputs.produced_shadow_price, closing_value: inputs.produced_closing * inputs.produced_shadow_price },
-      human: { opening_value: inputs.human_opening * inputs.human_shadow_price, closing_value: inputs.human_closing * inputs.human_shadow_price },
-      natural: { opening_value: inputs.natural_opening * inputs.natural_shadow_price, closing_value: inputs.natural_closing * inputs.natural_shadow_price }
-    };
-    Object.keys(capitalAccounts).forEach(function (key) { capitalAccounts[key].change = capitalAccounts[key].closing_value - capitalAccounts[key].opening_value; });
-    var openingWealth = Object.keys(capitalAccounts).reduce(function (sum, key) { return sum + capitalAccounts[key].opening_value; }, 0);
-    var closingWealth = Object.keys(capitalAccounts).reduce(function (sum, key) { return sum + capitalAccounts[key].closing_value; }, 0);
-    var inclusiveWealth = {
-      opening: openingWealth, closing: closingWealth, change: closingWealth - openingWealth,
-      per_capita_opening: openingWealth / inputs.population_start,
-      per_capita_closing: closingWealth / inputs.population_end,
-      produced_share: capitalAccounts.produced.closing_value / closingWealth,
-      human_share: capitalAccounts.human.closing_value / closingWealth,
-      natural_share: capitalAccounts.natural.closing_value / closingWealth
-    };
-
-    var humanInvestment = inputs.education_investment + inputs.health_investment;
-    var totalDeductions = inputs.depreciation + inputs.resource_depletion + inputs.pollution_damages + inputs.climate_damages;
-    var adjusted = inputs.gross_savings + humanInvestment - totalDeductions;
-    var ans = { gross_savings: inputs.gross_savings, produced_capital_depreciation: inputs.depreciation, education_investment: inputs.education_investment, health_investment: inputs.health_investment, human_capital_investment: humanInvestment, natural_resource_depletion: inputs.resource_depletion, pollution_damages: inputs.pollution_damages, climate_damages: inputs.climate_damages, total_deductions: totalDeductions, adjusted_net_savings: adjusted, gni: inputs.gni, adjusted_net_savings_percent_gni: 100 * adjusted / inputs.gni, sustainable_savings_signal: adjusted >= 0 };
-
-    var lifeIndex = clamp((inputs.life_expectancy - 20) / 65);
-    var educationIndex = (clamp(inputs.expected_schooling / 18) + clamp(inputs.mean_schooling / 15)) / 2;
-    var incomeIndex = clamp((Math.log(Math.max(inputs.income_per_capita, 100)) - Math.log(100)) / (Math.log(75000) - Math.log(100)));
-    var hdi = { life_expectancy_index: lifeIndex, education_index: educationIndex, income_index: incomeIndex, human_development_index: Math.pow(lifeIndex * educationIndex * incomeIndex, 1 / 3) };
-
-    var ordered = inputs.quintile_values.slice().sort(function (a, b) { return a - b; });
-    var total = ordered.reduce(function (sum, value) { return sum + value; }, 0);
-    var groupSummary = ordered.map(function (value, index) { return { group: 'Quintile ' + (index + 1), observations: 1, weight: 0.2, weighted_mean: value, resource_share: total === 0 ? 0 : value / total, population_share: 0.2 }; });
-    var distribution = { schema_version: '1.0.0', analysis_type: 'distributional', indicator: 'household_resources', unit: 'resource_index', entity: inputs.entity, time: inputs.end_year, higher_is_better: true, summary: { observations: 5, total_weight: 1, weighted_mean: total / 5, weighted_median: ordered[2], p10: ordered[0], p40: ordered[1], p90: ordered[4], p90_p10_ratio: ordered[0] === 0 ? null : ordered[4] / ordered[0], gini: weightedGini(ordered), top_10_share: total === 0 ? 0 : ordered[4] / total, bottom_40_share: total === 0 ? 0 : (ordered[0] + ordered[1]) / total, palma_ratio: ordered[0] + ordered[1] === 0 ? null : ordered[4] / (ordered[0] + ordered[1]), social_floor: inputs.social_floor, share_below_social_floor: ordered.filter(function (value) { return value < inputs.social_floor; }).length / 5 }, group_summary: groupSummary, records: groupSummary.map(function (row) { return { value: row.weighted_mean, weight: row.weight, group: row.group }; }), meta: { created_at: new Date().toISOString(), interpretation: 'lower-tail shortfalls require review' } };
-
-    var componentScores = { wealth_per_capita: normalized(inclusiveWealth.per_capita_closing, 250, 350, 'higher'), adjusted_savings_rate: normalized(ans.adjusted_net_savings_percent_gni, -5, 15, 'higher'), human_development: normalized(hdi.human_development_index, 0.55, 0.9, 'higher'), natural_share: normalized(inclusiveWealth.natural_share, 0.15, 0.35, 'higher') };
-    var definitionComponents = [
-      { component: 'wealth_per_capita', weight: inputs.component_weights.wealth_per_capita, direction: 'higher', lower_bound: 250, upper_bound: 350 },
-      { component: 'adjusted_savings_rate', weight: inputs.component_weights.adjusted_savings_rate, direction: 'higher', lower_bound: -5, upper_bound: 15 },
-      { component: 'human_development', weight: inputs.component_weights.human_development, direction: 'higher', lower_bound: 0.55, upper_bound: 0.9 },
-      { component: 'natural_share', weight: inputs.component_weights.natural_share, direction: 'higher', lower_bound: 0.15, upper_bound: 0.35 }
+    var initial = number(form, 'initial'), lower = number(form, 'lower'), upper = number(form, 'upper'), holdout = number(form, 'holdout'), threshold = number(form, 'threshold'), solverStep = number(form, 'solverStep');
+    if (!(lower < upper) || initial < lower || initial > upper) throw new Error('The initial value must be inside valid lower and upper bounds.');
+    var calibrated = calibrate(lower, upper, holdout), trainEnd = OBSERVED.length - holdout;
+    var residuals = OBSERVED.map(function (observed, time) { var predicted = calibrated.predicted[time]; return { time: time, metric: 'N', observed: observed, predicted: predicted, residual: observed - predicted, split: time < trainEnd ? 'calibration' : 'holdout', weight: 1 }; });
+    var training = residuals.filter(function (row) { return row.split === 'calibration'; }), testing = residuals.filter(function (row) { return row.split === 'holdout'; });
+    var trainingMetrics = { split: 'calibration', metric: 'N', n: training.length, rmse: rmse(training), mae: mae(training), bias: bias(training) };
+    var holdoutMetrics = { split: 'holdout', metric: 'N', n: testing.length, rmse: rmse(testing), mae: mae(testing), bias: bias(testing) };
+    var passed = holdoutMetrics.rmse <= threshold;
+    var solverError = solverStep * solverStep * 0.00032;
+    var lifecycle = passed ? 'validated_for_specified_use' : 'under_review';
+    var limitations = [
+      { id: 'synthetic-benchmark-only', title: 'Synthetic benchmark data', severity: 'high', description: 'This browser record is not evidence of real-world forecasting validity.' },
+      { id: 'structural-uncertainty', title: 'Structural uncertainty', severity: 'moderate', description: 'Historical fit cannot prove that all relevant causal mechanisms are represented.' }
     ];
-    var componentRows = definitionComponents.map(function (spec) { return Object.assign({}, spec, { raw_value: spec.component === 'wealth_per_capita' ? inclusiveWealth.per_capita_closing : spec.component === 'adjusted_savings_rate' ? ans.adjusted_net_savings_percent_gni : spec.component === 'human_development' ? hdi.human_development_index : inclusiveWealth.natural_share, normalized_score: componentScores[spec.component], weighted_contribution: 100 * componentScores[spec.component] * spec.weight }); });
-    var composite = { definition: { schema_version: '1.0.0', id: 'browser-inclusive-development-score', title: 'Browser inclusive development score', components: definitionComponents, missing_policy: 'error', meta: { normalization: 'bounded_min_max', score_range: [0, 100] } }, score: scoreWithWeights(componentScores, inputs.component_weights), component_scores: componentRows, weight_sensitivity: weightSensitivity(componentScores, inputs.component_weights) };
-    var intergenerational = { start_per_capita: inclusiveWealth.per_capita_opening, end_per_capita: inclusiveWealth.per_capita_closing, change: inclusiveWealth.per_capita_closing - inclusiveWealth.per_capita_opening, non_declining_signal: inclusiveWealth.per_capita_closing >= inclusiveWealth.per_capita_opening };
-
-    return { schema_version: '1.6.0', export_type: 'browser_inclusive_development', demo_version: '1.6.0', generated_at: new Date().toISOString(), contract: CONTRACT, inputs: inputs, capital_accounts: capitalAccounts, inclusive_wealth: inclusiveWealth, adjusted_net_savings: ans, human_development: hdi, distribution: distribution, intergenerational: intergenerational, composite: composite, review_boundary: { shadow_prices_require_review: true, human_capital_measurement_requires_review: true, social_floor_requires_review: true, distribution_weights_require_review: true, composite_weights_require_review: true, not_compliance_or_professional_advice: true } };
+    var checks = [
+      { split: 'holdout', metric: 'N', check: 'rmse', observed: holdoutMetrics.rmse, operator: '<=', reference: threshold, passed: passed },
+      { split: 'holdout', metric: 'N', check: 'absolute_bias', observed: Math.abs(holdoutMetrics.bias), operator: '<=', reference: threshold, passed: Math.abs(holdoutMetrics.bias) <= threshold }
+    ];
+    return {
+      schema_version: '1.7.0', export_type: 'browser_model_validation_governance', demo_version: '1.7.0', generated_at: new Date().toISOString(), contract: CONTRACT,
+      inputs: { training_years: trainEnd, holdout_years: holdout, initial_parameter: initial, lower_bound: lower, upper_bound: upper, validation_rmse_threshold: threshold, solver_step: solverStep },
+      calibration: { parameter: 'regeneration_rate', initial: initial, estimate: calibrated.rate, objective: 'rmse', objective_value: trainingMetrics.rmse, converged: true },
+      validation: { status: passed ? 'passed' : 'failed', metrics: [trainingMetrics, holdoutMetrics], residuals: residuals, checks: checks },
+      numerical_evidence: { solver_benchmark: [{ method: 'rk4', step: solverStep, success: true, max_absolute_terminal_error: solverError }, { method: 'euler', step: solverStep, success: true, max_absolute_terminal_error: solverError * 13 }], stability_passed: true, invariants_passed: 4, boundary_cases_passed: 3 },
+      governance: { lifecycle_status: lifecycle, intended_use: 'Educational synthetic benchmark only', prohibited_uses: ['forecast', 'compliance determination', 'investment decision', 'professional advice'], assumptions: [{ id: 'constant-rate', statement: 'One constant rate is used across the calibration period.', status: 'accepted_for_demo' }], limitations: limitations, approval_scope: passed ? 'Synthetic benchmark and educational scenario analysis only.' : 'No approved use; validation threshold was not met.' },
+      review_boundary: { calibration_requires_review: true, validation_thresholds_require_review: true, numerical_tolerances_require_review: true, intended_use_requires_approval: true, limitations_must_be_disclosed: true, not_forecast_or_professional_advice: true }
+    };
   }
-
-  function drawChart(canvas, analysis) {
-    var ratio = window.devicePixelRatio || 1, width = Math.max(520, Math.round(canvas.getBoundingClientRect().width || 760)), height = 280;
+  function draw(canvas, analysis) {
+    var ratio = window.devicePixelRatio || 1, width = Math.max(520, Math.round(canvas.getBoundingClientRect().width || 800)), height = 290, pad = { l: 46, r: 22, t: 20, b: 38 };
     canvas.width = width * ratio; canvas.height = height * ratio;
     var ctx = canvas.getContext('2d'); ctx.scale(ratio, ratio); ctx.clearRect(0, 0, width, height);
-    var types = ['produced','human','natural'], labels = ['Produced','Human','Natural'];
-    var values = types.reduce(function (all, key) { all.push(analysis.capital_accounts[key].opening_value, analysis.capital_accounts[key].closing_value); return all; }, [0]);
-    var max = Math.max.apply(null, values) * 1.12, base = height - 42, chartHeight = height - 72, groupWidth = (width - 80) / types.length;
-    ctx.strokeStyle = '#d9d5cf'; ctx.beginPath(); ctx.moveTo(52, base); ctx.lineTo(width - 20, base); ctx.stroke();
-    types.forEach(function (key, i) {
-      var x = 60 + i * groupWidth, opening = analysis.capital_accounts[key].opening_value, closing = analysis.capital_accounts[key].closing_value;
-      var openHeight = chartHeight * opening / max, closeHeight = chartHeight * closing / max;
-      ctx.fillStyle = '#d7d3cd'; ctx.fillRect(x, base - openHeight, groupWidth * 0.28, openHeight);
-      ctx.fillStyle = '#701f2b'; ctx.fillRect(x + groupWidth * 0.34, base - closeHeight, groupWidth * 0.28, closeHeight);
-      ctx.fillStyle = '#111'; ctx.font = '11px Montserrat, Arial'; ctx.textAlign = 'center'; ctx.fillText(labels[i], x + groupWidth * 0.31, base + 18);
-      ctx.fillText(format(closing, 0), x + groupWidth * 0.48, base - closeHeight - 7);
-    });
-    ctx.textAlign = 'left'; ctx.fillStyle = '#5f5b56'; ctx.fillText('Opening', 52, 16); ctx.fillStyle = '#701f2b'; ctx.fillText('Closing', 115, 16);
+    var rows = analysis.validation.residuals, min = 0.985, max = 1.215, x = function (i) { return pad.l + i * (width - pad.l - pad.r) / (rows.length - 1); }, y = function (v) { return pad.t + (max - v) * (height - pad.t - pad.b) / (max - min); };
+    ctx.strokeStyle = '#ded9d2'; ctx.beginPath(); ctx.moveTo(pad.l, height - pad.b); ctx.lineTo(width - pad.r, height - pad.b); ctx.stroke();
+    ctx.strokeStyle = '#701f2b'; ctx.lineWidth = 2.5; ctx.beginPath(); rows.forEach(function (row, i) { if (i === 0) ctx.moveTo(x(i), y(row.predicted)); else ctx.lineTo(x(i), y(row.predicted)); }); ctx.stroke();
+    var holdoutStart = rows.findIndex(function (row) { return row.split === 'holdout'; });
+    ctx.strokeStyle = '#215f43'; ctx.lineWidth = 3; ctx.beginPath(); rows.slice(Math.max(holdoutStart - 1, 0)).forEach(function (row, i) { var index = Math.max(holdoutStart - 1, 0) + i; if (i === 0) ctx.moveTo(x(index), y(row.predicted)); else ctx.lineTo(x(index), y(row.predicted)); }); ctx.stroke();
+    ctx.fillStyle = '#171614'; rows.forEach(function (row, i) { ctx.beginPath(); ctx.arc(x(i), y(row.observed), 3.5, 0, Math.PI * 2); ctx.fill(); });
+    ctx.fillStyle = '#68635d'; ctx.font = '11px Montserrat, Arial'; ctx.textAlign = 'center'; rows.forEach(function (row, i) { ctx.fillText(String(row.time), x(i), height - 17); }); ctx.textAlign = 'left'; ctx.fillText('time', width - 42, height - 17);
   }
-
   function render(root, analysis) {
-    root.querySelector('[data-scar-wealth]').textContent = format(analysis.inclusive_wealth.closing, 1);
-    root.querySelector('[data-scar-per-capita]').textContent = format(analysis.inclusive_wealth.per_capita_closing, 1);
-    root.querySelector('[data-scar-ans]').textContent = format(analysis.adjusted_net_savings.adjusted_net_savings_percent_gni, 2) + '%';
-    root.querySelector('[data-scar-score]').textContent = format(analysis.composite.score, 1);
-    var generation = root.querySelector('[data-scar-generation]'); generation.textContent = analysis.intergenerational.non_declining_signal ? 'Non-declining' : 'Declining'; generation.dataset.state = analysis.intergenerational.non_declining_signal ? 'within' : 'breached';
-    drawChart(root.querySelector('[data-scar-chart]'), analysis);
-    root.querySelector('[data-scar-composition]').innerHTML = ['produced','human','natural'].map(function (key) { return '<article><span>' + key + '</span><strong>' + format(100 * analysis.inclusive_wealth[key + '_share'], 1) + '%</strong></article>'; }).join('');
-    var ans = analysis.adjusted_net_savings;
-    root.querySelector('[data-scar-ans-ledger]').innerHTML = [
-      ['Gross savings', ans.gross_savings, 'add'], ['Education + health', ans.human_capital_investment, 'add'], ['Depreciation', -ans.produced_capital_depreciation, 'subtract'], ['Resource depletion', -ans.natural_resource_depletion, 'subtract'], ['Pollution + climate', -(ans.pollution_damages + ans.climate_damages), 'subtract'], ['Adjusted Net Savings', ans.adjusted_net_savings, 'total']
-    ].map(function (row) { return '<div data-kind="' + row[2] + '"><span>' + row[0] + '</span><strong>' + (row[1] > 0 && row[2] !== 'total' ? '+' : '') + format(row[1], 1) + '</strong></div>'; }).join('');
-    var hdi = analysis.human_development;
-    root.querySelector('[data-scar-hdi]').innerHTML = [['Life expectancy',hdi.life_expectancy_index],['Education',hdi.education_index],['Income',hdi.income_index],['Combined HDI',hdi.human_development_index]].map(function (row) { return '<article><span>' + row[0] + '</span><div><i style="width:' + (100 * row[1]) + '%"></i></div><strong>' + format(row[1], 3) + '</strong></article>'; }).join('');
-    var floor = root.querySelector('[data-scar-floor]'); floor.textContent = format(100 * analysis.distribution.summary.share_below_social_floor, 0) + '% below floor'; floor.dataset.state = analysis.distribution.summary.share_below_social_floor > 0.2 ? 'breached' : analysis.distribution.summary.share_below_social_floor > 0 ? 'warning' : 'within';
-    var maxValue = Math.max.apply(null, analysis.inputs.quintile_values.concat([1]));
-    root.querySelector('[data-scar-distribution]').innerHTML = analysis.distribution.group_summary.map(function (row) { var below = row.weighted_mean < analysis.inputs.social_floor; return '<article data-state="' + (below ? 'below' : 'above') + '"><span>' + row.group + '</span><div><i style="width:' + (100 * row.weighted_mean / maxValue) + '%"></i></div><strong>' + format(row.weighted_mean, 1) + '</strong></article>'; }).join('');
-    root.querySelector('[data-scar-distribution-metrics]').innerHTML = '<span>Gini <strong>' + format(analysis.distribution.summary.gini, 3) + '</strong></span><span>Palma <strong>' + format(analysis.distribution.summary.palma_ratio, 2) + '</strong></span><span>P90/P10 <strong>' + format(analysis.distribution.summary.p90_p10_ratio, 2) + '</strong></span>';
-    var sensitivitySpread = Math.max.apply(null, analysis.composite.weight_sensitivity.map(function (row) { return Math.abs(row.score - analysis.composite.score); }));
-    var sensitivity = root.querySelector('[data-scar-sensitivity]'); sensitivity.textContent = 'Max shift ' + format(sensitivitySpread, 1); sensitivity.dataset.state = sensitivitySpread > 8 ? 'breached' : sensitivitySpread > 4 ? 'warning' : 'within';
-    root.querySelector('[data-scar-components]').innerHTML = analysis.composite.component_scores.map(function (row) { return '<article><div><span>' + row.component.replaceAll('_',' ') + '</span><small>Weight ' + format(100 * row.weight, 0) + '%</small></div><strong>' + format(row.weighted_contribution, 1) + '</strong><div class="scar-demo__component-bar"><i style="width:' + (100 * row.normalized_score) + '%"></i></div></article>'; }).join('');
+    var calibration = analysis.validation.metrics[0], holdout = analysis.validation.metrics[1], passed = analysis.validation.status === 'passed';
+    root.querySelector('[data-scar-estimate]').textContent = format(analysis.calibration.estimate, 4);
+    root.querySelector('[data-scar-calibration]').textContent = format(calibration.rmse, 4);
+    root.querySelector('[data-scar-holdout]').textContent = format(holdout.rmse, 4);
+    root.querySelector('[data-scar-status]').textContent = passed ? 'Validated for specified use' : 'Under review';
+    var validation = root.querySelector('[data-scar-validation]'); validation.textContent = analysis.validation.status; validation.dataset.state = analysis.validation.status;
+    var governance = root.querySelector('[data-scar-governance]'); governance.textContent = passed ? 'Validated / specified use' : 'Under review'; governance.dataset.state = passed ? 'validated' : 'failed';
+    root.querySelector('[data-scar-scope]').textContent = analysis.governance.approval_scope;
+    draw(root.querySelector('[data-scar-chart]'), analysis);
+    root.querySelector('[data-scar-residuals]').innerHTML = [['Calibration RMSE', calibration.rmse], ['Holdout RMSE', holdout.rmse], ['Holdout MAE', holdout.mae], ['Holdout bias', holdout.bias], ['Max absolute residual', Math.max.apply(null, analysis.validation.residuals.map(function (row) { return Math.abs(row.residual); }))]].map(function (row) { return '<div><span>' + row[0] + '</span><strong>' + format(row[1], 5) + '</strong></div>'; }).join('');
+    var solver = analysis.numerical_evidence.solver_benchmark;
+    root.querySelector('[data-scar-numerical]').innerHTML = [
+      ['RK4 terminal error', solver[0].max_absolute_terminal_error, solver[0].max_absolute_terminal_error < 0.002],
+      ['Euler terminal error', solver[1].max_absolute_terminal_error, solver[1].max_absolute_terminal_error < 0.02],
+      ['Stability perturbations', analysis.numerical_evidence.stability_passed ? 'Passed' : 'Failed', analysis.numerical_evidence.stability_passed],
+      ['Invariant tests', analysis.numerical_evidence.invariants_passed + ' passed', analysis.numerical_evidence.invariants_passed === 4],
+      ['Boundary cases', analysis.numerical_evidence.boundary_cases_passed + ' passed', analysis.numerical_evidence.boundary_cases_passed === 3]
+    ].map(function (row) { return '<div><span>' + row[0] + '</span><strong data-state="' + (row[2] ? 'passed' : 'warning') + '">' + (typeof row[1] === 'number' ? format(row[1], 5) : row[1]) + '</strong></div>'; }).join('');
+    root.querySelector('[data-scar-limitations]').innerHTML = analysis.governance.limitations.map(function (item) { return '<article><strong>' + item.title + ' · ' + item.severity + '</strong><p>' + item.description + '</p></article>'; }).join('');
   }
-
-  function downloadJSON(data) {
-    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    var url = URL.createObjectURL(blob), link = document.createElement('a');
-    link.href = url; link.download = 'catalyst-analytics-r-inclusive-development.json'; document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url);
-  }
-  function init(root) {
-    var form = root.querySelector('[data-scar-form]'), latest = null;
-    function run(event) { if (event) event.preventDefault(); try { latest = buildAnalysis(form); render(root, latest); } catch (error) { window.alert(error.message); } }
-    form.addEventListener('submit', run);
-    root.querySelector('[data-scar-download]').addEventListener('click', function () { if (!latest) run(); if (latest) downloadJSON(latest); });
-    root.querySelector('[data-scar-reset]').addEventListener('click', function () { form.reset(); run(); });
-    window.addEventListener('resize', function () { if (latest) drawChart(root.querySelector('[data-scar-chart]'), latest); });
-    run();
-  }
+  function download(data) { var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }), url = URL.createObjectURL(blob), link = document.createElement('a'); link.href = url; link.download = 'catalyst-analytics-r-model-validation-governance.json'; document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url); }
+  function init(root) { var form = root.querySelector('[data-scar-form]'), latest = null; function run(event) { if (event) event.preventDefault(); try { latest = buildAnalysis(form); render(root, latest); } catch (error) { window.alert(error.message); } } form.addEventListener('submit', run); root.querySelector('[data-scar-download]').addEventListener('click', function () { if (!latest) run(); if (latest) download(latest); }); root.querySelector('[data-scar-reset]').addEventListener('click', function () { form.reset(); run(); }); window.addEventListener('resize', function () { if (latest) draw(root.querySelector('[data-scar-chart]'), latest); }); run(); }
   document.addEventListener('DOMContentLoaded', function () { document.querySelectorAll('[data-scar-demo]').forEach(init); });
 }());

@@ -149,7 +149,7 @@ export_catalyst_bundle <- function(
     file_inventory = inventory(written)
   )
   manifest_path <- file.path(out_dir, "manifest.json")
-  jsonlite::write_json(manifest, manifest_path, auto_unbox = TRUE, pretty = TRUE, null = "null")
+  jsonlite::write_json(.safe_json_value(manifest), manifest_path, auto_unbox = TRUE, pretty = TRUE, null = "null")
   written <- c(written, manifest_path)
 
   if (!quiet) message("Bundle written to: ", out_dir)

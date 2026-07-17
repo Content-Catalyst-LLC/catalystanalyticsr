@@ -68,7 +68,7 @@ export_uncertainty_analysis <- function(
     meta = x$meta,
     boundary = list(forecast = FALSE, compliance = FALSE, autonomous_decision = FALSE, professional_advice = FALSE)
   )
-  jsonlite::write_json(payload, json_path, auto_unbox = TRUE, pretty = TRUE, null = "null", na = "null", dataframe = "rows", digits = 15)
+  jsonlite::write_json(.safe_json_value(payload), json_path, auto_unbox = TRUE, pretty = TRUE, null = "null", na = "null", dataframe = "rows", digits = 15)
   paths <- c(paths, json_path)
   manifest_path <- file.path(dir, paste0(prefix, "-manifest.json"))
   manifest <- list(
@@ -84,7 +84,7 @@ export_uncertainty_analysis <- function(
     scenario_fingerprint = scenario_fingerprint(x$scenario),
     files = .data_frame_records(.file_hash_table(paths, dir))
   )
-  jsonlite::write_json(manifest, manifest_path, auto_unbox = TRUE, pretty = TRUE, null = "null", na = "null", dataframe = "rows")
+  jsonlite::write_json(.safe_json_value(manifest), manifest_path, auto_unbox = TRUE, pretty = TRUE, null = "null", na = "null", dataframe = "rows")
   paths <- c(paths, manifest_path)
   zip_path <- NULL
   if (zip_bundle) {
@@ -117,12 +117,12 @@ export_stress_test <- function(x, dir = "catalyst_stress_test_bundle", prefix = 
   )
   case_path <- file.path(comparison_bundle$bundle_dir, "stress_cases.json")
   jsonlite::write_json(
-    list(
+    .safe_json_value(list(
       schema_version = x$schema_version,
       baseline_id = x$baseline$id,
       cases = x$cases,
       meta = x$meta
-    ),
+    )),
     case_path,
     auto_unbox = TRUE,
     pretty = TRUE,

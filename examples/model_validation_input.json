@@ -1,0 +1,157 @@
+{
+  "schema_version": "1.0.0",
+  "analysis_id": "khncpa-v080-validation",
+  "scenario": "examples/scenario_input.json",
+  "observations": "inst/extdata/governance/sample_historical_observations.csv",
+  "calibration_spec": {
+    "schema_version": "1.0.0",
+    "id": "khncpa-natural-capital-calibration",
+    "title": "KH-NC-PA natural-capital calibration",
+    "parameters": {
+      "regen": {
+        "name": "regen",
+        "target": "parameters.regen",
+        "initial": 0.02,
+        "lower": 0.0,
+        "upper": 0.08,
+        "transform": "identity",
+        "unit": "fraction_per_year",
+        "description": "Natural-capital regeneration rate"
+      }
+    },
+    "objective": "weighted_rmse",
+    "method": "L-BFGS-B",
+    "control": {
+      "maxit": 250,
+      "tolerance": 1e-08
+    },
+    "meta": {
+      "created_at": "2026-07-17T00:00:00Z",
+      "package_version": "0.8.0"
+    }
+  },
+  "validation": {
+    "holdout_fraction": 0.3,
+    "thresholds": {
+      "rmse": 0.01,
+      "mae": 0.01,
+      "absolute_bias": 0.005,
+      "minimum_r_squared": 0.98
+    }
+  },
+  "solver_benchmark": {
+    "methods": [
+      "rk4",
+      "euler"
+    ],
+    "step_sizes": [
+      1,
+      0.5,
+      0.25
+    ],
+    "reference_method": "rk4",
+    "reference_step": 0.25
+  },
+  "stability": {
+    "perturbation_fraction": 0.01,
+    "tolerance": 0.1
+  },
+  "governance": {
+    "schema_version": "1.0.0",
+    "model": {
+      "id": "khncpa",
+      "version": "1.0.0",
+      "title": "KH-NC-PA Vector Dynamics Model",
+      "description": "Coupled sustainability scenario model."
+    },
+    "intended_uses": [
+      "exploratory scenario analysis",
+      "method development",
+      "educational comparison"
+    ],
+    "prohibited_uses": [
+      "forecast",
+      "compliance determination",
+      "professional advice"
+    ],
+    "owner": "Content Catalyst LLC",
+    "methodology_refs": [
+      "docs/methodology.md",
+      "docs/calibration-validation-model-governance.md"
+    ],
+    "parameters": [
+      {
+        "schema_version": "1.0.0",
+        "id": "regen",
+        "title": "Natural-capital regeneration rate",
+        "description": "Annual proportional regeneration of natural capital.",
+        "unit": "fraction_per_year",
+        "default": 0.02,
+        "bounds": {
+          "lower": 0.0,
+          "upper": 0.08
+        },
+        "source": {
+          "id": "methodology-v1",
+          "citation": "Catalyst Analytics R methodology v0.8.0"
+        },
+        "calibrated": true,
+        "sensitivity": "high",
+        "review_status": "reviewed"
+      }
+    ],
+    "assumptions": [
+      {
+        "schema_version": "1.0.0",
+        "id": "constant-regeneration",
+        "statement": "The calibration period uses one constant regeneration parameter.",
+        "rationale": "The release demonstrates governed calibration before time-varying parameters are introduced.",
+        "evidence_refs": [
+          "sample-historical-natural-capital-v1"
+        ],
+        "owner": "model-owner",
+        "status": "accepted_for_validation",
+        "review_due": "2027-01-31"
+      }
+    ],
+    "limitations": [
+      {
+        "schema_version": "1.0.0",
+        "id": "synthetic-benchmark-only",
+        "title": "Synthetic benchmark data",
+        "description": "The included evidence is deterministic synthetic data and does not establish real-world forecasting validity.",
+        "severity": "high",
+        "affected_uses": [
+          "forecast",
+          "regulatory_compliance",
+          "investment_decision"
+        ],
+        "mitigation": "Calibrate and validate with approved observational data before any real-world use.",
+        "status": "open"
+      },
+      {
+        "schema_version": "1.0.0",
+        "id": "structural-uncertainty",
+        "title": "Structural uncertainty remains",
+        "description": "Good historical fit does not demonstrate that the model structure captures all causal mechanisms.",
+        "severity": "moderate",
+        "affected_uses": [
+          "long_horizon_projection"
+        ],
+        "mitigation": "Compare alternative structures and disclose scenario dependence.",
+        "status": "open"
+      }
+    ],
+    "evidence": {
+      "calibration": [
+        "khncpa-natural-capital-calibration"
+      ],
+      "validation": [
+        "khncpa-natural-capital-calibration-validation"
+      ]
+    },
+    "lifecycle_status": "validated_for_specified_use",
+    "created_at": "2026-07-17T00:00:00Z",
+    "updated_at": "2026-07-17T00:00:00Z"
+  }
+}

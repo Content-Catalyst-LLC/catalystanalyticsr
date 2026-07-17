@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_governance_demo_export.schema.json",
+  "title": "Catalyst Analytics R browser governance export",
+  "type": "object",
+  "required": ["schema_version", "export_type", "demo_version", "generated_at", "contract", "inputs", "calibration", "validation", "numerical_evidence", "governance", "review_boundary"],
+  "properties": {
+    "schema_version": {"const": "1.7.0"},
+    "export_type": {"const": "browser_model_validation_governance"},
+    "demo_version": {"const": "1.7.0"},
+    "generated_at": {"type": "string"},
+    "contract": {"type": "object", "required": ["compatible_repository_version", "calibration_contract_version", "validation_contract_version", "governance_contract_version", "parity_status"]},
+    "inputs": {"type": "object"},
+    "calibration": {"type": "object", "required": ["parameter", "initial", "estimate", "objective", "objective_value", "converged"]},
+    "validation": {"type": "object", "required": ["status", "metrics", "residuals", "checks"]},
+    "numerical_evidence": {"type": "object"},
+    "governance": {"type": "object", "required": ["lifecycle_status", "intended_use", "prohibited_uses", "assumptions", "limitations", "approval_scope"]},
+    "review_boundary": {"type": "object"}
+  },
+  "additionalProperties": true
+}

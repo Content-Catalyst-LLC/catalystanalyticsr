@@ -404,7 +404,7 @@ scenario_to_json <- function(scenario, path = NULL, pretty = TRUE) {
   .assert_flag(pretty, "pretty")
   scenario <- as_catalyst_scenario(scenario)
   payload <- jsonlite::toJSON(
-    unclass(scenario),
+    .safe_json_value(unclass(scenario)),
     auto_unbox = TRUE,
     pretty = pretty,
     null = "null",

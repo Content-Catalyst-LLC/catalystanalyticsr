@@ -6,7 +6,17 @@ Catalyst Analytics R is the reproducible statistical, scenario-modeling, uncerta
 **WordPress companion:** `1.6.0`  
 **Shortcode:** `[catalyst_analytics_r_demo]`
 
-## v0.7.0 capabilities
+## v0.8.0 calibration, validation, and governance
+
+Catalyst Analytics R now supports bounded parameter calibration, historical and holdout validation, error metrics, residual diagnostics, solver and time-step benchmarks, stability and invariant checks, model cards, parameter cards, assumption and limitation ledgers, reviewer approvals, and governed lifecycle transitions. The release keeps a strict distinction between numerical fit and approved use: a model may fit a benchmark and still remain prohibited for forecasting, compliance, or professional advice.
+
+```r
+spec <- calibration_spec(list(regen = list(target = "parameters.regen", initial = 0.02, lower = 0, upper = 0.08)))
+calibration <- calibrate_model(scenario, observations, spec)
+validation <- validate_model_fit(calibration, thresholds = list(rmse = 0.01))
+```
+
+## v0.8.0 capabilities
 
 - Produced-, human-, and natural-capital stock-and-flow accounts
 - Declared shadow prices and reconciliation errors

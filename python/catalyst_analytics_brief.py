@@ -337,8 +337,42 @@ def inclusive_development_brief(payload: dict) -> str:
     return "\n".join(lines)
 
 
+
+def model_validation_brief(payload: dict) -> str:
+    summary_rows = payload.get("summary", [])
+    summary = summary_rows[-1] if isinstance(summary_rows, list) and summary_rows else summary_rows if isinstance(summary_rows, dict) else {}
+    calibration = payload.get("calibration", {})
+    validation = payload.get("validation", {})
+    governance = payload.get("governance", {})
+    card = governance.get("model_card", {})
+    parameters = calibration.get("parameters", [])
+    limitations = card.get("limitations", governance.get("limitations", []))
+    lines = [
+        "# Catalyst Analytics R Model Validation Brief", "",
+        f"**Analysis:** {payload.get('title', payload.get('analysis_id', 'Model validation'))}",
+        f"**Model:** {summary.get('model_id', calibration.get('model', {}).get('id', 'n/a'))}@{summary.get('model_version', calibration.get('model', {}).get('version', 'n/a'))}",
+        f"**Validation status:** {summary.get('validation_status', validation.get('status', 'n/a'))}",
+        f"**Lifecycle:** {summary.get('lifecycle_status', governance.get('lifecycle_status', 'n/a'))}", "",
+        "## Calibrated parameters", "",
+    ]
+    if parameters:
+        for row in parameters:
+            lines.append(f"- {row.get('parameter', 'parameter')}: {row.get('estimate', 'n/a')} (initial {row.get('initial', 'n/a')}, bounds {row.get('lower', 'n/a')} to {row.get('upper', 'n/a')})")
+    else:
+        lines.append("- No calibrated parameters were included.")
+    lines.extend(["", "## Validation evidence", "", f"- Calibration objective: {summary.get('calibration_objective', calibration.get('objective', 'n/a'))}", f"- Holdout RMSE: {summary.get('holdout_rmse', 'n/a')}", f"- Holdout MAE: {summary.get('holdout_mae', 'n/a')}", f"- Stability passed: {summary.get('stability_passed', 'n/a')}", "", "## Known limitations", ""])
+    if limitations:
+        for item in limitations:
+            lines.append(f"- [{item.get('severity', 'unknown')}] {item.get('title', item.get('id', 'Limitation'))}: {item.get('description', '')}")
+    else:
+        lines.append("- No limitations were included.")
+    lines.extend(["", "## Review boundary", "", "Calibration fit does not automatically establish causal validity, forecasting accuracy, compliance suitability, or professional fitness. Intended use, validation thresholds, numerical tolerances, limitations, and lifecycle approval require qualified human review.", ""])
+    return "\n".join(lines)
+
 def brief(payload: dict) -> str:
     engine = payload.get("engine", {})
+    if payload.get("export_type") in ("model_validation_governance", "browser_model_validation_governance") or payload.get("analysis_type") == "calibration_validation_model_governance":
+        return model_validation_brief(payload)
     if payload.get("export_type") == "browser_inclusive_development" or payload.get("analysis_type") == "inclusive_wealth_human_development_distribution":
         return inclusive_development_brief(payload)
     if payload.get("export_type") == "browser_climate_accounting" or ("inventory" in payload and "carbon" in payload and "natural_capital" in payload):

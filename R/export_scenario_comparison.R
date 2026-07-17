@@ -104,7 +104,7 @@ export_scenario_comparison <- function(
     boundary = list(forecast = FALSE, compliance = FALSE, professional_advice = FALSE)
   )
   summary_path <- file.path(out_dir, "comparison.json")
-  jsonlite::write_json(summary_payload, summary_path, auto_unbox = TRUE, pretty = TRUE, null = "null", dataframe = "rows")
+  jsonlite::write_json(.safe_json_value(summary_payload), summary_path, auto_unbox = TRUE, pretty = TRUE, null = "null", dataframe = "rows")
   written <- c(written, summary_path)
 
   relative_paths <- function(paths) substring(paths, nchar(out_dir) + 2L)
@@ -132,7 +132,7 @@ export_scenario_comparison <- function(
     file_inventory = inventory(written)
   )
   manifest_path <- file.path(out_dir, "manifest.json")
-  jsonlite::write_json(manifest, manifest_path, auto_unbox = TRUE, pretty = TRUE, null = "null")
+  jsonlite::write_json(.safe_json_value(manifest), manifest_path, auto_unbox = TRUE, pretty = TRUE, null = "null")
   written <- c(written, manifest_path)
 
   zip_path <- NULL

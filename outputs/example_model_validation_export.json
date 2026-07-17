@@ -1,0 +1,595 @@
+{
+  "schema_version": "1.0.0",
+  "export_type": "model_validation_governance",
+  "analysis_id": "khncpa-v080-validation",
+  "title": "KH-NC-PA calibration, validation, and governance",
+  "summary": [
+    {
+      "analysis_id": "khncpa-v080-validation",
+      "model_id": "khncpa",
+      "model_version": "1.0.0",
+      "calibration_objective": 0.0008451542547285736,
+      "calibration_converged": true,
+      "validation_status": "passed",
+      "holdout_rmse": 0.0009999999999999638,
+      "holdout_mae": 0.0009999999999999638,
+      "solver_cases": 4,
+      "stability_passed": true,
+      "lifecycle_status": "validated_for_specified_use",
+      "open_limitations": 2
+    }
+  ],
+  "calibration": {
+    "schema_version": "1.0.0",
+    "calibration_id": "khncpa-natural-capital-calibration",
+    "model": {
+      "id": "khncpa",
+      "version": "1.0.0"
+    },
+    "specification": {
+      "schema_version": "1.0.0",
+      "id": "khncpa-natural-capital-calibration",
+      "title": "KH-NC-PA natural-capital calibration",
+      "parameters": {
+        "regen": {
+          "name": "regen",
+          "target": "parameters.regen",
+          "initial": 0.02,
+          "lower": 0.0,
+          "upper": 0.08,
+          "transform": "identity",
+          "unit": "fraction_per_year",
+          "description": "Natural-capital regeneration rate"
+        }
+      },
+      "objective": "weighted_rmse",
+      "method": "L-BFGS-B",
+      "control": {
+        "maxit": 250,
+        "tolerance": 1e-08
+      },
+      "meta": {
+        "created_at": "2026-07-17T00:00:00Z",
+        "package_version": "0.8.0"
+      }
+    },
+    "parameters": [
+      {
+        "parameter": "regen",
+        "target": "parameters.regen",
+        "initial": 0.02,
+        "estimate": 0.034,
+        "lower": 0.0,
+        "upper": 0.08,
+        "unit": "fraction_per_year",
+        "at_lower_bound": false,
+        "at_upper_bound": false
+      }
+    ],
+    "objective": 0.0008451542547285736,
+    "convergence": {
+      "code": 0,
+      "message": "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH",
+      "evaluations": {
+        "function": 18,
+        "gradient": 18
+      }
+    },
+    "fitted": [
+      {
+        "time": 0,
+        "model_time": 0,
+        "metric": "N",
+        "observed": 1.0,
+        "predicted": 1.0,
+        "weight": 1,
+        "split": "calibration",
+        "residual": 0.0
+      },
+      {
+        "time": 1,
+        "model_time": 1,
+        "metric": "N",
+        "observed": 1.019,
+        "predicted": 1.02,
+        "weight": 1,
+        "split": "calibration",
+        "residual": -0.001000000000000112
+      },
+      {
+        "time": 2,
+        "model_time": 2,
+        "metric": "N",
+        "observed": 1.041,
+        "predicted": 1.04,
+        "weight": 1,
+        "split": "calibration",
+        "residual": 0.0009999999999998899
+      },
+      {
+        "time": 3,
+        "model_time": 3,
+        "metric": "N",
+        "observed": 1.061,
+        "predicted": 1.061,
+        "weight": 1,
+        "split": "calibration",
+        "residual": 0.0
+      },
+      {
+        "time": 4,
+        "model_time": 4,
+        "metric": "N",
+        "observed": 1.084,
+        "predicted": 1.083,
+        "weight": 1,
+        "split": "calibration",
+        "residual": 0.001000000000000112
+      },
+      {
+        "time": 5,
+        "model_time": 5,
+        "metric": "N",
+        "observed": 1.105,
+        "predicted": 1.106,
+        "weight": 1,
+        "split": "calibration",
+        "residual": -0.001000000000000112
+      },
+      {
+        "time": 6,
+        "model_time": 6,
+        "metric": "N",
+        "observed": 1.129,
+        "predicted": 1.128,
+        "weight": 1,
+        "split": "calibration",
+        "residual": 0.001000000000000112
+      },
+      {
+        "time": 7,
+        "model_time": 7,
+        "metric": "N",
+        "observed": 1.151,
+        "predicted": 1.152,
+        "weight": 1,
+        "split": "holdout",
+        "residual": -0.0009999999999998899
+      },
+      {
+        "time": 8,
+        "model_time": 8,
+        "metric": "N",
+        "observed": 1.174,
+        "predicted": 1.175,
+        "weight": 1,
+        "split": "holdout",
+        "residual": -0.001000000000000112
+      },
+      {
+        "time": 9,
+        "model_time": 9,
+        "metric": "N",
+        "observed": 1.198,
+        "predicted": 1.197,
+        "weight": 1,
+        "split": "holdout",
+        "residual": 0.0009999999999998899
+      }
+    ]
+  },
+  "validation": {
+    "schema_version": "1.0.0",
+    "validation_id": "khncpa-natural-capital-calibration-validation",
+    "status": "passed",
+    "metrics": [
+      {
+        "split": "calibration",
+        "metric": "N",
+        "n": 7,
+        "mae": 0.0007142857142857625,
+        "rmse": 0.0008451542547285736,
+        "mape": 0.06650278936538352,
+        "smape": 0.06650834882902062,
+        "bias": 0.00014285714285712712,
+        "r_squared": 0.9996140018086772
+      },
+      {
+        "split": "holdout",
+        "metric": "N",
+        "n": 3,
+        "mae": 0.0009999999999999638,
+        "rmse": 0.0009999999999999638,
+        "mape": 0.08517743426529366,
+        "smape": 0.08516438956835416,
+        "bias": -0.0003333333333333706,
+        "r_squared": 0.9972842486421245
+      }
+    ],
+    "residual_diagnostics": [
+      {
+        "split": "calibration",
+        "metric": "N",
+        "n": 7,
+        "mean_residual": 0.00014285714285712712,
+        "residual_sd": 0.0008997354108425027,
+        "lag1_autocorrelation": -0.6822882392210181,
+        "absolute_residual_fitted_correlation": 0.08,
+        "shapiro_wilk_p_value": 0.71,
+        "max_absolute_residual": 0.001000000000000112
+      },
+      {
+        "split": "holdout",
+        "metric": "N",
+        "n": 3,
+        "mean_residual": -0.0003333333333333706,
+        "residual_sd": 0.0011547005383791885,
+        "lag1_autocorrelation": -1.0,
+        "absolute_residual_fitted_correlation": -0.12,
+        "shapiro_wilk_p_value": 0.64,
+        "max_absolute_residual": 0.001000000000000112
+      }
+    ],
+    "thresholds": {
+      "rmse": 0.01,
+      "mae": 0.01,
+      "absolute_bias": 0.005,
+      "minimum_r_squared": 0.98
+    },
+    "checks": [
+      {
+        "split": "calibration",
+        "metric": "N",
+        "check": "rmse",
+        "observed": 0.0008451542547285736,
+        "operator": "<=",
+        "reference": 0.01,
+        "passed": true
+      },
+      {
+        "split": "calibration",
+        "metric": "N",
+        "check": "mae",
+        "observed": 0.0007142857142857625,
+        "operator": "<=",
+        "reference": 0.01,
+        "passed": true
+      },
+      {
+        "split": "calibration",
+        "metric": "N",
+        "check": "absolute_bias",
+        "observed": 0.00014285714285712712,
+        "operator": "<=",
+        "reference": 0.005,
+        "passed": true
+      },
+      {
+        "split": "calibration",
+        "metric": "N",
+        "check": "minimum_r_squared",
+        "observed": 0.9996140018086772,
+        "operator": ">=",
+        "reference": 0.98,
+        "passed": true
+      },
+      {
+        "split": "holdout",
+        "metric": "N",
+        "check": "rmse",
+        "observed": 0.0009999999999999638,
+        "operator": "<=",
+        "reference": 0.01,
+        "passed": true
+      },
+      {
+        "split": "holdout",
+        "metric": "N",
+        "check": "mae",
+        "observed": 0.0009999999999999638,
+        "operator": "<=",
+        "reference": 0.01,
+        "passed": true
+      },
+      {
+        "split": "holdout",
+        "metric": "N",
+        "check": "absolute_bias",
+        "observed": 0.0003333333333333706,
+        "operator": "<=",
+        "reference": 0.005,
+        "passed": true
+      },
+      {
+        "split": "holdout",
+        "metric": "N",
+        "check": "minimum_r_squared",
+        "observed": 0.9972842486421245,
+        "operator": ">=",
+        "reference": 0.98,
+        "passed": true
+      }
+    ]
+  },
+  "solver_benchmark": {
+    "schema_version": "1.0.0",
+    "scenario_id": "canonical-baseline",
+    "reference": {
+      "method": "rk4",
+      "step": 0.25
+    },
+    "summary": [
+      {
+        "method": "rk4",
+        "step": 0.25,
+        "success": true,
+        "elapsed_seconds": 0.016,
+        "max_absolute_terminal_error": 0.0,
+        "mean_absolute_terminal_error": 0.0,
+        "message": ""
+      },
+      {
+        "method": "rk4",
+        "step": 0.5,
+        "success": true,
+        "elapsed_seconds": 0.009,
+        "max_absolute_terminal_error": 8e-05,
+        "mean_absolute_terminal_error": 3e-05,
+        "message": ""
+      },
+      {
+        "method": "euler",
+        "step": 0.5,
+        "success": true,
+        "elapsed_seconds": 0.006,
+        "max_absolute_terminal_error": 0.0062,
+        "mean_absolute_terminal_error": 0.0021,
+        "message": ""
+      },
+      {
+        "method": "euler",
+        "step": 1.0,
+        "success": true,
+        "elapsed_seconds": 0.004,
+        "max_absolute_terminal_error": 0.0138,
+        "mean_absolute_terminal_error": 0.0047,
+        "message": ""
+      }
+    ],
+    "terminal_values": [],
+    "meta": {
+      "created_at": "2026-07-17T00:00:00Z",
+      "package_version": "0.8.0"
+    }
+  },
+  "stability_assessment": {
+    "schema_version": "1.0.0",
+    "scenario_id": "canonical-baseline",
+    "perturbation_fraction": 0.01,
+    "tolerance": 0.1,
+    "perturbations": [
+      {
+        "perturbation": "initial_state.K",
+        "max_relative_terminal_divergence": 0.007,
+        "stable": true
+      },
+      {
+        "perturbation": "initial_state.H",
+        "max_relative_terminal_divergence": 0.006,
+        "stable": true
+      },
+      {
+        "perturbation": "initial_state.N",
+        "max_relative_terminal_divergence": 0.009,
+        "stable": true
+      }
+    ],
+    "invariants": [
+      {
+        "invariant": "K_finite_nonnegative",
+        "passed": true
+      },
+      {
+        "invariant": "H_finite_nonnegative",
+        "passed": true
+      },
+      {
+        "invariant": "N_finite_nonnegative",
+        "passed": true
+      },
+      {
+        "invariant": "strictly_increasing_time",
+        "passed": true
+      }
+    ],
+    "boundary_conditions": [
+      {
+        "case": "zero_natural_capital",
+        "expected": "runs_or_controlled_failure",
+        "observed": "run",
+        "passed": true
+      },
+      {
+        "case": "zero_population",
+        "expected": "runs_or_controlled_failure",
+        "observed": "controlled_failure",
+        "passed": true
+      },
+      {
+        "case": "negative_capital_rejected",
+        "expected": "validation_failure",
+        "observed": "validation_failure",
+        "passed": true
+      }
+    ],
+    "stable": true,
+    "meta": {
+      "created_at": "2026-07-17T00:00:00Z",
+      "package_version": "0.8.0"
+    }
+  },
+  "governance": {
+    "schema_version": "1.0.0",
+    "governance_id": "khncpa-1.0.0-governance",
+    "model_card": {
+      "schema_version": "1.0.0",
+      "model": {
+        "id": "khncpa",
+        "version": "1.0.0",
+        "title": "KH-NC-PA Vector Dynamics Model",
+        "description": "Coupled sustainability scenario model."
+      },
+      "intended_uses": [
+        "exploratory scenario analysis",
+        "method development",
+        "educational comparison"
+      ],
+      "prohibited_uses": [
+        "forecast",
+        "compliance determination",
+        "professional advice"
+      ],
+      "owner": "Content Catalyst LLC",
+      "methodology_refs": [
+        "docs/methodology.md",
+        "docs/calibration-validation-model-governance.md"
+      ],
+      "parameters": [
+        {
+          "schema_version": "1.0.0",
+          "id": "regen",
+          "title": "Natural-capital regeneration rate",
+          "description": "Annual proportional regeneration of natural capital.",
+          "unit": "fraction_per_year",
+          "default": 0.02,
+          "bounds": {
+            "lower": 0.0,
+            "upper": 0.08
+          },
+          "source": {
+            "id": "methodology-v1",
+            "citation": "Catalyst Analytics R methodology v0.8.0"
+          },
+          "calibrated": true,
+          "sensitivity": "high",
+          "review_status": "reviewed"
+        }
+      ],
+      "assumptions": [
+        {
+          "schema_version": "1.0.0",
+          "id": "constant-regeneration",
+          "statement": "The calibration period uses one constant regeneration parameter.",
+          "rationale": "The release demonstrates governed calibration before time-varying parameters are introduced.",
+          "evidence_refs": [
+            "sample-historical-natural-capital-v1"
+          ],
+          "owner": "model-owner",
+          "status": "accepted_for_validation",
+          "review_due": "2027-01-31"
+        }
+      ],
+      "limitations": [
+        {
+          "schema_version": "1.0.0",
+          "id": "synthetic-benchmark-only",
+          "title": "Synthetic benchmark data",
+          "description": "The included evidence is deterministic synthetic data and does not establish real-world forecasting validity.",
+          "severity": "high",
+          "affected_uses": [
+            "forecast",
+            "regulatory_compliance",
+            "investment_decision"
+          ],
+          "mitigation": "Calibrate and validate with approved observational data before any real-world use.",
+          "status": "open"
+        },
+        {
+          "schema_version": "1.0.0",
+          "id": "structural-uncertainty",
+          "title": "Structural uncertainty remains",
+          "description": "Good historical fit does not demonstrate that the model structure captures all causal mechanisms.",
+          "severity": "moderate",
+          "affected_uses": [
+            "long_horizon_projection"
+          ],
+          "mitigation": "Compare alternative structures and disclose scenario dependence.",
+          "status": "open"
+        }
+      ],
+      "evidence": {
+        "calibration": [
+          "khncpa-natural-capital-calibration"
+        ],
+        "validation": [
+          "khncpa-natural-capital-calibration-validation"
+        ]
+      },
+      "lifecycle_status": "validated_for_specified_use",
+      "created_at": "2026-07-17T00:00:00Z",
+      "updated_at": "2026-07-17T00:00:00Z"
+    },
+    "lifecycle_status": "validated_for_specified_use",
+    "reviewers": [
+      {
+        "name": "Model reviewer",
+        "role": "method reviewer",
+        "status": "approved"
+      }
+    ],
+    "approvals": [
+      {
+        "reviewer": "Model reviewer",
+        "decision": "approved_for_specified_use",
+        "date": "2026-07-17T00:00:00Z",
+        "scope": "synthetic benchmark and educational scenario analysis"
+      }
+    ],
+    "notes": [
+      {
+        "reviewer": "Model reviewer",
+        "note": "Approved only for the specified synthetic benchmark and educational use boundary.",
+        "date": "2026-07-17T00:00:00Z"
+      }
+    ],
+    "transition_history": [
+      {
+        "from": null,
+        "to": "experimental",
+        "reviewer": "system",
+        "note": "Initial governance record",
+        "date": "2026-07-17T00:00:00Z"
+      },
+      {
+        "from": "experimental",
+        "to": "under_review",
+        "reviewer": "Model reviewer",
+        "note": "Calibration and validation evidence submitted.",
+        "date": "2026-07-17T00:00:00Z"
+      },
+      {
+        "from": "under_review",
+        "to": "validated_for_specified_use",
+        "reviewer": "Model reviewer",
+        "note": "Evidence accepted within stated use boundary.",
+        "date": "2026-07-17T00:00:00Z"
+      }
+    ],
+    "effective_date": "2026-07-17",
+    "updated_at": "2026-07-17T00:00:00Z"
+  },
+  "review_boundary": {
+    "calibration_requires_review": true,
+    "validation_thresholds_require_review": true,
+    "numerical_tolerances_require_review": true,
+    "intended_use_requires_approval": true,
+    "limitations_must_be_disclosed": true,
+    "not_forecast_or_professional_advice": true
+  },
+  "meta": {
+    "package_version": "0.8.0",
+    "created_at": "2026-07-17T00:00:00Z",
+    "review_status": "reviewed",
+    "methodology_boundary": "Calibration quality, validation thresholds, solver tolerances, intended use, and lifecycle approval require human review"
+  }
+}

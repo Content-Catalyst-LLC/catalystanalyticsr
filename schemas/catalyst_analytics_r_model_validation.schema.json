@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_model_validation.schema.json",
+  "title": "Catalyst Analytics R calibration, validation, and governance export",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "export_type",
+    "analysis_id",
+    "summary",
+    "calibration",
+    "validation",
+    "governance",
+    "review_boundary",
+    "meta"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "export_type": {
+      "const": "model_validation_governance"
+    },
+    "analysis_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "array",
+      "minItems": 1
+    },
+    "calibration": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "calibration_id",
+        "model",
+        "specification",
+        "parameters",
+        "objective",
+        "convergence",
+        "fitted"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "objective": {
+          "type": "number",
+          "minimum": 0
+        },
+        "parameters": {
+          "type": "array",
+          "minItems": 1
+        },
+        "fitted": {
+          "type": "array",
+          "minItems": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "validation_id",
+        "status",
+        "metrics",
+        "residual_diagnostics",
+        "thresholds",
+        "checks"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "not_assessed"
+          ]
+        },
+        "metrics": {
+          "type": "array",
+          "minItems": 1
+        },
+        "residual_diagnostics": {
+          "type": "array",
+          "minItems": 1
+        },
+        "checks": {
+          "type": "array"
+        }
+      },
+      "additionalProperties": true
+    },
+    "solver_benchmark": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "stability_assessment": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "governance_id",
+        "model_card",
+        "lifecycle_status",
+        "transition_history"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "lifecycle_status": {
+          "enum": [
+            "experimental",
+            "under_review",
+            "validated_for_specified_use",
+            "deprecated",
+            "archived"
+          ]
+        },
+        "transition_history": {
+          "type": "array",
+          "minItems": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "review_boundary": {
+      "type": "object",
+      "required": [
+        "calibration_requires_review",
+        "validation_thresholds_require_review",
+        "numerical_tolerances_require_review",
+        "intended_use_requires_approval",
+        "limitations_must_be_disclosed",
+        "not_forecast_or_professional_advice"
+      ]
+    },
+    "meta": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

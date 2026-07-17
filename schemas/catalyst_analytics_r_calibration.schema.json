@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_calibration.schema.json",
+  "title": "Catalyst Analytics R calibration",
+  "type": "object",
+  "required": ["schema_version", "calibration_id", "model", "specification", "parameters", "objective", "convergence", "fitted"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "calibration_id": {"type": "string", "minLength": 1},
+    "model": {"type": "object", "required": ["id", "version"]},
+    "specification": {"type": "object", "required": ["id", "parameters", "objective", "method"]},
+    "parameters": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["parameter", "target", "initial", "estimate", "lower", "upper", "unit"]}},
+    "objective": {"type": "number", "minimum": 0},
+    "convergence": {"type": "object", "required": ["code"]},
+    "fitted": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["time", "metric", "observed", "predicted", "split", "residual"]}}
+  },
+  "additionalProperties": true
+}

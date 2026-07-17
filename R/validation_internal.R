@@ -98,12 +98,55 @@
   "dev"
 }
 
-.safe_json_value <- function(x) {
+.safe_json_value <- function(x, .depth = 0L) {
+  if (.depth > 100L) return("<maximum-json-depth>")
+  next_depth <- .depth + 1L
+
+  if (is.null(x)) return(NULL)
   if (is.function(x)) return("<function>")
-  if (is.atomic(x) || is.null(x)) return(x)
-  if (is.data.frame(x)) return(x)
-  if (is.list(x)) return(lapply(x, .safe_json_value))
-  as.character(x)
+  if (is.environment(x)) return("<environment>")
+  if (inherits(x, "POSIXt")) {
+    return(format(as.POSIXct(x, tz = "UTC"), "%Y-%m-%dT%H:%M:%OSZ", tz = "UTC"))
+  }
+  if (inherits(x, "Date")) return(format(x, "%Y-%m-%d"))
+  if (inherits(x, "difftime")) return(as.numeric(x, units = "secs"))
+  if (is.factor(x)) return(as.character(x))
+  if (is.language(x)) return(paste(deparse(x, width.cutoff = 500L), collapse = " "))
+  if (is.data.frame(x)) {
+    out <- x
+    for (name in names(out)) out[[name]] <- .safe_json_value(out[[name]], next_depth)
+    rownames(out) <- NULL
+    return(out)
+  }
+  if (is.matrix(x) || is.array(x)) {
+    out <- unclass(x)
+    attributes(out) <- attributes(x)[intersect(names(attributes(x)), c("dim", "dimnames"))]
+    return(out)
+  }
+  if (is.raw(x)) return(vapply(x, function(value) sprintf("%02x", as.integer(value)), character(1)))
+  if (is.complex(x)) {
+    return(lapply(x, function(value) list(real = Re(value), imaginary = Im(value))))
+  }
+  if (is.atomic(x)) return(unclass(x))
+  if (is.pairlist(x)) {
+    out <- lapply(as.list(x), .safe_json_value, .depth = next_depth)
+    names(out) <- names(x)
+    return(out)
+  }
+  if (is.list(x)) {
+    out <- lapply(unclass(x), .safe_json_value, .depth = next_depth)
+    names(out) <- names(x)
+    return(out)
+  }
+
+  class_label <- paste(class(x), collapse = "/")
+  if (!nzchar(class_label)) class_label <- "unclassed"
+  converted <- tryCatch(
+    suppressWarnings(as.character(x)),
+    error = function(error) character()
+  )
+  if (is.character(converted) && length(converted) > 0L) return(unname(converted))
+  sprintf("<unsupported:%s:%s>", typeof(x), class_label)
 }
 
 .named_list_table <- function(x) {

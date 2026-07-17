@@ -403,7 +403,7 @@ dataset_fingerprint <- function(dataset) {
   }
   path <- tempfile(fileext = ".json")
   on.exit(unlink(path), add = TRUE)
-  jsonlite::write_json(record, path, auto_unbox = TRUE, pretty = FALSE, null = "null", digits = NA)
+  jsonlite::write_json(.safe_json_value(record), path, auto_unbox = TRUE, pretty = FALSE, null = "null", digits = NA)
   unname(tools::md5sum(path))
 }
 

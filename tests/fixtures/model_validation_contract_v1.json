@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "fixture_id": "model-validation-contract-v1",
+  "expected_estimate": 0.034,
+  "estimate_tolerance": 0.002,
+  "maximum_holdout_rmse": 0.01,
+  "expected_validation_status": "passed",
+  "expected_lifecycle_status": "validated_for_specified_use",
+  "minimum_solver_cases": 4,
+  "stability_expected": true,
+  "open_limitations": 2
+}

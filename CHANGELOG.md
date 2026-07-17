@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.8.0 - Calibration, Validation, and Model Governance
+
+### R CMD check repair 3
+
+- Updated the remaining v0.7.0 export-manifest expectations to v0.8.0.
+- Added pre-optimization validation for calibration targets.
+- Calibration now rejects unsupported sections and missing parameter, policy, or initial-state fields deterministically.
+- Added regression coverage for syntactically valid but unregistered calibration targets.
+
+### R CMD check serialization repair 2
+
+- Replaced the terminal JSON fallback with a non-throwing, class-aware descriptor.
+- Added explicit handling for raw, complex, pairlist, and excessive-depth values.
+- Added regression coverage for unsupported S4 objects and special R value types.
+- Preserved recursive sanitization for Catalyst records without invoking unsafe default character coercion.
+
+
+### R CMD check repair
+
+- Added recursive JSON sanitization for nested Catalyst S3 records, dates, timestamps, factors, language objects, functions, environments, matrices, and data-frame columns.
+- Corrected model-validation and governance exports so `jsonlite` never receives unsupported custom S3 classes.
+- Replaced ambiguous one-row data-frame coercion in solver benchmarks, stability assessment, and initial-state extraction with explicit per-metric scalar extraction.
+- Added regression coverage for governed JSON serialization and finite numerical benchmark evidence.
+
+- Added bounded model calibration through `stats::optim`.
+- Added calibration/holdout partitioning, error metrics, and residual diagnostics.
+- Added solver/time-step benchmarks, stability tests, invariants, and boundary checks.
+- Added model cards, parameter cards, assumptions, limitations, reviewers, approvals, and lifecycle transitions.
+- Added integrated validation/governance exports and browser companion v1.7.0.
+
 ## 0.7.0 - Inclusive Wealth, Human Development, and Distribution
 
 - Added produced-, human-, and natural-capital stock-and-flow accounts with reconciliation and declared shadow prices.

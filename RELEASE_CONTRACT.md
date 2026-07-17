@@ -2,14 +2,14 @@
 
 ## Canonical versions
 
-- Repository and R package: **0.7.0**
-- WordPress companion: **1.6.0**
+- Repository and R package: **0.8.0**
+- WordPress companion: **1.7.0**
 - Wealth contract: **1.0.0**
 - Human-development contract: **1.0.0**
 - Distribution contract: **1.0.0**
 - Composite-score contract: **1.0.0**
 - Inclusive-development contract: **1.0.0**
-- Browser inclusive-development export: **1.6.0**
+- Browser inclusive-development export: **1.7.0**
 
 All prior scenario, comparison, uncertainty, data, indicator, emissions, climate, natural-capital, and boundary contracts remain valid.
 
@@ -19,7 +19,7 @@ All prior scenario, comparison, uncertainty, data, indicator, emissions, climate
 python3 scripts/check_release.py
 Rscript scripts/check_r_sources.R
 R CMD build .
-R CMD check --no-manual catalystanalyticsr_0.7.0.tar.gz
+R CMD check --no-manual catalystanalyticsr_0.8.0.tar.gz
 ```
 
 ## Capital-account contract
@@ -53,4 +53,22 @@ R CMD check --no-manual catalystanalyticsr_0.7.0.tar.gz
 
 ## Browser boundary
 
-The WordPress companion performs deterministic educational calculations mapped to the v0.7.0 concepts. It does not execute R or verify data, capital valuations, shadow prices, social floors, survey weights, discount rates, or composite-score legitimacy.
+The WordPress companion performs deterministic educational calculations mapped to the v0.8.0 concepts. It does not execute R or verify data, capital valuations, shadow prices, social floors, survey weights, discount rates, or composite-score legitimacy.
+
+## v0.8.0 release gate
+
+The release must preserve calibration parameters, fitted observations, holdout metrics, residual diagnostics, solver benchmarks, stability and boundary evidence, known limitations, intended and prohibited uses, lifecycle state, reviewers, approvals, and transition history. Validated status requires both calibration and validation evidence.
+
+## Serialization and numerical extraction repair gate
+
+- Every model-validation export is passed through the recursive JSON sanitizer.
+- Nested custom S3 records must serialize without defining ad hoc `asJSON` methods.
+- Solver and stability comparisons extract named numeric scalars explicitly.
+- Dates and timestamps are emitted as portable ISO-formatted strings.
+
+## Calibration-target and version-expectation repair gate
+
+- All export tests expect package version `0.8.0`.
+- Calibration targets are validated before optimizer execution.
+- Only existing `parameters.*`, `policy.*`, and `initial_state.*` fields are accepted.
+- Unsupported or unregistered calibration targets fail with `Unsupported calibration target`.

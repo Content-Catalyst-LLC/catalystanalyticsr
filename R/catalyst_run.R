@@ -73,8 +73,9 @@ catalyst_run <- function(
     carbon_budget(res$trajectory_wide, budget = emissions_budget)
   }
 
-  state0 <- as.numeric(res$trajectory_wide[1, model_object$required_states])
-  names(state0) <- model_object$required_states
+  state0 <- vapply(model_object$required_states, function(state) {
+    as.numeric(res$trajectory_wide[[state]][1L])
+  }, numeric(1))
 
   pp <- NULL
   if (include_phase_plane && identical(model_object$id, "khncpa")) {

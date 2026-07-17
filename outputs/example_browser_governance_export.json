@@ -1,0 +1,336 @@
+{
+  "schema_version": "1.7.0",
+  "export_type": "browser_model_validation_governance",
+  "demo_version": "1.7.0",
+  "generated_at": "2026-07-17T00:00:00Z",
+  "contract": {
+    "engine": "browser_educational_companion",
+    "compatible_repository_version": "0.8.0",
+    "calibration_contract_version": "1.0.0",
+    "validation_contract_version": "1.0.0",
+    "governance_contract_version": "1.0.0",
+    "parity_status": "mapped_governance_contract_not_numerical_parity"
+  },
+  "inputs": {
+    "training_years": 7,
+    "holdout_years": 3,
+    "initial_parameter": 0.02,
+    "lower_bound": 0,
+    "upper_bound": 0.08,
+    "validation_rmse_threshold": 0.01
+  },
+  "calibration": {
+    "parameter": "regeneration_rate",
+    "initial": 0.02,
+    "estimate": 0.034,
+    "objective": "rmse",
+    "objective_value": 0.0008451542547285736,
+    "converged": true
+  },
+  "validation": {
+    "status": "passed",
+    "metrics": [
+      {
+        "split": "calibration",
+        "metric": "N",
+        "n": 7,
+        "mae": 0.0007142857142857625,
+        "rmse": 0.0008451542547285736,
+        "mape": 0.06650278936538352,
+        "smape": 0.06650834882902062,
+        "bias": 0.00014285714285712712,
+        "r_squared": 0.9996140018086772
+      },
+      {
+        "split": "holdout",
+        "metric": "N",
+        "n": 3,
+        "mae": 0.0009999999999999638,
+        "rmse": 0.0009999999999999638,
+        "mape": 0.08517743426529366,
+        "smape": 0.08516438956835416,
+        "bias": -0.0003333333333333706,
+        "r_squared": 0.9972842486421245
+      }
+    ],
+    "residuals": [
+      {
+        "time": 0,
+        "model_time": 0,
+        "metric": "N",
+        "observed": 1.0,
+        "predicted": 1.0,
+        "weight": 1,
+        "split": "calibration",
+        "residual": 0.0
+      },
+      {
+        "time": 1,
+        "model_time": 1,
+        "metric": "N",
+        "observed": 1.019,
+        "predicted": 1.02,
+        "weight": 1,
+        "split": "calibration",
+        "residual": -0.001000000000000112
+      },
+      {
+        "time": 2,
+        "model_time": 2,
+        "metric": "N",
+        "observed": 1.041,
+        "predicted": 1.04,
+        "weight": 1,
+        "split": "calibration",
+        "residual": 0.0009999999999998899
+      },
+      {
+        "time": 3,
+        "model_time": 3,
+        "metric": "N",
+        "observed": 1.061,
+        "predicted": 1.061,
+        "weight": 1,
+        "split": "calibration",
+        "residual": 0.0
+      },
+      {
+        "time": 4,
+        "model_time": 4,
+        "metric": "N",
+        "observed": 1.084,
+        "predicted": 1.083,
+        "weight": 1,
+        "split": "calibration",
+        "residual": 0.001000000000000112
+      },
+      {
+        "time": 5,
+        "model_time": 5,
+        "metric": "N",
+        "observed": 1.105,
+        "predicted": 1.106,
+        "weight": 1,
+        "split": "calibration",
+        "residual": -0.001000000000000112
+      },
+      {
+        "time": 6,
+        "model_time": 6,
+        "metric": "N",
+        "observed": 1.129,
+        "predicted": 1.128,
+        "weight": 1,
+        "split": "calibration",
+        "residual": 0.001000000000000112
+      },
+      {
+        "time": 7,
+        "model_time": 7,
+        "metric": "N",
+        "observed": 1.151,
+        "predicted": 1.152,
+        "weight": 1,
+        "split": "holdout",
+        "residual": -0.0009999999999998899
+      },
+      {
+        "time": 8,
+        "model_time": 8,
+        "metric": "N",
+        "observed": 1.174,
+        "predicted": 1.175,
+        "weight": 1,
+        "split": "holdout",
+        "residual": -0.001000000000000112
+      },
+      {
+        "time": 9,
+        "model_time": 9,
+        "metric": "N",
+        "observed": 1.198,
+        "predicted": 1.197,
+        "weight": 1,
+        "split": "holdout",
+        "residual": 0.0009999999999998899
+      }
+    ],
+    "checks": [
+      {
+        "split": "calibration",
+        "metric": "N",
+        "check": "rmse",
+        "observed": 0.0008451542547285736,
+        "operator": "<=",
+        "reference": 0.01,
+        "passed": true
+      },
+      {
+        "split": "calibration",
+        "metric": "N",
+        "check": "mae",
+        "observed": 0.0007142857142857625,
+        "operator": "<=",
+        "reference": 0.01,
+        "passed": true
+      },
+      {
+        "split": "calibration",
+        "metric": "N",
+        "check": "absolute_bias",
+        "observed": 0.00014285714285712712,
+        "operator": "<=",
+        "reference": 0.005,
+        "passed": true
+      },
+      {
+        "split": "calibration",
+        "metric": "N",
+        "check": "minimum_r_squared",
+        "observed": 0.9996140018086772,
+        "operator": ">=",
+        "reference": 0.98,
+        "passed": true
+      },
+      {
+        "split": "holdout",
+        "metric": "N",
+        "check": "rmse",
+        "observed": 0.0009999999999999638,
+        "operator": "<=",
+        "reference": 0.01,
+        "passed": true
+      },
+      {
+        "split": "holdout",
+        "metric": "N",
+        "check": "mae",
+        "observed": 0.0009999999999999638,
+        "operator": "<=",
+        "reference": 0.01,
+        "passed": true
+      },
+      {
+        "split": "holdout",
+        "metric": "N",
+        "check": "absolute_bias",
+        "observed": 0.0003333333333333706,
+        "operator": "<=",
+        "reference": 0.005,
+        "passed": true
+      },
+      {
+        "split": "holdout",
+        "metric": "N",
+        "check": "minimum_r_squared",
+        "observed": 0.9972842486421245,
+        "operator": ">=",
+        "reference": 0.98,
+        "passed": true
+      }
+    ]
+  },
+  "numerical_evidence": {
+    "solver_benchmark": [
+      {
+        "method": "rk4",
+        "step": 0.25,
+        "success": true,
+        "elapsed_seconds": 0.016,
+        "max_absolute_terminal_error": 0.0,
+        "mean_absolute_terminal_error": 0.0,
+        "message": ""
+      },
+      {
+        "method": "rk4",
+        "step": 0.5,
+        "success": true,
+        "elapsed_seconds": 0.009,
+        "max_absolute_terminal_error": 8e-05,
+        "mean_absolute_terminal_error": 3e-05,
+        "message": ""
+      },
+      {
+        "method": "euler",
+        "step": 0.5,
+        "success": true,
+        "elapsed_seconds": 0.006,
+        "max_absolute_terminal_error": 0.0062,
+        "mean_absolute_terminal_error": 0.0021,
+        "message": ""
+      },
+      {
+        "method": "euler",
+        "step": 1.0,
+        "success": true,
+        "elapsed_seconds": 0.004,
+        "max_absolute_terminal_error": 0.0138,
+        "mean_absolute_terminal_error": 0.0047,
+        "message": ""
+      }
+    ],
+    "stability_passed": true,
+    "invariants_passed": 4,
+    "boundary_cases_passed": 3
+  },
+  "governance": {
+    "lifecycle_status": "validated_for_specified_use",
+    "intended_use": "Educational synthetic benchmark only",
+    "prohibited_uses": [
+      "forecast",
+      "compliance determination",
+      "professional advice"
+    ],
+    "assumptions": [
+      {
+        "schema_version": "1.0.0",
+        "id": "constant-regeneration",
+        "statement": "The calibration period uses one constant regeneration parameter.",
+        "rationale": "The release demonstrates governed calibration before time-varying parameters are introduced.",
+        "evidence_refs": [
+          "sample-historical-natural-capital-v1"
+        ],
+        "owner": "model-owner",
+        "status": "accepted_for_validation",
+        "review_due": "2027-01-31"
+      }
+    ],
+    "limitations": [
+      {
+        "schema_version": "1.0.0",
+        "id": "synthetic-benchmark-only",
+        "title": "Synthetic benchmark data",
+        "description": "The included evidence is deterministic synthetic data and does not establish real-world forecasting validity.",
+        "severity": "high",
+        "affected_uses": [
+          "forecast",
+          "regulatory_compliance",
+          "investment_decision"
+        ],
+        "mitigation": "Calibrate and validate with approved observational data before any real-world use.",
+        "status": "open"
+      },
+      {
+        "schema_version": "1.0.0",
+        "id": "structural-uncertainty",
+        "title": "Structural uncertainty remains",
+        "description": "Good historical fit does not demonstrate that the model structure captures all causal mechanisms.",
+        "severity": "moderate",
+        "affected_uses": [
+          "long_horizon_projection"
+        ],
+        "mitigation": "Compare alternative structures and disclose scenario dependence.",
+        "status": "open"
+      }
+    ],
+    "approval_scope": "Synthetic benchmark and educational scenario analysis"
+  },
+  "review_boundary": {
+    "calibration_requires_review": true,
+    "validation_thresholds_require_review": true,
+    "numerical_tolerances_require_review": true,
+    "intended_use_requires_approval": true,
+    "limitations_must_be_disclosed": true,
+    "not_forecast_or_professional_advice": true
+  }
+}

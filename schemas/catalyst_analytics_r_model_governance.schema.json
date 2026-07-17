@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_model_governance.schema.json",
+  "title": "Catalyst Analytics R model governance",
+  "type": "object",
+  "required": ["schema_version", "governance_id", "model_card", "lifecycle_status", "transition_history"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "governance_id": {"type": "string", "minLength": 1},
+    "lifecycle_status": {"enum": ["experimental", "under_review", "validated_for_specified_use", "deprecated", "archived"]},
+    "model_card": {
+      "type": "object",
+      "required": ["schema_version", "model", "intended_uses", "prohibited_uses", "parameters", "assumptions", "limitations", "evidence", "lifecycle_status"],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "model": {"type": "object", "required": ["id", "version", "title"]},
+        "intended_uses": {"type": "array", "items": {"type": "string"}},
+        "prohibited_uses": {"type": "array", "items": {"type": "string"}},
+        "parameters": {"type": "array"},
+        "assumptions": {"type": "array"},
+        "limitations": {"type": "array"},
+        "evidence": {"type": "object", "required": ["calibration", "validation"]},
+        "lifecycle_status": {"enum": ["experimental", "under_review", "validated_for_specified_use", "deprecated", "archived"]}
+      },
+      "additionalProperties": true
+    },
+    "reviewers": {"type": "array"},
+    "approvals": {"type": "array"},
+    "notes": {"type": "array"},
+    "transition_history": {"type": "array", "minItems": 1}
+  },
+  "additionalProperties": true
+}
