@@ -7,6 +7,10 @@ Catalyst Analytics R is the reproducible statistical, scenario-modeling, uncerta
 **Shortcode:** `[catalyst_analytics_r_demo]`
 
 
+## Public API and platform handoffs
+
+Version 1.5.0 adds a transport-neutral `/v1` API manifest, governed request and response envelopes, in-process dispatch for validation and discovery, and first-party handoffs to Site Intelligence, Research Lab, Workbench, Catalyst Canvas, Decision Studio, and Knowledge Library. The host platform remains responsible for HTTP transport, authentication, authorization, rate limiting, and durable operations.
+
 ## v1.4.0 econometrics and policy evaluation
 
 - Governed regression specifications with classical, HC1, and clustered uncertainty

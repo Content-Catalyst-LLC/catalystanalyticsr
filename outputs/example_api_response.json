@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "response_type": "catalyst_public_api_response",
+  "request_id": "req-example-health",
+  "endpoint": "health",
+  "status": "ok",
+  "data": {
+    "status": "ok",
+    "package_version": "1.5.0",
+    "api_version": "v1"
+  },
+  "warnings": [],
+  "errors": [],
+  "package": {
+    "name": "catalystanalyticsr",
+    "version": "1.5.0"
+  },
+  "completed_at": "2026-07-17T00:00:01Z",
+  "boundary": {
+    "human_review_required": true,
+    "automated_publication": false,
+    "automated_decision_authorization": false
+  }
+}

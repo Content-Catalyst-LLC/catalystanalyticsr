@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-api-response-v1.json",
+  "title": "Catalyst Analytics R API response",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "response_type",
+    "request_id",
+    "endpoint",
+    "status",
+    "data",
+    "warnings",
+    "errors",
+    "package",
+    "completed_at",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "response_type": {
+      "const": "catalyst_public_api_response"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "accepted",
+        "error"
+      ]
+    },
+    "data": {},
+    "warnings": {
+      "type": "array"
+    },
+    "errors": {
+      "type": "array"
+    },
+    "package": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object"
+    }
+  }
+}

@@ -16,7 +16,7 @@ test_that("project publication exports portable analytical artifacts", {
 
   manifest <- jsonlite::read_json(paths$manifest, simplifyVector = TRUE)
   expect_identical(manifest$schema_version, "1.0.0")
-  expect_identical(manifest$package$version, "1.4.0")
+  expect_identical(manifest$package$version, "1.5.0")
   expect_identical(manifest$project_id, project$id)
   file_count <- if (is.data.frame(manifest$files)) nrow(manifest$files) else length(manifest$files)
   expect_gte(file_count, 8L)
@@ -33,7 +33,7 @@ test_that("platform handoffs preserve review and reproducibility boundaries", {
   expect_equal(length(decision$analytical_evidence), 1L)
   expect_equal(knowledge$handoff_type, "knowledge_library_methodology_package")
   expect_true(knowledge$publication_boundary$limitations_require_prominent_disclosure)
-  expect_equal(knowledge$reproducibility$package_version, "1.4.0")
+  expect_equal(knowledge$reproducibility$package_version, "1.5.0")
 })
 
 test_that("plot registration copies figures with integrity records", {

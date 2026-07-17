@@ -83,6 +83,9 @@
         },
         "policy_evaluations": {
           "type": "object"
+        },
+        "platform_handoffs": {
+          "type": "object"
         }
       }
     },

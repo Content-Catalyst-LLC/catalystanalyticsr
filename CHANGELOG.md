@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.5.0 repair — WordPress compatibility test parity
+
+- Updated the production-readiness regression test to expect WordPress companion v2.5.0.
+- Added a release-contract guard that rejects stale v2.4.0 compatibility expectations.
+- No package API, schema, analytical behavior, or WordPress companion code changed.
+
+
+## 1.5.0
+
+- Added a versioned public API manifest, endpoint records, request and response envelopes, and in-process dispatch.
+- Added first-party handoffs for Site Intelligence, Research Lab, Workbench, Catalyst Canvas, Decision Studio, and Knowledge Library.
+- Added portable handoff bundles, workspace storage, schemas, fixtures, tests, documentation, and WordPress companion v2.5.0.
+- Preserved human-review, provenance, licensing, uncertainty, and non-authorization boundaries across every platform transfer.
+
 ## 1.4.0
 
 ### v1.4.0 documentation repair V2

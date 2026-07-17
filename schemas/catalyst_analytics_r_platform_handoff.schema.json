@@ -1,29 +1,35 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-project-handoff-v1.json",
-  "title": "Catalyst Analytics R project handoff",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-platform-handoff-v1.json",
+  "title": "Sustainable Catalyst platform handoff",
   "type": "object",
   "additionalProperties": true,
   "required": [
     "schema_version",
     "handoff_type",
+    "target",
     "project_id",
     "project_fingerprint",
     "title",
-    "created_at"
+    "payload",
+    "provenance",
+    "review",
+    "boundary",
+    "created_at",
+    "package_version"
   ],
   "properties": {
     "schema_version": {
       "const": "1.0.0"
     },
-    "handoff_type": {
+    "target": {
       "enum": [
-        "site_intelligence_data_request",
-        "research_lab_compute_request",
-        "workbench_formula_package",
-        "catalyst_canvas_assumption_package",
-        "decision_studio_analytical_project",
-        "knowledge_library_methodology_package"
+        "site_intelligence",
+        "research_lab",
+        "workbench",
+        "catalyst_canvas",
+        "decision_studio",
+        "knowledge_library"
       ]
     },
     "project_id": {
@@ -33,15 +39,6 @@
       "type": "string",
       "pattern": "^[a-f0-9]{32}$"
     },
-    "title": {
-      "type": "string"
-    },
-    "created_at": {
-      "type": "string"
-    },
-    "target": {
-      "type": "string"
-    },
     "payload": {
       "type": "object"
     },
@@ -49,10 +46,17 @@
       "type": "object"
     },
     "review": {
-      "type": "object"
+      "type": "object",
+      "required": [
+        "status",
+        "human_reviewer_required"
+      ]
     },
     "boundary": {
-      "type": "object"
+      "type": "object",
+      "required": [
+        "human_review_required"
+      ]
     },
     "package_version": {
       "type": "string"

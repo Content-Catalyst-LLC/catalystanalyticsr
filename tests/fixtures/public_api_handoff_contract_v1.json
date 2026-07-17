@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "public_api_and_sustainable_catalyst_handoffs",
+  "repository_version": "1.5.0",
+  "api_version": "v1",
+  "targets": [
+    "site_intelligence",
+    "research_lab",
+    "workbench",
+    "catalyst_canvas",
+    "decision_studio",
+    "knowledge_library"
+  ],
+  "required_boundaries": [
+    "host platform supplies transport and authentication",
+    "receiving product validates contract",
+    "human review required",
+    "no automated publication or decision authorization"
+  ]
+}

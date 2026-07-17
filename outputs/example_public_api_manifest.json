@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "api_version": "v1",
+  "package": {
+    "name": "catalystanalyticsr",
+    "version": "1.5.0"
+  },
+  "base_path": "/v1",
+  "endpoints": {
+    "health": {
+      "schema_version": "1.0.0",
+      "id": "health",
+      "method": "GET",
+      "path": "/v1/health",
+      "title": "Package health",
+      "description": "Return package and contract status.",
+      "request_schema": null,
+      "response_schema": "catalyst_api_response@1.0.0",
+      "access": "public",
+      "side_effects": false
+    }
+  },
+  "contracts": {
+    "request": "catalyst_api_request@1.0.0",
+    "response": "catalyst_api_response@1.0.0",
+    "platform_handoff": "catalyst_platform_handoff@1.0.0"
+  },
+  "guarantees": {
+    "additive_minor_releases": true,
+    "explicit_contract_versions": true,
+    "durable_mutation_endpoints": false
+  },
+  "boundary": {
+    "transport_server_not_included": true,
+    "authentication_implemented_by_host_platform": true,
+    "human_review_required_for_publication_and_decisions": true
+  }
+}

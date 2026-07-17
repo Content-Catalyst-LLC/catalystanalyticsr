@@ -85,15 +85,17 @@
 #' @export
 decision_studio_handoff <- function(project) {
   validate_catalyst_project(project)
-  list(
-    schema_version = "1.0.0", handoff_type = "decision_studio_analytical_project", project_id = project$id,
-    project_fingerprint = project_fingerprint(project), title = project$title, question = project$description, scope = project$scope,
-    alternatives = lapply(project$scenarios, function(scenario) list(id = scenario$id, title = scenario$title, role = scenario$role, model = scenario$model, assumptions = scenario$assumptions, constraints = scenario$constraints)),
-    analytical_evidence = lapply(project$runs, function(run) list(id = run$id, label = run$label, status = run$status, scenario_ids = run$scenario_ids, result_summary = run$result_summary, input_hash = run$input_hash, output_hash = run$output_hash, warnings = run$warnings, errors = run$errors, review_status = run$review_status)),
-    interpretations = project$notes, reviews = project$reviews,
-    decision_boundary = list(human_decision_required = TRUE, uncertainty_must_be_disclosed = TRUE, limitations_must_be_disclosed = TRUE, approval_not_inferred_from_reproducibility = TRUE),
-    created_at = .utc_now(), package_version = .catalyst_package_version()
-  )
+  alternatives <- lapply(project$scenarios, function(scenario) list(id = scenario$id, title = scenario$title, role = scenario$role, model = scenario$model, assumptions = scenario$assumptions, constraints = scenario$constraints))
+  analytical_evidence <- lapply(project$runs, function(run) list(id = run$id, label = run$label, status = run$status, scenario_ids = run$scenario_ids, result_summary = run$result_summary, input_hash = run$input_hash, output_hash = run$output_hash, warnings = run$warnings, errors = run$errors, review_status = run$review_status))
+  decision_boundary <- list(human_decision_required = TRUE, uncertainty_must_be_disclosed = TRUE, limitations_must_be_disclosed = TRUE, approval_not_inferred_from_reproducibility = TRUE)
+  result <- .platform_common(project, "decision_studio", "decision_studio_analytical_project", project$title,
+    list(question = project$description, scope = project$scope, alternatives = alternatives, analytical_evidence = analytical_evidence, interpretations = project$notes, reviews = project$reviews),
+    c(decision_boundary, list(human_review_required = TRUE)),
+    review = list(status = project$metadata$review_status, human_reviewer_required = TRUE))
+  result$question <- project$description; result$scope <- project$scope; result$alternatives <- alternatives
+  result$analytical_evidence <- analytical_evidence; result$interpretations <- project$notes; result$reviews <- project$reviews
+  result$decision_boundary <- decision_boundary
+  result
 }
 
 #' Build a Knowledge Library methodology handoff
@@ -106,18 +108,19 @@ knowledge_library_handoff <- function(project) {
   sources <- list()
   for (dataset in project$datasets) sources[[length(sources) + 1L]] <- dataset$source
   assumptions <- unlist(lapply(project$scenarios, function(scenario) scenario$assumptions), recursive = FALSE)
-  list(
-    schema_version = "1.0.0", handoff_type = "knowledge_library_methodology_package", project_id = project$id,
-    project_fingerprint = project_fingerprint(project), title = paste0(project$title, " - Methodology and Reproducibility Record"),
-    abstract = project$description, scope = project$scope,
-    models = project$models, datasets = lapply(project$datasets, dataset_manifest), sources = sources,
-    assumptions = assumptions, parameter_sets = project$parameter_sets,
-    runs = lapply(project$runs, function(run) run[c("id", "label", "status", "model", "input_hash", "output_hash", "result_summary", "warnings", "errors", "review_status")]),
-    interpretations = project$notes, review_record = project$reviews,
-    reproducibility = list(environment = project$environment, snapshots = project$snapshots, package_version = .catalyst_package_version()),
-    publication_boundary = list(methodology_record_not_peer_review = TRUE, sources_require_citation_review = TRUE, limitations_require_prominent_disclosure = TRUE),
-    created_at = .utc_now()
-  )
+  runs <- lapply(project$runs, function(run) run[c("id", "label", "status", "model", "input_hash", "output_hash", "result_summary", "warnings", "errors", "review_status")])
+  reproducibility <- list(environment = project$environment, snapshots = project$snapshots, package_version = .catalyst_package_version())
+  publication_boundary <- list(methodology_record_not_peer_review = TRUE, sources_require_citation_review = TRUE, limitations_require_prominent_disclosure = TRUE)
+  title <- paste0(project$title, " - Methodology and Reproducibility Record")
+  result <- .platform_common(project, "knowledge_library", "knowledge_library_methodology_package", title,
+    list(abstract = project$description, scope = project$scope, models = project$models, datasets = lapply(project$datasets, dataset_manifest), sources = sources, assumptions = assumptions, parameter_sets = project$parameter_sets, runs = runs, interpretations = project$notes, review_record = project$reviews, reproducibility = reproducibility),
+    c(publication_boundary, list(human_review_required = TRUE)),
+    review = list(status = project$metadata$review_status, human_reviewer_required = TRUE))
+  result$abstract <- project$description; result$scope <- project$scope; result$models <- project$models
+  result$datasets <- lapply(project$datasets, dataset_manifest); result$sources <- sources; result$assumptions <- assumptions
+  result$parameter_sets <- project$parameter_sets; result$runs <- runs; result$interpretations <- project$notes
+  result$review_record <- project$reviews; result$reproducibility <- reproducibility; result$publication_boundary <- publication_boundary
+  result
 }
 
 .project_write_json <- function(value, path) {

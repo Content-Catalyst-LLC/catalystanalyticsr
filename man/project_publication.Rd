@@ -3,7 +3,7 @@
 \alias{knowledge_library_handoff}
 \alias{export_project_publication}
 \title{Analytical publication and platform handoffs}
-\description{Create portable publication bundles and governed handoffs for Decision Studio and Knowledge Library.}
+\description{Create portable publication bundles and governed first-party handoffs for Decision Studio and Knowledge Library using the shared platform-handoff contract.}
 \usage{
 decision_studio_handoff(project)
 

@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "handoff_type": "site_intelligence_data_request",
+  "target": "site_intelligence",
+  "project_id": "transition-evidence",
+  "project_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "title": "Transition evidence - Site Intelligence data request",
+  "payload": {
+    "datasets": [],
+    "requested_indicators": [
+      "emissions"
+    ],
+    "refresh_policy": "pinned_snapshot",
+    "scope": {
+      "geography": "WORLD"
+    }
+  },
+  "provenance": {
+    "package": {
+      "name": "catalystanalyticsr",
+      "version": "1.5.0"
+    },
+    "environment": {},
+    "project_snapshot_count": 1
+  },
+  "review": {
+    "status": "requires_review",
+    "human_reviewer_required": true
+  },
+  "boundary": {
+    "source_licenses_must_be_preserved": true,
+    "refresh_requires_approved_snapshot": true,
+    "external_data_not_treated_as_validated_model_evidence": true,
+    "human_review_required": true
+  },
+  "created_at": "2026-07-17T00:00:00Z",
+  "package_version": "1.5.0"
+}

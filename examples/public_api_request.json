@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "request_type": "catalyst_public_api_request",
+  "request_id": "req-example-health",
+  "endpoint": "health",
+  "payload": {},
+  "actor": {},
+  "context": {
+    "source": "example"
+  },
+  "submitted_at": "2026-07-17T00:00:00Z"
+}

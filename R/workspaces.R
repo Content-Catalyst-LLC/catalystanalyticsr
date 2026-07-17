@@ -135,7 +135,7 @@ catalyst_workspace <- function(workspace_id, title, description = "", owner = ""
     tags = unique(tags[nzchar(trimws(tags))]),
     active_project_id = NULL,
     projects = list(),
-    libraries = list(scenarios = list(), parameter_sets = list(), policy_packages = list(), regional_portfolios = list(), policy_optimizations = list(), policy_pathways = list(), policy_evaluations = list()),
+    libraries = list(scenarios = list(), parameter_sets = list(), policy_packages = list(), regional_portfolios = list(), policy_optimizations = list(), policy_pathways = list(), policy_evaluations = list(), platform_handoffs = list()),
     snapshots = list(),
     activity = list(),
     metadata = utils::modifyList(list(
@@ -208,6 +208,10 @@ validate_catalyst_workspace <- function(workspace) {
     for (entry in workspace$libraries$policy_evaluations) {
       if (!is.list(entry) || is.null(entry$id) || is.null(entry$title) || is.null(entry$fingerprint)) stop("Policy evaluation library entry is incomplete.", call. = FALSE)
     }
+  }
+  if (!is.null(workspace$libraries$platform_handoffs)) {
+    .workspace_named_list(workspace$libraries$platform_handoffs, "workspace$libraries$platform_handoffs")
+    invisible(lapply(workspace$libraries$platform_handoffs, validate_platform_handoff))
   }
   if (!is.list(workspace$snapshots) || !is.list(workspace$activity) || !is.list(workspace$metadata)) stop("Workspace snapshots, activity, and metadata must be lists.", call. = FALSE)
   restored_fingerprint <- workspace[[".restored_workspace_fingerprint", exact = TRUE]]
@@ -624,7 +628,7 @@ workspace_manifest <- function(workspace) {
     counts = list(
       projects = length(workspace$projects), scenarios = length(workspace$libraries$scenarios),
       parameter_sets = length(workspace$libraries$parameter_sets), policy_packages = length(workspace$libraries$policy_packages),
-      regional_portfolios = length(workspace$libraries$regional_portfolios), policy_optimizations = length(workspace$libraries$policy_optimizations), policy_pathways = length(workspace$libraries$policy_pathways), policy_evaluations = length(workspace$libraries$policy_evaluations), runs = nrow(workspace_run_history(workspace)), snapshots = length(workspace$snapshots)
+      regional_portfolios = length(workspace$libraries$regional_portfolios), policy_optimizations = length(workspace$libraries$policy_optimizations), policy_pathways = length(workspace$libraries$policy_pathways), policy_evaluations = length(workspace$libraries$policy_evaluations), platform_handoffs = length(workspace$libraries$platform_handoffs), runs = nrow(workspace_run_history(workspace)), snapshots = length(workspace$snapshots)
     ),
     projects = lapply(workspace$projects, function(project) list(id = project$id, title = project$title, fingerprint = project_fingerprint(project), review_status = project$metadata$review_status, publication_status = project$metadata$publication_status)),
     scenario_library = lapply(workspace$libraries$scenarios, function(entry) entry[c("id", "title", "description", "tags", "source_project_id", "fingerprint")]),
@@ -633,6 +637,7 @@ workspace_manifest <- function(workspace) {
     regional_portfolios = lapply(workspace$libraries$regional_portfolios, function(portfolio) list(id=portfolio$id,title=portfolio$title,members=length(portfolio$members),fingerprint=.project_hash(portfolio))),
     policy_optimizations = workspace$libraries$policy_optimizations,
     policy_evaluations = workspace$libraries$policy_evaluations,
+    platform_handoffs = lapply(workspace$libraries$platform_handoffs, function(handoff) list(target = handoff$target, handoff_type = handoff$handoff_type, project_id = handoff$project_id, project_fingerprint = handoff$project_fingerprint, review_status = handoff$review$status)),
     policy_pathways = lapply(workspace$libraries$policy_pathways, function(pathway) list(id=pathway$id,title=pathway$title,stages=length(pathway$stages),fingerprint=.project_hash(pathway))),
     snapshots = lapply(workspace$snapshots, function(entry) entry[c("id", "note", "created_at", "workspace_fingerprint")]),
     metadata = workspace$metadata
@@ -668,6 +673,7 @@ workspace_from_json <- function(path) {
   workspace <- jsonlite::fromJSON(path, simplifyVector = FALSE)
   if (!is.list(workspace)) stop("Workspace JSON root must be an object.", call. = FALSE)
   if (!"active_project_id" %in% names(workspace)) workspace["active_project_id"] <- list(NULL)
+  if (is.null(workspace$libraries$platform_handoffs)) workspace$libraries$platform_handoffs <- list()
   workspace <- .workspace_restore_classes(workspace)
   validate_catalyst_workspace(workspace)
   workspace
@@ -697,6 +703,7 @@ workspace_from_json <- function(path) {
     paste0("- Regional portfolios: ", length(workspace$libraries$regional_portfolios)),
     paste0("- Policy optimizations: ", length(workspace$libraries$policy_optimizations)),
     paste0("- Policy evaluations: ", length(workspace$libraries$policy_evaluations)),
+    paste0("- Platform handoffs: ", length(workspace$libraries$platform_handoffs)),
     paste0("- Adaptive policy pathways: ", length(workspace$libraries$policy_pathways)),
     paste0("- Consolidated run records: ", nrow(history)),
     paste0("- Workspace snapshots: ", length(workspace$snapshots)), "",
@@ -751,6 +758,8 @@ export_workspace <- function(workspace, dir = ".", prefix = "catalyst-workspace"
   paths$policy_pathways <- file.path(bundle_dir, "policy-pathways.csv"); utils::write.csv(pathway_index, paths$policy_pathways, row.names = FALSE)
   evaluation_index <- if (!length(workspace$libraries$policy_evaluations)) data.frame(id=character(),title=character(),identification_status=character(),review_status=character(),fingerprint=character(),stringsAsFactors=FALSE) else do.call(rbind,lapply(workspace$libraries$policy_evaluations,function(entry)data.frame(id=entry$id,title=entry$title,identification_status=entry$identification_status,review_status=entry$review_status,fingerprint=entry$fingerprint,stringsAsFactors=FALSE)))
   paths$policy_evaluations <- file.path(bundle_dir, "policy-evaluations.csv"); utils::write.csv(evaluation_index, paths$policy_evaluations, row.names = FALSE)
+  handoff_index <- if (!length(workspace$libraries$platform_handoffs)) data.frame(id=character(),target=character(),handoff_type=character(),project_id=character(),review_status=character(),stringsAsFactors=FALSE) else do.call(rbind,lapply(names(workspace$libraries$platform_handoffs),function(id){handoff<-workspace$libraries$platform_handoffs[[id]];data.frame(id=id,target=handoff$target,handoff_type=handoff$handoff_type,project_id=handoff$project_id,review_status=handoff$review$status,stringsAsFactors=FALSE)}))
+  paths$platform_handoffs <- file.path(bundle_dir, "platform-handoffs.csv"); utils::write.csv(handoff_index, paths$platform_handoffs, row.names = FALSE)
   paths$run_history <- file.path(bundle_dir, "run-history.csv"); utils::write.csv(.workspace_index_or_empty(history, c("project_id", "project_title", "run_id", "label", "status", "created_at", "input_hash", "output_hash", "review_status")), paths$run_history, row.names = FALSE)
   paths$readme <- file.path(bundle_dir, "README.md"); writeLines(.workspace_markdown(workspace), paths$readme, useBytes = TRUE)
   files <- list.files(bundle_dir, recursive = TRUE, full.names = TRUE, all.files = FALSE)

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-public-api-v1.json",
+  "title": "Catalyst Analytics R public API manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "api_version",
+    "package",
+    "base_path",
+    "endpoints",
+    "contracts",
+    "guarantees",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "api_version": {
+      "const": "v1"
+    },
+    "base_path": {
+      "const": "/v1"
+    },
+    "endpoints": {
+      "type": "object"
+    },
+    "contracts": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object"
+    }
+  }
+}

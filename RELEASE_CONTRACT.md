@@ -1,66 +1,12 @@
-# Catalyst Analytics R v1.0.0 Release Contract
+# Catalyst Analytics R v1.5.0 Release Contract
 
-## Versions
+The release is valid only when:
 
-- Repository and R package: `1.0.0`
-- WordPress companion: `2.0.0`
-- Project contract: `1.0.0`
-- Analytical publication contract: `1.0.0`
-- Project handoff contract: `1.0.0`
-
-## Required release gates
-
-1. Every exported R API has an Rd alias and documented arguments.
-2. Project records preserve scenarios, datasets, model versions, parameter sets, run hashes, environment, notes, reviews, snapshots, and publication status.
-3. Run records preserve stable input and output hashes, warnings, errors, package version, and review status.
-4. Publication bundles include project JSON, CSV indexes, Markdown, HTML, Quarto source, platform handoffs, and a file-integrity manifest.
-5. Decision Studio and Knowledge Library handoffs preserve explicit human-review and use boundaries.
-6. Browser companion v2.0.0 declares `mapped_project_contract_not_r_execution` and never claims R numerical parity.
-7. Prior scenario, comparison, uncertainty, data, climate, inclusive-development, calibration, validation, and governance contracts remain valid.
-8. `testthat`, `R CMD build`, and `R CMD check --no-manual` must complete without findings before commit or push.
-
-## v1.0.0 repair gate
-
-- Publication manifests must report `file_count` equal to the number of file-integrity records.
-- Manifest integrity scope must be `all_bundle_files_except_manifest`; a manifest cannot safely contain its own hash.
-- Environment capture must call `utils::capture.output()` explicitly.
-- The project-publication regression test must count data-frame rows when `jsonlite` simplifies the file-record array.
-
-## v1.2.0 snapshot fingerprint repair
-
-- A restored workspace must report the fingerprint recorded by its selected snapshot.
-- Canonical workspace JSON must not expose restoration-only fingerprint metadata.
-- Any semantic workspace mutation must clear restored fingerprint identity.
-
-
-## Regional portfolio release gate
-
-- Geography and sector scope contracts are versioned.
-- Portfolio weights, units, and directions are explicit.
-- Regional carbon budgets preserve cumulative and overshoot evidence.
-- Sector pathways preserve output, emissions, and intensity change.
-- Portfolio aggregation does not confer allocation or decision authority.
-
-
-## v1.4.0 optimization and policy pathway contract
-
-The release must preserve governed variables, objectives, constraints, feasible and Pareto diagnostics, adaptive pathways, human decision gates, non-executing triggers, robust regret evidence, and an explicit prohibition on autonomous policy authorization.
-
-
-## Econometrics gate
-
-The release must retain explicit causal assumptions, robust and clustered uncertainty, design-specific boundaries, portable policy-evaluation exports, and no automated policy authorization.
-## v1.4.0 Rd usage repair gate
-
-- Econometrics and workspace policy-evaluation Rd files must use real line breaks inside `\usage{}` blocks.
-- Literal escaped newline tokens must not appear in those usage sections.
-- Documented usage signatures must preserve every exported function and S3 print method.
-- The release contract must verify balanced usage parentheses before R CMD check.
-
-
-## v1.4.0 documentation repair V2
-
-The release contract rejects stray escaped-newline tokens in all Rd files,
-requires terminal newlines, and verifies balanced usage blocks. The
-`export_policy_evaluation.Rd` file must be valid multiline Rd with no text
-outside a documentation section.
+- `DESCRIPTION`, the repository manifest, public API manifest, and WordPress compatibility record identify repository version 1.5.0.
+- WordPress companion version 2.5.0 maps to repository 1.5.0.
+- API request, response, public manifest, platform handoff, handoff export, and browser export schemas validate.
+- All six first-party target products are represented.
+- Every handoff requires human review and forbids autonomous publication or decision authorization.
+- Existing analytical contracts remain valid.
+- R source is ASCII-portable, exported functions are documented, JavaScript and PHP parse, repository tests pass, and archives are intact.
+- `R CMD check --no-manual` reports no errors, warnings, or notes before commit and push.

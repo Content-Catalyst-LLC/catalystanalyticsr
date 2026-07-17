@@ -1,16 +1,16 @@
 {
-  "schema_version": "2.4.0",
+  "schema_version": "2.5.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "1.4.0",
+  "repository_version": "1.5.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "1.4.0"
+    "version": "1.5.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "2.4.0",
-    "compatible_repository_version": "1.4.0",
+    "version": "2.5.0",
+    "compatible_repository_version": "1.5.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -27,8 +27,8 @@
       "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
     },
     "browser_export": {
-      "version": "2.4.0",
-      "schema": "schemas/catalyst_analytics_r_policy_evaluation_demo_export.schema.json"
+      "version": "2.5.0",
+      "schema": "schemas/catalyst_analytics_r_platform_demo_export.schema.json"
     },
     "comparison": {
       "version": "1.0.0",
@@ -171,6 +171,26 @@
     "policy_evaluation_export": {
       "version": "1.0.0",
       "schema": "schemas/catalyst_analytics_r_policy_evaluation_export.schema.json"
+    },
+    "public_api": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_public_api.schema.json"
+    },
+    "api_request": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_api_request.schema.json"
+    },
+    "api_response": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_api_response.schema.json"
+    },
+    "platform_handoff": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_platform_handoff.schema.json"
+    },
+    "platform_handoff_export": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_platform_handoff_export.schema.json"
     }
   },
   "models": [
@@ -316,5 +336,18 @@
     "parallel-trends and no-interference assumptions require review",
     "synthetic controls require placebo and support review",
     "econometric outputs do not authorize policy"
+  ],
+  "capabilities": [
+    "versioned public API envelopes and endpoint discovery",
+    "Site Intelligence data handoffs",
+    "Research Lab compute handoffs",
+    "Workbench formula handoffs",
+    "Catalyst Canvas assumption handoffs",
+    "portable first-party platform handoff bundles"
+  ],
+  "known_boundaries": [
+    "public API contract does not include an HTTP server",
+    "host platforms provide authentication, authorization, rate limiting, and retention",
+    "platform handoffs do not autonomously execute cross-product actions"
   ]
 }
