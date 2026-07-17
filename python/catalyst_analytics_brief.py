@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate a Catalyst Analytics R Markdown brief from scenario or comparison JSON."""
+"""Generate a Catalyst Analytics R Markdown brief from scenario, comparison, or uncertainty JSON."""
 
 from __future__ import annotations
 
@@ -76,7 +76,63 @@ def comparison_brief(payload: dict) -> str:
     return "\n".join(lines)
 
 
+
+def uncertainty_brief(payload: dict) -> str:
+    scenario = payload.get("scenario", {})
+    model = scenario.get("model", {})
+    meta = payload.get("meta", {})
+    summary = payload.get("summary", [])
+    probabilities = payload.get("probabilities", [])
+    sensitivity = sorted(
+        payload.get("sensitivity", []),
+        key=lambda row: row.get("absolute_effect", 0) or 0,
+        reverse=True,
+    )
+    lines = [
+        "# Catalyst Analytics R Uncertainty Brief", "",
+        f"**Scenario:** {scenario.get('title', scenario.get('id', 'Untitled'))}",
+        f"**Model:** {model.get('id', 'n/a')}@{model.get('version', 'n/a')}",
+        f"**Sampling:** {meta.get('sampling', 'n/a')}",
+        f"**Seed:** {meta.get('seed', 'n/a')}",
+        f"**Completed:** {meta.get('completed', 'n/a')} of {meta.get('requested', 'n/a')}",
+        f"**Failed:** {meta.get('failed', 'n/a')} ({meta.get('failure_rate', 'n/a')})", "",
+        "## Uncertainty intervals", "",
+        "| Metric | Mean | P10 | Median | P90 | Unit |",
+        "|---|---:|---:|---:|---:|---|",
+    ]
+    for row in summary:
+        lines.append(
+            f"| {row.get('metric', 'n/a')} | {row.get('mean', 'n/a')} | "
+            f"{row.get('p10', 'n/a')} | {row.get('median', 'n/a')} | "
+            f"{row.get('p90', 'n/a')} | {row.get('unit', 'n/a')} |"
+        )
+    lines.extend(["", "## Threshold probabilities", ""])
+    if probabilities:
+        for row in probabilities:
+            lines.append(
+                f"- {row.get('metric', 'n/a')} {row.get('operator', '')} "
+                f"{row.get('threshold', 'n/a')}: {row.get('probability', 'n/a')}"
+            )
+    else:
+        lines.append("- No threshold probabilities were requested.")
+    lines.extend(["", "## Strongest sensitivity signals", ""])
+    if sensitivity:
+        for row in sensitivity[:10]:
+            lines.append(
+                f"- {row.get('target', 'n/a')} -> {row.get('metric', 'n/a')}: "
+                f"{row.get('estimate', 'n/a')} ({row.get('method', 'n/a')})"
+            )
+    else:
+        lines.append("- No sensitivity estimates were available.")
+    lines.extend([
+        "", "## Boundary", "",
+        "This brief summarizes sampled exploratory analysis. Intervals and probabilities depend on the declared distributions, model structure, and available evidence. They are not forecasts, compliance determinations, autonomous decisions, or professional advice.", ""
+    ])
+    return "\n".join(lines)
+
 def brief(payload: dict) -> str:
+    if payload.get("analysis_type") == "uncertainty_ensemble":
+        return uncertainty_brief(payload)
     if "comparison" in payload or ("baseline_id" in payload and "deltas" in payload):
         return comparison_brief(payload)
     return scenario_brief(payload)

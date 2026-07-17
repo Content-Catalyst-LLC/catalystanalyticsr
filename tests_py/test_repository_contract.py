@@ -35,14 +35,14 @@ def validator(path: str):
 def test_release_manifest_versions_and_contracts_are_consistent():
     manifest = load_json("catalyst_analytics_r_manifest.json")
     assert manifest["repository"] == "catalystanalyticsr"
-    assert manifest["repository_version"] == "0.3.0"
-    assert manifest["r_package"]["version"] == description_version() == "0.3.0"
-    assert manifest["wordpress_demo"]["version"] == plugin_version() == "1.2.0"
-    assert manifest["wordpress_demo"]["compatible_repository_version"] == "0.3.0"
+    assert manifest["repository_version"] == "0.4.0"
+    assert manifest["r_package"]["version"] == description_version() == "0.4.0"
+    assert manifest["wordpress_demo"]["version"] == plugin_version() == "1.3.0"
+    assert manifest["wordpress_demo"]["compatible_repository_version"] == "0.4.0"
     assert manifest["wordpress_demo"]["shortcode"] == "[catalyst_analytics_r_demo]"
     assert manifest["contracts"]["scenario"]["version"] == "1.0.0"
     assert manifest["contracts"]["model_manifest"]["version"] == "1.0.0"
-    assert manifest["contracts"]["browser_export"]["version"] == "1.2.0"
+    assert manifest["contracts"]["browser_export"]["version"] == "1.3.0"
 
 
 def test_canonical_scenario_examples_validate_against_schema():
@@ -77,7 +77,7 @@ def test_browser_export_and_nested_canonical_scenarios_validate():
     assert len(export["canonical_scenarios"]) == 2
     for scenario in export["canonical_scenarios"]:
         scenario_validator.validate(scenario)
-    assert export["engine"]["parity_status"] == "mapped_comparison_contract"
+    assert export["engine"]["parity_status"] == "mapped_uncertainty_contract"
     assert export["comparison"]["baseline_id"] != export["comparison"]["policy_id"]
 
 
@@ -205,15 +205,16 @@ def test_r_comparative_engine_exports_are_present():
     assert "baseline" in source and "counterfactual" in source
 
 
-def test_wordpress_demo_performs_real_two_scenario_comparison():
+def test_wordpress_demo_performs_seeded_uncertainty_analysis():
     php = (ROOT / "wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php").read_text(encoding="utf-8")
     js = (ROOT / "wordpress/catalyst-analytics-r-demo/assets/catalyst-analytics-r-demo.js").read_text(encoding="utf-8")
-    assert "Compare a baseline with a policy pathway" in php
+    assert "Compare pathways under declared uncertainty" in php
+    assert "Latin hypercube" in php and "Monte Carlo" in php
     assert "canonical_scenarios" in js
-    assert "mapped_comparison_contract" in js
-    assert "compatible_repository_version: '0.3.0'" in js
-    assert "comparison_contract_version: '1.0.0'" in js
-    assert "baseline_non_dominated" in js and "policy_non_dominated" in js
+    assert "mapped_uncertainty_contract" in js
+    assert "compatible_repository_version: '0.4.0'" in js
+    assert "uncertainty_contract_version: '1.0.0'" in js
+    assert "budget_probability" in js and "P10-P90" in php
 
 
 def test_python_brief_supports_comparative_exports(tmp_path):
@@ -228,3 +229,72 @@ def test_python_brief_supports_comparative_exports(tmp_path):
     assert "Reference baseline" in text
     assert "Transition policy" in text
     assert "Metric deltas" in text
+
+
+def test_uncertainty_and_stress_contracts_validate():
+    scenario = load_json("examples/uncertainty_input.json")
+    validator("schemas/catalyst_analytics_r_scenario.schema.json").validate(scenario)
+    wrapper = load_json("examples/uncertainty_analysis_input.json")
+    validator("schemas/catalyst_analytics_r_uncertainty_input.schema.json").validate(wrapper)
+    validator("schemas/catalyst_analytics_r_scenario.schema.json").validate(wrapper["scenario"])
+    export = load_json("outputs/example_uncertainty_export.json")
+    validator("schemas/catalyst_analytics_r_uncertainty.schema.json").validate(export)
+    validator("schemas/catalyst_analytics_r_scenario.schema.json").validate(export["scenario"])
+    stress = load_json("examples/stress_test_input.json")
+    validator("schemas/catalyst_analytics_r_stress_test_input.schema.json").validate(stress)
+    assert export["meta"]["sampling"] == "latin_hypercube"
+    assert export["meta"]["failed"] == 0
+    assert export["probabilities"]
+    assert export["sensitivity"]
+
+
+def test_r_uncertainty_engine_exports_are_present():
+    namespace = (ROOT / "NAMESPACE").read_text(encoding="utf-8")
+    for name in (
+        "uncertainty_spec", "validate_uncertainty_spec", "sample_uncertainty",
+        "run_uncertainty", "uncertainty_summary", "uncertainty_probabilities",
+        "global_sensitivity", "local_sensitivity", "plot_uncertainty",
+        "plot_tornado", "stress_shock", "stress_case", "run_stress_tests",
+        "stress_test_summary", "plot_stress_test", "export_uncertainty_analysis",
+        "export_stress_test",
+    ):
+        assert f"export({name})" in namespace
+    source = (ROOT / "R/uncertainty_engine.R").read_text(encoding="utf-8")
+    for token in (
+        "monte_carlo", "latin_hypercube", "triangular", "failure_rate",
+        "thresholds", "spearman", "stress_case", "multiply",
+    ):
+        assert token in source
+
+
+def test_uncertainty_fixture_documents_reproducibility_invariants():
+    fixture = load_json("tests/fixtures/uncertainty_contract_v1.json")
+    assert fixture["seed"] == 42
+    assert set(fixture["sampling_methods"]) == {"monte_carlo", "latin_hypercube"}
+    assert set(fixture["supported_distributions"]) == {"fixed", "uniform", "normal", "lognormal", "triangular", "beta", "discrete"}
+    assert fixture["invariants"]["same_seed_is_reproducible"] is True
+    assert fixture["invariants"]["failed_runs_are_reported"] is True
+
+
+def test_browser_uncertainty_export_validates_and_preserves_specs():
+    export = load_json("outputs/example_browser_comparison_export.json")
+    validator("schemas/catalyst_analytics_r_demo_export.schema.json").validate(export)
+    assert export["engine"]["parity_status"] == "mapped_uncertainty_contract"
+    assert export["uncertainty"]["sampling"] == "latin_hypercube"
+    assert export["uncertainty"]["requested"] == 250
+    assert len(export["canonical_scenarios"][1]["uncertainty"]) == 3
+
+
+def test_python_brief_supports_uncertainty_exports():
+    import importlib.util
+    path = ROOT / "python/catalyst_analytics_brief.py"
+    spec = importlib.util.spec_from_file_location("catalyst_analytics_brief_uncertainty", path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec and spec.loader
+    spec.loader.exec_module(module)
+    text = module.brief(load_json("outputs/example_uncertainty_export.json"))
+    assert "# Catalyst Analytics R Uncertainty Brief" in text
+    assert "Latin hypercube" in text or "latin_hypercube" in text
+    assert "Uncertainty intervals" in text
+    assert "Threshold probabilities" in text
+    assert "Strongest sensitivity signals" in text

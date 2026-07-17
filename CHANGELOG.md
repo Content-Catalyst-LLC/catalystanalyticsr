@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0 - Uncertainty, Sensitivity, and Stress Testing
+
+- Added canonical uncertainty specifications and strict distribution validation.
+- Added Monte Carlo and Latin hypercube sampling with reproducible seeds.
+- Added ensemble intervals, threshold probabilities, local and global sensitivity, stress cases, plots, and reproducible exports.
+- Upgraded the WordPress demo to v1.3.0 with uncertainty bands and probability summaries.
+
 ## 0.3.0 — Comparative Scenario Engine
 
 - Added governed multi-scenario execution.

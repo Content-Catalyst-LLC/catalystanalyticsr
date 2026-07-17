@@ -69,3 +69,16 @@
   .scar-demo__metric-label { margin-top: 14px !important; }
   .scar-demo__actions button { width: 100%; }
 }
+
+
+.scar-demo__uncertainty {
+  border-color: #6f3b3b;
+  background: #f7eeee;
+}
+.scar-demo__uncertainty legend { color: #641313; }
+.scar-demo__uncertainty select,
+.scar-demo__uncertainty input[type="number"] { width: 100%; }
+.scar-demo__chart polygon { pointer-events: none; }
+@media (max-width: 760px) {
+  .scar-demo__table { min-width: 680px; }
+}

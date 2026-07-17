@@ -27,7 +27,7 @@ The public plugin runs a lightweight JavaScript model. It now emits the same can
 
 `mapped_contract` means the browser and R layers share scenario structure, control meaning, model identity, units, and provenance fields. It does not mean their trajectories are numerically identical.
 
-## Comparative scenario layer — v0.3.0
+## Comparative scenario layer — v0.4.0
 
 The comparative layer sits above canonical scenario execution:
 

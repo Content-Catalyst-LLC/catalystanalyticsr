@@ -24,6 +24,9 @@ catalyst_globals <- function(dummy = NULL) {
     model_contract_version = "1.0.0",
     scenario_schema_version = "1.0.0",
     comparison_schema_version = "1.0.0",
-    demo_export_schema_version = "1.2.0"
+    uncertainty_schema_version = "1.0.0",
+    demo_export_schema_version = "1.3.0"
   )
 }
+
+utils::globalVariables(c("sample_id", "median", "p10", "p90", "estimate", "target", "absolute_effect"))

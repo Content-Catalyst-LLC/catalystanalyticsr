@@ -26,7 +26,7 @@ The manifest records package version, model id, exact model version, model contr
 
 `scenario.json` is written only when the run contains a canonical scenario object.
 
-## Comparative scenario bundles — v0.3.0
+## Comparative scenario bundles — v0.4.0
 
 `export_scenario_comparison()` creates a `comparison_<id>` directory and optional ZIP archive.
 

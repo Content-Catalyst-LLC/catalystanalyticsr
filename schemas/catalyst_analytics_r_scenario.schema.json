@@ -25,131 +25,268 @@
     "metadata"
   ],
   "properties": {
-    "schema_version": { "const": "1.0.0" },
-    "id": { "$ref": "#/$defs/id" },
-    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "$ref": "#/$defs/id"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
     "role": {
-      "enum": ["baseline", "intervention", "counterfactual", "exploratory"]
+      "enum": [
+        "baseline",
+        "intervention",
+        "counterfactual",
+        "exploratory"
+      ]
     },
     "model": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "version"],
+      "required": [
+        "id",
+        "version"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/id" },
-        "version": { "$ref": "#/$defs/semver" }
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        }
       }
     },
     "time": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["start", "end", "step", "unit", "values"],
+      "required": [
+        "start",
+        "end",
+        "step",
+        "unit",
+        "values"
+      ],
       "properties": {
-        "start": { "type": "number" },
-        "end": { "type": "number" },
-        "step": { "type": ["number", "null"], "exclusiveMinimum": 0 },
-        "unit": { "type": "string", "minLength": 1 },
+        "start": {
+          "type": "number"
+        },
+        "end": {
+          "type": "number"
+        },
+        "step": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
         "values": {
           "type": "array",
           "minItems": 2,
-          "items": { "type": "number" }
+          "items": {
+            "type": "number"
+          }
         }
       }
     },
-    "initial_state": { "$ref": "#/$defs/numericMap" },
-    "policy": { "$ref": "#/$defs/numericMap" },
-    "parameters": { "$ref": "#/$defs/numericMapAllowEmpty" },
+    "initial_state": {
+      "$ref": "#/$defs/numericMap"
+    },
+    "policy": {
+      "$ref": "#/$defs/numericMap"
+    },
+    "parameters": {
+      "$ref": "#/$defs/numericMapAllowEmpty"
+    },
     "constraints": {
       "type": "object",
       "additionalProperties": {
-        "type": ["number", "string", "boolean", "null"]
+        "type": [
+          "number",
+          "string",
+          "boolean",
+          "null"
+        ]
       }
     },
     "units": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["time", "states", "flows"],
+      "required": [
+        "time",
+        "states",
+        "flows"
+      ],
       "properties": {
-        "time": { "type": "string", "minLength": 1 },
-        "states": { "$ref": "#/$defs/stringMap" },
-        "flows": { "$ref": "#/$defs/stringMap" }
+        "time": {
+          "type": "string",
+          "minLength": 1
+        },
+        "states": {
+          "$ref": "#/$defs/stringMap"
+        },
+        "flows": {
+          "$ref": "#/$defs/stringMap"
+        }
       }
     },
     "scope": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["geography", "sectors"],
+      "required": [
+        "geography",
+        "sectors"
+      ],
       "properties": {
         "geography": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["type", "id", "label"],
+          "required": [
+            "type",
+            "id",
+            "label"
+          ],
           "properties": {
-            "type": { "type": "string", "minLength": 1 },
-            "id": { "type": "string", "minLength": 1 },
-            "label": { "type": "string", "minLength": 1 }
+            "type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1
+            }
           }
         },
         "sectors": {
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     },
     "currency": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["code", "price_year"],
+      "required": [
+        "code",
+        "price_year"
+      ],
       "properties": {
-        "code": { "type": "string", "minLength": 1 },
-        "price_year": { "type": ["integer", "null"], "minimum": 1800, "maximum": 3000 }
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "price_year": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1800,
+          "maximum": 3000
+        }
       }
     },
     "sources": {
       "type": "array",
-      "items": { "$ref": "#/$defs/source" }
+      "items": {
+        "$ref": "#/$defs/source"
+      }
     },
     "assumptions": {
       "type": "array",
-      "items": { "$ref": "#/$defs/assumption" }
+      "items": {
+        "$ref": "#/$defs/assumption"
+      }
     },
     "uncertainty": {
       "type": "array",
-      "items": { "$ref": "#/$defs/uncertainty" }
+      "items": {
+        "$ref": "#/$defs/uncertainty"
+      }
     },
     "review": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["status", "reviewed_by", "notes"],
+      "required": [
+        "status",
+        "reviewed_by",
+        "notes"
+      ],
       "properties": {
-        "status": { "enum": ["draft", "under_review", "approved", "rejected", "archived"] },
+        "status": {
+          "enum": [
+            "draft",
+            "under_review",
+            "approved",
+            "rejected",
+            "archived"
+          ]
+        },
         "reviewed_by": {
           "type": "array",
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "notes": {
           "type": "array",
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     },
     "metadata": {
       "type": "object",
-      "required": ["description", "tags", "created_by", "created_at"],
+      "required": [
+        "description",
+        "tags",
+        "created_by",
+        "created_at"
+      ],
       "properties": {
-        "description": { "type": "string" },
+        "description": {
+          "type": "string"
+        },
         "tags": {
           "type": "array",
           "uniqueItems": true,
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
-        "created_by": { "type": "string" },
-        "created_at": { "type": "string", "format": "date-time" },
+        "created_by": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
         "migrations": {
           "type": "array",
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": true
@@ -169,53 +306,132 @@
     "numericMap": {
       "type": "object",
       "minProperties": 1,
-      "additionalProperties": { "type": "number" }
+      "additionalProperties": {
+        "type": "number"
+      }
     },
     "numericMapAllowEmpty": {
       "type": "object",
-      "additionalProperties": { "type": "number" }
+      "additionalProperties": {
+        "type": "number"
+      }
     },
     "stringMap": {
       "type": "object",
       "minProperties": 1,
-      "additionalProperties": { "type": "string", "minLength": 1 }
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "source": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["id", "title", "type"],
+      "required": [
+        "id",
+        "title",
+        "type"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/id" },
-        "title": { "type": "string", "minLength": 1 },
-        "type": { "type": "string", "minLength": 1 },
-        "uri": { "type": "string" },
-        "version": { "type": "string" },
-        "license": { "type": "string" },
-        "accessed_at": { "type": "string", "format": "date-time" }
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uri": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string"
+        },
+        "accessed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
     },
     "assumption": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["id", "statement", "status"],
+      "required": [
+        "id",
+        "statement",
+        "status"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/id" },
-        "statement": { "type": "string", "minLength": 1 },
-        "status": { "enum": ["declared", "tested", "contested", "retired"] },
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "declared",
+            "tested",
+            "contested",
+            "retired"
+          ]
+        },
         "source_ids": {
           "type": "array",
-          "items": { "$ref": "#/$defs/id" }
+          "items": {
+            "$ref": "#/$defs/id"
+          }
         }
       }
     },
     "uncertainty": {
       "type": "object",
-      "additionalProperties": true,
-      "required": ["id", "target", "distribution"],
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "target",
+        "distribution",
+        "parameters",
+        "label",
+        "enabled"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/id" },
-        "target": { "type": "string", "minLength": 1 },
-        "distribution": { "type": "string", "minLength": 1 }
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "target": {
+          "type": "string",
+          "pattern": "^(parameters|policy|initial_state|constraints)\\.[A-Za-z][A-Za-z0-9_]*$"
+        },
+        "distribution": {
+          "enum": [
+            "fixed",
+            "uniform",
+            "normal",
+            "lognormal",
+            "triangular",
+            "beta",
+            "discrete"
+          ]
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "enabled": {
+          "type": "boolean"
+        }
       }
     }
   }

@@ -1,0 +1,11 @@
+test_that("uncertainty exports include provenance and failure records", {
+  scenario <- scenario_from_json(system.file("extdata", "scenarios", "canonical_uncertain_policy_v1.json", package = "catalystanalyticsr"))
+  ensemble <- run_uncertainty(scenario, n = 4, sampling = "monte_carlo", seed = 5, metrics = c("emissions", "natural_capital"))
+  out <- tempfile("uncertainty-bundle-")
+  paths <- export_uncertainty_analysis(ensemble, dir = out, include_samples = TRUE, zip_bundle = FALSE)
+  expect_true(file.exists(file.path(out, "uncertainty-analysis.json")))
+  expect_true(file.exists(file.path(out, "uncertainty-manifest.json")))
+  payload <- jsonlite::fromJSON(file.path(out, "uncertainty-analysis.json"), simplifyVector = FALSE)
+  expect_identical(payload$analysis_type, "uncertainty_ensemble")
+  expect_identical(payload$meta$seed, 5L)
+})

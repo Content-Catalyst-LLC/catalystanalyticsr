@@ -4,9 +4,9 @@ Catalyst Analytics R is the reproducible sustainability-analysis layer of the Su
 
 The repository also includes a WordPress demo plugin. The browser tool uses simplified equations, but its inputs and exports are mapped to the canonical R scenario and comparison contracts.
 
-## v0.3.0 — Comparative Scenario Engine
+## v0.4.0 — Comparative Scenario Engine
 
-Version 0.3.0 turns the package from a single-run engine into a comparative analytical system:
+Version 0.4.0 adds governed uncertainty, sensitivity, and stress testing to the comparative analytical system:
 
 - Batch execution with `run_scenarios()`
 - Baseline, intervention, counterfactual, and exploratory roles
@@ -25,12 +25,12 @@ Version 0.3.0 turns the package from a single-run engine into a comparative anal
 
 ## Versions
 
-- Repository and R package: **0.3.0**
+- Repository and R package: **0.4.0**
 - Canonical scenario schema: **1.0.0**
 - Comparative scenario schema: **1.0.0**
 - KH-NC-PA model: **1.0.0**
-- WordPress demo plugin: **1.2.0**
-- Browser comparison export: **1.2.0**
+- WordPress demo plugin: **1.3.0**
+- Browser uncertainty export: **1.3.0**
 
 ## Comparative quickstart
 
@@ -82,7 +82,7 @@ The bundle contains canonical scenario JSON, trajectory CSV files, terminal valu
 
 ## WordPress demo
 
-Install `dist/catalyst-analytics-r-demo-v1.2.0.zip` and use:
+Install `dist/catalyst-analytics-r-demo-v1.3.0.zip` and use:
 
 ```text
 [catalyst_analytics_r_demo]
@@ -113,9 +113,27 @@ python3 -m pip install pytest jsonschema
 python3 scripts/check_release.py
 Rscript scripts/check_r_sources.R
 R CMD build .
-R CMD check --no-manual catalystanalyticsr_0.3.0.tar.gz
+R CMD check --no-manual catalystanalyticsr_0.4.0.tar.gz
 ```
 
 ## Boundaries
 
 Catalyst Analytics R provides transparent exploratory and decision-support analysis. Its outputs are not forecasts, compliance determinations, autonomous decisions, or professional advice.
+
+## Uncertainty, sensitivity, and stress testing
+
+```r
+scenario <- scenario_from_json("examples/uncertainty_input.json")
+ensemble <- run_uncertainty(
+  scenario,
+  n = 500,
+  sampling = "latin_hypercube",
+  seed = 42,
+  thresholds = list(emissions = list(value = 0.2, operator = "<="))
+)
+uncertainty_summary(ensemble)
+global_sensitivity(ensemble)
+plot_tornado(ensemble, "emissions")
+```
+
+Named stress cases can combine multiple parameter, policy, state, or constraint shocks and are evaluated through the comparative scenario engine.

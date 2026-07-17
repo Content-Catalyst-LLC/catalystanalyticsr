@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-uncertainty-v1.schema.json",
+  "title": "Catalyst Analytics R Uncertainty Analysis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analysis_type",
+    "scenario",
+    "scenario_fingerprint",
+    "specifications",
+    "summary",
+    "thresholds",
+    "probabilities",
+    "sensitivity",
+    "failures",
+    "meta",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_type": {
+      "const": "uncertainty_ensemble"
+    },
+    "scenario": {
+      "type": "object"
+    },
+    "scenario_fingerprint": {
+      "type": "string",
+      "minLength": 1
+    },
+    "specifications": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/uncertaintySpec"
+      }
+    },
+    "summary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "metric",
+          "unit",
+          "direction",
+          "n",
+          "mean",
+          "sd",
+          "min",
+          "p025",
+          "p10",
+          "median",
+          "p90",
+          "p975",
+          "max"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "thresholds": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "probabilities": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "sensitivity": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "meta": {
+      "type": "object",
+      "required": [
+        "package_version",
+        "created_at",
+        "sampling",
+        "seed",
+        "requested",
+        "completed",
+        "failed",
+        "failure_rate"
+      ],
+      "additionalProperties": true
+    },
+    "boundary": {
+      "type": "object",
+      "required": [
+        "forecast",
+        "compliance",
+        "autonomous_decision",
+        "professional_advice"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "forecast": {
+          "const": false
+        },
+        "compliance": {
+          "const": false
+        },
+        "autonomous_decision": {
+          "const": false
+        },
+        "professional_advice": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "uncertaintySpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "target",
+        "distribution",
+        "parameters",
+        "label",
+        "enabled"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9._-]*$"
+        },
+        "target": {
+          "type": "string",
+          "pattern": "^(parameters|policy|initial_state|constraints)\\.[A-Za-z][A-Za-z0-9_]*$"
+        },
+        "distribution": {
+          "enum": [
+            "fixed",
+            "uniform",
+            "normal",
+            "lognormal",
+            "triangular",
+            "beta",
+            "discrete"
+          ]
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

@@ -2,8 +2,8 @@
 
 ## Canonical versions
 
-- Repository release: **0.3.0**
-- R package: **0.3.0**
+- Repository release: **0.4.0**
+- R package: **0.4.0**
 - Canonical scenario schema: **1.0.0**
 - Comparative scenario schema: **1.0.0**
 - Comparative input schema: **1.0.0**
@@ -11,8 +11,8 @@
 - Model manifest schema: **1.0.0**
 - Legacy browser input schema: **1.0.0**
 - Browser comparison input schema: **1.1.0**
-- WordPress demo plugin: **1.2.0**
-- Browser comparison export schema: **1.2.0**
+- WordPress demo plugin: **1.3.0**
+- Browser comparison export schema: **1.3.0**
 
 The WordPress plugin follows an independent monotonic version line. Compatibility is declared in `catalyst_analytics_r_manifest.json`.
 
@@ -28,12 +28,12 @@ When R is installed:
 ```bash
 Rscript scripts/check_r_sources.R
 R CMD build .
-R CMD check --no-manual catalystanalyticsr_0.3.0.tar.gz
+R CMD check --no-manual catalystanalyticsr_0.4.0.tar.gz
 ```
 
 ## Required comparative contracts
 
-A v0.3.0 release is invalid unless:
+A v0.4.0 release is invalid unless:
 
 - At least two canonical scenarios can execute through `run_scenarios()`.
 - Baseline selection is deterministic and rejects ambiguous multiple baselines.
@@ -49,3 +49,12 @@ A v0.3.0 release is invalid unless:
 - All JSON fixtures validate against their schemas.
 - All exported R functions have documentation aliases.
 - No placeholder tests, non-ASCII R source, malformed JSON, JavaScript errors, PHP errors, caches, or version mismatches remain.
+
+## Uncertainty contract
+
+- Uncertainty targets are explicit scenario paths.
+- Distribution parameters validate before sampling.
+- Monte Carlo and Latin hypercube sampling record a reproducible seed.
+- Failed realizations remain in the analysis record.
+- Threshold probabilities and sensitivity estimates state their sample count.
+- Stress cases preserve each shock operation and baseline comparison.

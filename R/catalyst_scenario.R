@@ -116,7 +116,7 @@
 
   x$sources <- .normalize_record_list(x$sources)
   x$assumptions <- .normalize_record_list(x$assumptions)
-  x$uncertainty <- .normalize_record_list(x$uncertainty)
+  x$uncertainty <- lapply(.normalize_record_list(x$uncertainty), .normalize_uncertainty_spec)
 
   x$review <- .as_named_list(x$review, "review")
   x$review$status <- as.character(.as_scalar(x$review$status, "review$status"))
@@ -279,11 +279,7 @@ catalyst_scenario <- function(
         stop("Assumption status is invalid.", call. = FALSE)
       }
     } else if (identical(kind, "uncertainty")) {
-      if (is.null(record$target) || is.null(record$distribution)) {
-        stop("Every uncertainty record must include `target` and `distribution`.", call. = FALSE)
-      }
-      .assert_single_string(as.character(.as_scalar(record$target, "uncertainty$target")), "uncertainty$target")
-      .assert_single_string(as.character(.as_scalar(record$distribution, "uncertainty$distribution")), "uncertainty$distribution")
+      validate_uncertainty_spec(record)
     }
   }
   invisible(TRUE)
@@ -377,6 +373,7 @@ validate_catalyst_scenario <- function(scenario, require_registered_model = TRUE
   .validate_record_ids(scenario$sources, "source")
   .validate_record_ids(scenario$assumptions, "assumption")
   .validate_record_ids(scenario$uncertainty, "uncertainty")
+  if (length(scenario$uncertainty)) invisible(lapply(scenario$uncertainty, validate_uncertainty_spec, scenario = scenario))
   invisible(TRUE)
 }
 

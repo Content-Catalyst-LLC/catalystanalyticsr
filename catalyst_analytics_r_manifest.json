@@ -1,16 +1,16 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "0.3.0",
+  "repository_version": "0.4.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "1.2.0",
-    "compatible_repository_version": "0.3.0",
+    "version": "1.3.0",
+    "compatible_repository_version": "0.4.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -27,7 +27,7 @@
       "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
     },
     "browser_export": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "schema": "schemas/catalyst_analytics_r_demo_export.schema.json"
     },
     "comparison": {
@@ -38,6 +38,15 @@
     "browser_comparison_input": {
       "version": "1.1.0",
       "schema": "schemas/catalyst_analytics_r_browser_comparison_input.schema.json"
+    },
+    "uncertainty": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_uncertainty.schema.json",
+      "input_schema": "schemas/catalyst_analytics_r_uncertainty_input.schema.json"
+    },
+    "stress_test": {
+      "version": "1.0.0",
+      "input_schema": "schemas/catalyst_analytics_r_stress_test_input.schema.json"
     }
   },
   "models": [
@@ -53,26 +62,28 @@
     "numerical_reference": "tests/fixtures/khncpa_reference_v1.json",
     "comparison_input": "examples/comparison_input.json",
     "comparison_export": "outputs/example_comparison_export.json",
-    "browser_comparison_export": "outputs/example_browser_comparison_export.json"
+    "browser_comparison_export": "outputs/example_browser_comparison_export.json",
+    "uncertainty_input": "examples/uncertainty_input.json",
+    "uncertainty_export": "outputs/example_uncertainty_export.json",
+    "stress_test_input": "examples/stress_test_input.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [
     "R package",
     "canonical scenario contract",
     "model registry",
-    "scenario migration",
-    "scenario modeling",
-    "indicator computation",
-    "carbon budget review",
-    "WordPress demo",
-    "JSON exports",
     "comparative scenario engine",
-    "baseline and intervention analysis",
-    "direction-aware rankings",
-    "trade-off and Pareto diagnostics",
-    "comparison export bundles"
+    "uncertainty distributions",
+    "Monte Carlo sampling",
+    "Latin hypercube sampling",
+    "scenario ensembles",
+    "probability thresholds",
+    "local and global sensitivity",
+    "stress testing",
+    "uncertainty export bundles",
+    "WordPress uncertainty demo"
   ],
-  "method_path": "question -> assumptions -> scenarios -> models -> comparison -> trade-offs -> interpretation -> review",
+  "method_path": "question -> assumptions -> scenarios -> uncertainty -> ensemble -> sensitivity -> stress tests -> interpretation -> review",
   "boundaries": [
     "educational decision support",
     "not a forecast",

@@ -6,7 +6,7 @@ The WordPress plugin exposes the shortcode:
 [catalyst_analytics_r_demo]
 ```
 
-## v1.2.0 behavior
+## v1.3.0 behavior
 
 The demo now performs a real baseline-versus-policy comparison using simplified browser-side equations. Users can edit shared starting conditions and budget assumptions, then configure separate baseline and intervention policy controls.
 
@@ -36,7 +36,7 @@ The browser export includes:
 - Both trajectories
 - Interpretation boundaries
 
-The browser export schema is 1.2.0 and declares compatibility with repository version 0.3.0.
+The browser export schema is 1.3.0 and declares compatibility with repository version 0.4.0.
 
 ## Numerical boundary
 

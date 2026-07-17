@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "baseline_scenario": "transition-policy-uncertain",
+  "cases": [
+    {
+      "id": "technology-slowdown",
+      "title": "Technology slowdown",
+      "description": "Reduces technology growth and increases emissions intensity.",
+      "shocks": [
+        {
+          "target": "parameters.tech_growth",
+          "mode": "multiply",
+          "value": 0.5
+        },
+        {
+          "target": "parameters.emissions_intensity",
+          "mode": "multiply",
+          "value": 1.25
+        }
+      ]
+    },
+    {
+      "id": "restoration-push",
+      "title": "Restoration acceleration",
+      "description": "Tests a stronger natural-capital regeneration pathway.",
+      "shocks": [
+        {
+          "target": "parameters.regen",
+          "mode": "multiply",
+          "value": 1.75
+        }
+      ]
+    },
+    {
+      "id": "investment-contraction",
+      "title": "Investment contraction",
+      "description": "Reduces savings and human investment shares.",
+      "shocks": [
+        {
+          "target": "policy.s",
+          "mode": "multiply",
+          "value": 0.7
+        },
+        {
+          "target": "policy.e",
+          "mode": "multiply",
+          "value": 0.7
+        }
+      ]
+    }
+  ]
+}

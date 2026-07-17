@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "seed": 42,
+  "sampling_methods": [
+    "monte_carlo",
+    "latin_hypercube"
+  ],
+  "supported_distributions": [
+    "fixed",
+    "uniform",
+    "normal",
+    "lognormal",
+    "triangular",
+    "beta",
+    "discrete"
+  ],
+  "specifications": [
+    {
+      "id": "emissions-intensity",
+      "target": "parameters.emissions_intensity",
+      "distribution": "triangular",
+      "parameters": {
+        "min": 0.08,
+        "mode": 0.12,
+        "max": 0.18
+      },
+      "label": "Emissions intensity",
+      "enabled": true
+    },
+    {
+      "id": "restoration-rate",
+      "target": "parameters.regen",
+      "distribution": "uniform",
+      "parameters": {
+        "min": 0.02,
+        "max": 0.07
+      },
+      "label": "Natural regeneration",
+      "enabled": true
+    },
+    {
+      "id": "adaptation-share",
+      "target": "policy.a",
+      "distribution": "beta",
+      "parameters": {
+        "shape1": 2,
+        "shape2": 5,
+        "min": 0.03,
+        "max": 0.18
+      },
+      "label": "Adaptation share",
+      "enabled": true
+    }
+  ],
+  "invariants": {
+    "sample_ids_start_at": 1,
+    "same_seed_is_reproducible": true,
+    "latin_hypercube_uses_each_stratum_once": true,
+    "failed_runs_are_reported": true
+  }
+}
