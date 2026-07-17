@@ -2,10 +2,19 @@
 
 Catalyst Analytics R is the reproducible statistical, scenario-modeling, uncertainty-analysis, sustainability-accounting, model-governance, and analytical-publication engine for the Sustainable Catalyst platform.
 
-**Current release:** `1.3.0`  
-**WordPress companion:** `2.3.0`  
+**Current release:** `1.4.0`  
+**WordPress companion:** `2.4.0`  
 **Shortcode:** `[catalyst_analytics_r_demo]`
 
+
+## v1.4.0 econometrics and policy evaluation
+
+- Governed regression specifications with classical, HC1, and clustered uncertainty
+- Unit, time, and two-way fixed-effects panel analysis
+- Difference-in-differences and dynamic event studies
+- Interrupted time-series and synthetic-control workflows
+- Explicit causal assumptions, diagnostics, policy-effect summaries, and publication bundles
+- WordPress companion v2.4.0 with explicit causal and non-R execution boundaries
 
 ## v1.3.0 optimization and policy pathway design
 
@@ -114,7 +123,7 @@ scripts/                            Release validation
 python3 scripts/check_release.py
 Rscript scripts/check_r_sources.R
 R CMD build .
-R CMD check --no-manual catalystanalyticsr_1.3.0.tar.gz
+R CMD check --no-manual catalystanalyticsr_1.4.0.tar.gz
 ```
 
 ## Boundary
@@ -125,3 +134,7 @@ A reproducible project can show exactly what was run, with which inputs, model, 
 ## v1.0 stable production contract
 
 Use `catalyst_api_manifest()` to inspect stable APIs, `catalyst_compatibility_manifest()` for contract support, and `catalyst_release_readiness()` to create a reviewable production gate record. See `docs/production-readiness.md`.
+
+## Econometrics and Policy Evaluation (v1.4.0)
+
+Build governed regressions, panel models, difference-in-differences, event studies, interrupted time series, and synthetic controls. Estimates retain robust or clustered uncertainty, diagnostics, explicit causal assumptions, review status, and portable publication evidence.

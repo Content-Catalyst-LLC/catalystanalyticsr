@@ -48,8 +48,12 @@ catalyst_globals <- function(dummy = NULL) {
     model_governance_schema_version = "1.0.0",
     regional_portfolio_schema_version = "1.0.0",
     regional_portfolio_analysis_schema_version = "1.0.0",
-    demo_export_schema_version = "2.3.0"
+    econometric_evaluation_schema_version = "1.0.0",
+    policy_evaluation_schema_version = "1.0.0",
+    demo_export_schema_version = "2.4.0"
   )
 }
 
 utils::globalVariables(c("sample_id", "median", "p10", "p90", "estimate", "target", "absolute_effect"))
+
+utils::globalVariables(c("evaluation_id", "effect", "conf_low", "conf_high", "label", "period", "time", "gap"))

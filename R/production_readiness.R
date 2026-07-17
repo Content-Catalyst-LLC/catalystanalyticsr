@@ -11,6 +11,7 @@
     projects = c("catalyst_project", "validate_catalyst_project", "project_add_run", "project_snapshot", "project_manifest", "export_project_publication"),
     workspaces = c("catalyst_workspace", "validate_catalyst_workspace", "workspace_add_project", "workspace_add_scenario", "workspace_add_parameter_set", "workspace_snapshot", "workspace_restore_snapshot", "workspace_manifest", "export_workspace"),
     regional_portfolios = c("geography_scope", "sector_scope", "scope_scenario", "portfolio_member", "regional_portfolio", "portfolio_aggregate", "portfolio_compare_regions", "regional_carbon_budgets", "sector_transition_pathways", "regional_portfolio_analysis", "export_regional_portfolio_analysis"),
+    econometrics = c("causal_assumption", "regression_spec", "fit_policy_regression", "panel_regression", "difference_in_differences", "event_study", "interrupted_time_series", "synthetic_control", "policy_evaluation_analysis", "export_policy_evaluation"),
     policy_optimization = c("decision_variable", "policy_objective", "policy_constraint", "policy_optimization_spec", "evaluate_policy_candidates", "optimize_policy", "policy_pareto_frontier", "policy_feasible_region", "target_seeking_scenario", "cost_effectiveness_analysis", "marginal_abatement_curve", "adaptive_trigger", "policy_stage", "policy_pathway", "evaluate_policy_pathway", "robust_pathway_analysis", "policy_pathway_analysis", "export_policy_pathway_analysis"),
     governance = c("model_governance_record", "transition_model_status", "model_governance_summary"),
     release = c("catalyst_api_manifest", "catalyst_release_readiness", "validate_release_readiness", "catalyst_compatibility_manifest")
@@ -19,7 +20,7 @@
 
 #' Stable public API manifest
 #'
-#' Returns the v1.3.0 public API stability declaration.
+#' Returns the v1.4.0 public API stability declaration.
 #' @param include_experimental Include exported APIs not in the stable groups.
 #' @return A list describing stable, experimental, and deprecated APIs.
 #' @export
@@ -30,7 +31,7 @@ catalyst_api_manifest <- function(include_experimental = TRUE) {
   experimental <- sort(setdiff(exports, stable))
   result <- list(
     schema_version = "1.0.0",
-    package = list(name = "catalystanalyticsr", version = "1.3.0"),
+    package = list(name = "catalystanalyticsr", version = "1.4.0"),
     stability_policy = list(
       stable = "Backward-compatible signatures and return contracts are maintained throughout the 1.x series unless a security or correctness defect requires a documented exception.",
       experimental = "May evolve in a minor release with migration notes.",
@@ -43,7 +44,7 @@ catalyst_api_manifest <- function(include_experimental = TRUE) {
       scenario = "1.0.0", comparison = "1.0.0", uncertainty = "1.0.0",
       dataset = "1.0.0", indicator = "1.0.0", climate_accounting = "1.0.0",
       inclusive_development = "1.0.0", model_validation = "1.0.0",
-      project = "1.0.0", analytical_publication = "1.0.0", workspace = "1.0.0", workspace_export = "1.0.0", regional_portfolio = "1.0.0", regional_portfolio_analysis = "1.0.0", policy_optimization = "1.0.0", policy_pathway = "1.0.0", policy_pathway_analysis = "1.0.0", release_readiness = "1.0.0"
+      project = "1.0.0", analytical_publication = "1.0.0", workspace = "1.0.0", workspace_export = "1.0.0", regional_portfolio = "1.0.0", regional_portfolio_analysis = "1.0.0", policy_optimization = "1.0.0", policy_pathway = "1.0.0", policy_pathway_analysis = "1.0.0", econometric_evaluation = "1.0.0", policy_evaluation_analysis = "1.0.0", release_readiness = "1.0.0"
     )
   )
   if (isTRUE(include_experimental)) result$experimental <- experimental
@@ -58,7 +59,7 @@ catalyst_api_manifest <- function(include_experimental = TRUE) {
 catalyst_compatibility_manifest <- function() {
   list(
     schema_version = "1.0.0",
-    package_version = "1.3.0",
+    package_version = "1.4.0",
     r_version = list(minimum = "4.1.0", tested_policy = "current and previous R release in CI"),
     contract_policy = list(
       major = "Breaking schema changes require a new contract major version and migration function.",
@@ -72,7 +73,7 @@ catalyst_compatibility_manifest <- function() {
       browser_mapping = c("1.0.0"),
       legacy_scenario_migrations = c("legacy_r", "browser_v1")
     ),
-    wordpress = list(plugin = "catalyst-analytics-r-demo", version = "2.3.0", compatible_repository_version = "1.3.0"),
+    wordpress = list(plugin = "catalyst-analytics-r-demo", version = "2.4.0", compatible_repository_version = "1.4.0"),
     boundaries = c("browser companion does not execute R", "reproducibility does not establish validity", "human review is required for publication and decisions")
   )
 }
@@ -105,7 +106,7 @@ catalyst_release_readiness <- function(checks = NULL, evidence = list()) {
   failed <- names(defaults)[!defaults | is.na(defaults)]
   result <- list(
     schema_version = "1.0.0",
-    package_version = "1.3.0",
+    package_version = "1.4.0",
     assessed_at = format(Sys.time(), tz = "UTC", usetz = TRUE),
     status = if (length(failed)) "not_ready" else "ready",
     checks = as.list(defaults),

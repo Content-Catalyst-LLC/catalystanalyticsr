@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0.0",
+  "analysis_type": "browser_econometrics_and_policy_evaluation",
+  "contract": {
+    "plugin_version": "2.4.0",
+    "compatible_repository_version": "1.4.0",
+    "econometric_evaluation_schema_version": "1.0.0",
+    "policy_evaluation_schema_version": "1.0.0",
+    "parity_status": "mapped_econometric_policy_evaluation_contract_not_r_execution"
+  },
+  "data": [
+    {
+      "unit": "treated-a",
+      "time": 1,
+      "treated": 1,
+      "post": 0,
+      "event_time": -3,
+      "outcome": 34
+    }
+  ],
+  "evaluations": {
+    "difference_in_differences": {
+      "estimate": -8,
+      "confidence_level": 0.95
+    },
+    "event_study": {
+      "reference_period": -1,
+      "effects": [
+        {
+          "period": 0,
+          "estimate": -8
+        }
+      ]
+    },
+    "synthetic_control": {
+      "average_post_gap": -8
+    }
+  },
+  "summary": {
+    "did_effect": -8,
+    "synthetic_gap": -8,
+    "pretrend_status": "not_rejected",
+    "fingerprint": "abc12345"
+  },
+  "meta": {
+    "package_version": "1.4.0",
+    "created_at": "2026-07-17T00:00:00Z",
+    "title": "Transition Policy Evaluation"
+  },
+  "boundary": {
+    "r_not_executed": true,
+    "causal_validity_not_automatic": true,
+    "automated_policy_authorization": false,
+    "human_review_required": true
+  }
+}

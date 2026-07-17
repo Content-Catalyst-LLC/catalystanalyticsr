@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-policy-evaluation-export.schema.json",
+  "title": "Catalyst Analytics R policy evaluation export",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "export_type",
+    "analysis_id",
+    "package",
+    "created_at",
+    "file_count",
+    "files",
+    "integrity",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "export_type": {
+      "const": "econometrics_and_policy_evaluation_bundle"
+    },
+    "analysis_id": {
+      "type": "string"
+    },
+    "package": {
+      "type": "object"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "file_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "files": {
+      "type": "array"
+    },
+    "integrity": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

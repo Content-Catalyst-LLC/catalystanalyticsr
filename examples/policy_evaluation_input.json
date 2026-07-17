@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "analysis_type": "econometrics_and_policy_evaluation_input",
+  "id": "transition-policy-evaluation",
+  "title": "Transition policy evaluation",
+  "methods": [
+    "difference_in_differences",
+    "event_study",
+    "interrupted_time_series",
+    "synthetic_control"
+  ],
+  "outcome": "emissions_intensity",
+  "unit_id": "region",
+  "time_id": "year",
+  "intervention_time": 2028,
+  "assumptions": [
+    {
+      "id": "parallel-trends",
+      "status": "supported",
+      "statement": "Untreated trends are comparable before intervention."
+    }
+  ],
+  "boundary": {
+    "human_review_required": true,
+    "causal_validity_not_automatic": true
+  }
+}

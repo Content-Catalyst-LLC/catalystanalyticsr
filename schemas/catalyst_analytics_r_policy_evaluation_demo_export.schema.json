@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-policy-evaluation-demo-export.schema.json",
+  "title": "Catalyst Analytics R browser policy evaluation export",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_type",
+    "contract",
+    "data",
+    "evaluations",
+    "summary",
+    "meta",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_type": {
+      "const": "browser_econometrics_and_policy_evaluation"
+    },
+    "contract": {
+      "type": "object"
+    },
+    "data": {
+      "type": "array"
+    },
+    "evaluations": {
+      "type": "object"
+    },
+    "summary": {
+      "type": "object"
+    },
+    "meta": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

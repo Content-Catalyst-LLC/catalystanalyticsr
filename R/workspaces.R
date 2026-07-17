@@ -84,6 +84,7 @@
   }
   if (is.null(workspace$libraries$policy_optimizations)) workspace$libraries$policy_optimizations <- list()
   if (is.null(workspace$libraries$policy_pathways)) workspace$libraries$policy_pathways <- list()
+  if (is.null(workspace$libraries$policy_evaluations)) workspace$libraries$policy_evaluations <- list()
   if (length(workspace$libraries$policy_pathways)) {
     workspace$libraries$policy_pathways <- lapply(workspace$libraries$policy_pathways, function(pathway) {
       if (inherits(pathway, "catalyst_policy_pathway")) return(pathway)
@@ -134,7 +135,7 @@ catalyst_workspace <- function(workspace_id, title, description = "", owner = ""
     tags = unique(tags[nzchar(trimws(tags))]),
     active_project_id = NULL,
     projects = list(),
-    libraries = list(scenarios = list(), parameter_sets = list(), policy_packages = list(), regional_portfolios = list(), policy_optimizations = list(), policy_pathways = list()),
+    libraries = list(scenarios = list(), parameter_sets = list(), policy_packages = list(), regional_portfolios = list(), policy_optimizations = list(), policy_pathways = list(), policy_evaluations = list()),
     snapshots = list(),
     activity = list(),
     metadata = utils::modifyList(list(
@@ -200,6 +201,13 @@ validate_catalyst_workspace <- function(workspace) {
   if (!is.null(workspace$libraries$policy_pathways)) {
     .workspace_named_list(workspace$libraries$policy_pathways, "workspace$libraries$policy_pathways")
     invisible(lapply(workspace$libraries$policy_pathways, validate_policy_pathway))
+  }
+
+  if (!is.null(workspace$libraries$policy_evaluations)) {
+    .workspace_named_list(workspace$libraries$policy_evaluations, "workspace$libraries$policy_evaluations")
+    for (entry in workspace$libraries$policy_evaluations) {
+      if (!is.list(entry) || is.null(entry$id) || is.null(entry$title) || is.null(entry$fingerprint)) stop("Policy evaluation library entry is incomplete.", call. = FALSE)
+    }
   }
   if (!is.list(workspace$snapshots) || !is.list(workspace$activity) || !is.list(workspace$metadata)) stop("Workspace snapshots, activity, and metadata must be lists.", call. = FALSE)
   restored_fingerprint <- workspace[[".restored_workspace_fingerprint", exact = TRUE]]
@@ -523,6 +531,7 @@ workspace_compare_projects <- function(workspace, project_ids = names(workspace$
     policy_packages = lapply(workspace$libraries$policy_packages, function(entry) list(id = entry$id, hash = entry$hash)),
     regional_portfolios = lapply(workspace$libraries$regional_portfolios, function(entry) list(id = entry$id, fingerprint = .project_hash(entry))),
     policy_optimizations = lapply(workspace$libraries$policy_optimizations, function(entry) list(id = entry$id, fingerprint = entry$fingerprint)),
+    policy_evaluations = lapply(workspace$libraries$policy_evaluations, function(entry) list(id = entry$id, fingerprint = entry$fingerprint)),
     policy_pathways = lapply(workspace$libraries$policy_pathways, function(entry) list(id = entry$id, fingerprint = .project_hash(entry)))
   )
 }
@@ -615,7 +624,7 @@ workspace_manifest <- function(workspace) {
     counts = list(
       projects = length(workspace$projects), scenarios = length(workspace$libraries$scenarios),
       parameter_sets = length(workspace$libraries$parameter_sets), policy_packages = length(workspace$libraries$policy_packages),
-      regional_portfolios = length(workspace$libraries$regional_portfolios), policy_optimizations = length(workspace$libraries$policy_optimizations), policy_pathways = length(workspace$libraries$policy_pathways), runs = nrow(workspace_run_history(workspace)), snapshots = length(workspace$snapshots)
+      regional_portfolios = length(workspace$libraries$regional_portfolios), policy_optimizations = length(workspace$libraries$policy_optimizations), policy_pathways = length(workspace$libraries$policy_pathways), policy_evaluations = length(workspace$libraries$policy_evaluations), runs = nrow(workspace_run_history(workspace)), snapshots = length(workspace$snapshots)
     ),
     projects = lapply(workspace$projects, function(project) list(id = project$id, title = project$title, fingerprint = project_fingerprint(project), review_status = project$metadata$review_status, publication_status = project$metadata$publication_status)),
     scenario_library = lapply(workspace$libraries$scenarios, function(entry) entry[c("id", "title", "description", "tags", "source_project_id", "fingerprint")]),
@@ -623,6 +632,7 @@ workspace_manifest <- function(workspace) {
     policy_packages = workspace$libraries$policy_packages,
     regional_portfolios = lapply(workspace$libraries$regional_portfolios, function(portfolio) list(id=portfolio$id,title=portfolio$title,members=length(portfolio$members),fingerprint=.project_hash(portfolio))),
     policy_optimizations = workspace$libraries$policy_optimizations,
+    policy_evaluations = workspace$libraries$policy_evaluations,
     policy_pathways = lapply(workspace$libraries$policy_pathways, function(pathway) list(id=pathway$id,title=pathway$title,stages=length(pathway$stages),fingerprint=.project_hash(pathway))),
     snapshots = lapply(workspace$snapshots, function(entry) entry[c("id", "note", "created_at", "workspace_fingerprint")]),
     metadata = workspace$metadata
@@ -686,6 +696,7 @@ workspace_from_json <- function(path) {
     paste0("- Policy packages: ", length(workspace$libraries$policy_packages)),
     paste0("- Regional portfolios: ", length(workspace$libraries$regional_portfolios)),
     paste0("- Policy optimizations: ", length(workspace$libraries$policy_optimizations)),
+    paste0("- Policy evaluations: ", length(workspace$libraries$policy_evaluations)),
     paste0("- Adaptive policy pathways: ", length(workspace$libraries$policy_pathways)),
     paste0("- Consolidated run records: ", nrow(history)),
     paste0("- Workspace snapshots: ", length(workspace$snapshots)), "",
@@ -738,6 +749,8 @@ export_workspace <- function(workspace, dir = ".", prefix = "catalyst-workspace"
   paths$policy_optimizations <- file.path(bundle_dir, "policy-optimizations.csv"); utils::write.csv(optimization_index, paths$policy_optimizations, row.names = FALSE)
   pathway_index <- if (!length(workspace$libraries$policy_pathways)) data.frame(id=character(),title=character(),stages=integer(),fingerprint=character(),stringsAsFactors=FALSE) else do.call(rbind,lapply(workspace$libraries$policy_pathways,function(pathway)data.frame(id=pathway$id,title=pathway$title,stages=length(pathway$stages),fingerprint=.project_hash(pathway),stringsAsFactors=FALSE)))
   paths$policy_pathways <- file.path(bundle_dir, "policy-pathways.csv"); utils::write.csv(pathway_index, paths$policy_pathways, row.names = FALSE)
+  evaluation_index <- if (!length(workspace$libraries$policy_evaluations)) data.frame(id=character(),title=character(),identification_status=character(),review_status=character(),fingerprint=character(),stringsAsFactors=FALSE) else do.call(rbind,lapply(workspace$libraries$policy_evaluations,function(entry)data.frame(id=entry$id,title=entry$title,identification_status=entry$identification_status,review_status=entry$review_status,fingerprint=entry$fingerprint,stringsAsFactors=FALSE)))
+  paths$policy_evaluations <- file.path(bundle_dir, "policy-evaluations.csv"); utils::write.csv(evaluation_index, paths$policy_evaluations, row.names = FALSE)
   paths$run_history <- file.path(bundle_dir, "run-history.csv"); utils::write.csv(.workspace_index_or_empty(history, c("project_id", "project_title", "run_id", "label", "status", "created_at", "input_hash", "output_hash", "review_status")), paths$run_history, row.names = FALSE)
   paths$readme <- file.path(bundle_dir, "README.md"); writeLines(.workspace_markdown(workspace), paths$readme, useBytes = TRUE)
   files <- list.files(bundle_dir, recursive = TRUE, full.names = TRUE, all.files = FALSE)
@@ -847,6 +860,39 @@ workspace_get_policy_pathway <- function(workspace, pathway_id) {
   validate_catalyst_workspace(workspace); .workspace_id(pathway_id, "pathway_id")
   result <- workspace$libraries$policy_pathways[[pathway_id]]
   if (is.null(result)) stop("Policy pathway is not present in the workspace.", call. = FALSE)
+  result
+}
+
+
+#' Add a policy evaluation to a workspace
+#' @param workspace A workspace.
+#' @param analysis Policy-evaluation analysis.
+#' @param replace Replace an existing record.
+#' @return Updated workspace.
+#' @export
+workspace_add_policy_evaluation <- function(workspace, analysis, replace = FALSE) {
+  validate_catalyst_workspace(workspace)
+  if (!inherits(analysis, "catalyst_policy_evaluation_analysis")) stop("`analysis` must be a policy-evaluation analysis.", call. = FALSE)
+  .assert_flag(replace, "replace")
+  if (is.null(workspace$libraries$policy_evaluations)) workspace$libraries$policy_evaluations <- list()
+  if (!is.null(workspace$libraries$policy_evaluations[[analysis$id]]) && !replace) stop("Policy evaluation already exists in the workspace.", call. = FALSE)
+  workspace$libraries$policy_evaluations[[analysis$id]] <- list(
+    id = analysis$id, title = analysis$title, effects = analysis$effects,
+    identification_status = analysis$identification_status, review_status = analysis$review_status,
+    fingerprint = .project_hash(analysis)
+  )
+  .workspace_touch(workspace, "policy_evaluation_added", list(evaluation_id = analysis$id))
+}
+
+#' Retrieve a workspace policy evaluation
+#' @param workspace A workspace.
+#' @param evaluation_id Evaluation identifier.
+#' @return Stored policy-evaluation record.
+#' @export
+workspace_get_policy_evaluation <- function(workspace, evaluation_id) {
+  validate_catalyst_workspace(workspace); .workspace_id(evaluation_id, "evaluation_id")
+  result <- workspace$libraries$policy_evaluations[[evaluation_id]]
+  if (is.null(result)) stop("Policy evaluation is not present in the workspace.", call. = FALSE)
   result
 }
 

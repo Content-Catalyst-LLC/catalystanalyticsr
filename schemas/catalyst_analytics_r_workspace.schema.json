@@ -80,6 +80,9 @@
         },
         "policy_pathways": {
           "type": "object"
+        },
+        "policy_evaluations": {
+          "type": "object"
         }
       }
     },

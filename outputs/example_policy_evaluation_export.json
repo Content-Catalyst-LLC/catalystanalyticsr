@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "analysis_type": "econometrics_and_policy_evaluation",
+  "id": "transition-policy-evaluation",
+  "title": "Transition policy evaluation",
+  "evaluations": {
+    "did": {
+      "schema_version": "1.0.0",
+      "analysis_type": "difference_in_differences",
+      "id": "did-transition",
+      "title": "Difference-in-differences transition estimate",
+      "boundary": {
+        "causal_effect_requires_parallel_trends": true,
+        "human_review_required": true
+      }
+    }
+  },
+  "effects": [
+    {
+      "evaluation_id": "did-transition",
+      "method": "difference_in_differences",
+      "effect": -8.4,
+      "std_error": 1.7,
+      "p_value": 0.002,
+      "conf_low": -11.8,
+      "conf_high": -5.0
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "parallel-trends",
+      "label": "Parallel trends",
+      "statement": "Untreated outcomes would have evolved in parallel.",
+      "status": "supported",
+      "evidence": {},
+      "limitations": []
+    }
+  ],
+  "identification_status": "supported",
+  "review_status": "under_review",
+  "metadata": {
+    "package_version": "1.4.0",
+    "created_at": "2026-07-17T00:00:00Z"
+  },
+  "boundary": {
+    "causal_claim_requires_design_specific_assumptions": true,
+    "automated_policy_authorization": false,
+    "human_review_required": true
+  }
+}

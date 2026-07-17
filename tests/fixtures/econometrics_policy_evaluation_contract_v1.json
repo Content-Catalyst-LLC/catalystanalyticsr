@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "econometrics_and_policy_evaluation",
+  "repository_version": "1.4.0",
+  "methods": {
+    "regression": {
+      "covariance": [
+        "classical",
+        "hc1",
+        "cluster"
+      ]
+    },
+    "panel": {
+      "fixed_effects": [
+        "unit",
+        "time",
+        "two_way"
+      ]
+    },
+    "quasi_experimental": [
+      "difference_in_differences",
+      "event_study",
+      "interrupted_time_series",
+      "synthetic_control"
+    ]
+  },
+  "required_boundaries": [
+    "causal assumptions explicit",
+    "human review required",
+    "no automated policy authorization"
+  ]
+}

@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.4.0
+
+### v1.4.0 documentation repair V2
+
+- Rebuilt `export_policy_evaluation.Rd` as valid multiline Rd.
+- Removed a stray literal `\n` token outside documentation sections.
+- Added package-wide Rd integrity checks for stray escaped newlines, terminal newlines, and balanced usage blocks.
+
+### R CMD check Rd usage repair
+
+- Replaced escaped `\n` text in econometrics and workspace Rd usage sections with real line breaks.
+- Rebuilt the econometrics usage signatures from the exported R function definitions.
+- Added static regression checks for multiline, balanced, syntactically parseable usage blocks.
+
+- Added governed regression and panel-data specifications.
+- Added classical, HC1, and cluster-robust uncertainty.
+- Added difference-in-differences, event studies, interrupted time series, and synthetic controls.
+- Added causal-assumption records, diagnostics, policy-effect summaries, workspace libraries, publication bundles, and WordPress companion v2.4.0.
+
+
 ## 1.3.0 - Optimization and Policy Pathway Design
 
 - Added governed decision variables, objectives, constraints, and optimization specifications.

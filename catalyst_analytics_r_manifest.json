@@ -1,16 +1,16 @@
 {
-  "schema_version": "2.3.0",
+  "schema_version": "2.4.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "1.3.0",
+  "repository_version": "1.4.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "1.3.0"
+    "version": "1.4.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "2.3.0",
-    "compatible_repository_version": "1.3.0",
+    "version": "2.4.0",
+    "compatible_repository_version": "1.4.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -27,8 +27,8 @@
       "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
     },
     "browser_export": {
-      "version": "2.3.0",
-      "schema": "schemas/catalyst_analytics_r_policy_pathway_demo_export.schema.json"
+      "version": "2.4.0",
+      "schema": "schemas/catalyst_analytics_r_policy_evaluation_demo_export.schema.json"
     },
     "comparison": {
       "version": "1.0.0",
@@ -159,6 +159,18 @@
     "policy_pathway_export": {
       "version": "1.0.0",
       "schema": "schemas/catalyst_analytics_r_policy_pathway_export.schema.json"
+    },
+    "econometric_evaluation": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_econometric_evaluation.schema.json"
+    },
+    "policy_evaluation": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_policy_evaluation.schema.json"
+    },
+    "policy_evaluation_export": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_policy_evaluation_export.schema.json"
     }
   },
   "models": [
@@ -213,7 +225,11 @@
     "policy_optimization_input": "examples/policy_optimization_input.json",
     "policy_optimization_export": "outputs/example_policy_optimization_export.json",
     "browser_policy_pathway_export": "outputs/example_browser_policy_pathway_export.json",
-    "policy_optimization_contract": "tests/fixtures/policy_optimization_contract_v1.json"
+    "policy_optimization_contract": "tests/fixtures/policy_optimization_contract_v1.json",
+    "policy_evaluation_input": "examples/policy_evaluation_input.json",
+    "policy_evaluation_export": "outputs/example_policy_evaluation_export.json",
+    "econometrics_policy_evaluation_contract": "tests/fixtures/econometrics_policy_evaluation_contract_v1.json",
+    "browser_policy_evaluation_export": "outputs/example_browser_policy_evaluation_export.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [
@@ -270,9 +286,17 @@
     "cost-effectiveness and marginal-abatement analysis",
     "adaptive policy pathways and human decision gates",
     "robustness and normalized regret analysis",
-    "WordPress optimization and pathway companion"
+    "WordPress optimization and pathway companion",
+    "governed regression and panel-data workflows",
+    "classical, HC1, and cluster-robust uncertainty",
+    "difference-in-differences and event studies",
+    "interrupted time-series evaluation",
+    "synthetic-control evaluation",
+    "explicit causal-identification assumptions",
+    "policy-effect publication and workspace libraries",
+    "WordPress econometrics and policy-evaluation companion"
   ],
-  "method_path": "question -> evidence and scenarios -> models and parameter sets -> governed runs -> hashes and environment -> indicators and plots -> interpretation -> review -> snapshot -> publication -> Decision Studio and Knowledge Library handoffs",
+  "method_path": "question -> data and identification assumptions -> regression or quasi-experimental design -> diagnostics and uncertainty -> policy effects -> robustness review -> human interpretation -> publication and platform handoff",
   "boundaries": [
     "educational decision support",
     "source and scope review required",
@@ -287,6 +311,10 @@
     "not professional advice",
     "reproducibility does not establish validity",
     "publication approval requires human review",
-    "project handoffs are not autonomous decisions"
+    "project handoffs are not autonomous decisions",
+    "statistical association is not causal proof",
+    "parallel-trends and no-interference assumptions require review",
+    "synthetic controls require placebo and support review",
+    "econometric outputs do not authorize policy"
   ]
 }

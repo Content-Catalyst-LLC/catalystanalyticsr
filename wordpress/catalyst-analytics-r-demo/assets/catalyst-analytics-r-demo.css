@@ -6,3 +6,5 @@
 
 .scar-demo__checks strong{color:var(--accent)} .scar-demo__handoffs article p{text-transform:none}
 .scar-demo__pareto{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.scar-demo__pareto article{padding:13px;border:1px solid var(--line);border-radius:10px;background:var(--soft)}.scar-demo__pareto strong{font-size:12px}.scar-demo__pareto p{margin:5px 0 0;color:var(--muted);font-size:11px;line-height:1.5}@media(max-width:700px){.scar-demo__pareto{grid-template-columns:1fr}}
+
+.scar-demo select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff}.scar-demo__pareto article p{overflow-wrap:anywhere}

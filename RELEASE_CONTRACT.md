@@ -42,6 +42,25 @@
 - Portfolio aggregation does not confer allocation or decision authority.
 
 
-## v1.3.0 optimization and policy pathway contract
+## v1.4.0 optimization and policy pathway contract
 
 The release must preserve governed variables, objectives, constraints, feasible and Pareto diagnostics, adaptive pathways, human decision gates, non-executing triggers, robust regret evidence, and an explicit prohibition on autonomous policy authorization.
+
+
+## Econometrics gate
+
+The release must retain explicit causal assumptions, robust and clustered uncertainty, design-specific boundaries, portable policy-evaluation exports, and no automated policy authorization.
+## v1.4.0 Rd usage repair gate
+
+- Econometrics and workspace policy-evaluation Rd files must use real line breaks inside `\usage{}` blocks.
+- Literal escaped newline tokens must not appear in those usage sections.
+- Documented usage signatures must preserve every exported function and S3 print method.
+- The release contract must verify balanced usage parentheses before R CMD check.
+
+
+## v1.4.0 documentation repair V2
+
+The release contract rejects stray escaped-newline tokens in all Rd files,
+requires terminal newlines, and verifies balanced usage blocks. The
+`export_policy_evaluation.Rd` file must be valid multiline Rd with no text
+outside a documentation section.

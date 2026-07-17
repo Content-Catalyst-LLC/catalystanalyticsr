@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-econometric-evaluation.schema.json",
+  "title": "Catalyst Analytics R econometric evaluation",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_type",
+    "id",
+    "title",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_type": {
+      "enum": [
+        "policy_regression",
+        "difference_in_differences",
+        "event_study",
+        "interrupted_time_series",
+        "synthetic_control"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "boundary": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

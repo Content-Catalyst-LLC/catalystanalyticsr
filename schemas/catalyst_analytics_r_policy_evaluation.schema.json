@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-policy-evaluation.schema.json",
+  "title": "Catalyst Analytics R policy evaluation analysis",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_type",
+    "id",
+    "title",
+    "evaluations",
+    "effects",
+    "assumptions",
+    "identification_status",
+    "review_status",
+    "metadata",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_type": {
+      "const": "econometrics_and_policy_evaluation"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evaluations": {
+      "type": "object"
+    },
+    "effects": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "assumptions": {
+      "type": "array"
+    },
+    "identification_status": {
+      "enum": [
+        "failed",
+        "challenged",
+        "supported",
+        "requires_review"
+      ]
+    },
+    "review_status": {
+      "enum": [
+        "draft",
+        "under_review",
+        "approved_for_specified_use"
+      ]
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object",
+      "required": [
+        "causal_claim_requires_design_specific_assumptions",
+        "automated_policy_authorization",
+        "human_review_required"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

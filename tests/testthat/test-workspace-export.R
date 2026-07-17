@@ -7,7 +7,7 @@ test_that("workspace export writes portable project and library indexes", {
   }
   manifest <- jsonlite::read_json(paths$manifest, simplifyVector = TRUE)
   expect_identical(manifest$schema_version, "1.0.0")
-  expect_identical(manifest$package$version, "1.3.0")
+  expect_identical(manifest$package$version, "1.4.0")
   expect_identical(manifest$workspace_id, workspace$id)
   file_count <- if (is.data.frame(manifest$files)) nrow(manifest$files) else length(manifest$files)
   expect_gte(file_count, 7L)
