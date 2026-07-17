@@ -12,7 +12,7 @@ test_that("export_catalyst_bundle writes expected files", {
 
   m <- jsonlite::read_json(file.path(out$bundle_dir, "manifest.json"))
   expect_equal(m$run_id, "test_run")
-  expect_equal(m$schema_version, "1.1.0")
+  expect_equal(m$schema_version, "1.2.0")
   expect_true("trajectory_wide.csv" %in% m$files)
   expect_true("parameters.csv" %in% m$files)
   expect_true("policy.csv" %in% m$files)

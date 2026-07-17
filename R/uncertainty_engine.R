@@ -516,7 +516,7 @@ plot_uncertainty <- function(x, metric = NULL, type = c("distribution", "interva
   type <- match.arg(type)
   if (type == "interval") {
     rows <- x$summary
-    return(ggplot2::ggplot(rows, ggplot2::aes(x = reorder(metric, median), y = median, ymin = p10, ymax = p90)) +
+    return(ggplot2::ggplot(rows, ggplot2::aes(x = stats::reorder(metric, median), y = median, ymin = p10, ymax = p90)) +
       ggplot2::geom_pointrange() + ggplot2::coord_flip() +
       ggplot2::labs(x = NULL, y = "P10 to P90 interval", title = "Uncertainty intervals") + theme_catalyst())
   }
@@ -545,7 +545,7 @@ plot_tornado <- function(x, metric = NULL, method = c("spearman", "pearson")) {
   .assert_single_string(metric, "metric")
   rows <- sensitivity[sensitivity$metric == metric, , drop = FALSE]
   if (!nrow(rows)) stop("`metric` is not present in the sensitivity results.", call. = FALSE)
-  ggplot2::ggplot(rows, ggplot2::aes(x = reorder(target, estimate), y = estimate)) +
+  ggplot2::ggplot(rows, ggplot2::aes(x = stats::reorder(target, estimate), y = estimate)) +
     ggplot2::geom_col() + ggplot2::coord_flip() + ggplot2::geom_hline(yintercept = 0, linewidth = 0.4) +
     ggplot2::labs(x = NULL, y = paste(tools::toTitleCase(method), "correlation"), title = paste("Sensitivity tornado:", metric)) + theme_catalyst()
 }

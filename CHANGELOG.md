@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.5.0 - Data Intake and Indicator Registry
+
+### R CMD check repair
+
+- Updated stale package and bundle-schema expectations in the export tests.
+- Qualified `stats::setNames()` and `stats::reorder()` calls and registered the comparative delta plotting binding.
+- Corrected the stress-test exporter to use the comparative bundle API.
+- Completed uncertainty and stress-test Rd argument documentation.
+
+- Added governed CSV and JSON data import with versioned dataset contracts.
+- Added source, license, citation, geography, sector, currency, price-year, unit, checksum, and transformation metadata.
+- Added missing-value, duplicate-row, duplicate-key, time-order, and frequency quality diagnostics.
+- Added a linear unit-conversion registry and traceable dataset transformations.
+- Added versioned indicator definitions, registry discovery, custom registration, grouped calculation, and formula/source/unit trace records.
+- Added reproducible data-analysis bundles and indicator definitions to scenario exports.
+- Added dataset, indicator, data-analysis, and browser export schemas and fixtures.
+- Upgraded the WordPress demo to v1.4.0 with CSV intake, quality review, indicator calculation, and governed JSON export.
+
 ## 0.4.0 - Uncertainty, Sensitivity, and Stress Testing
 
 - Added canonical uncertainty specifications and strict distribution validation.

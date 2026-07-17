@@ -1,16 +1,16 @@
 {
-  "schema_version": "1.3.0",
+  "schema_version": "1.4.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "0.4.0",
+  "repository_version": "0.5.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "0.4.0"
+    "version": "0.5.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "1.3.0",
-    "compatible_repository_version": "0.4.0",
+    "version": "1.4.0",
+    "compatible_repository_version": "0.5.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -27,8 +27,8 @@
       "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
     },
     "browser_export": {
-      "version": "1.3.0",
-      "schema": "schemas/catalyst_analytics_r_demo_export.schema.json"
+      "version": "1.4.0",
+      "schema": "schemas/catalyst_analytics_r_data_demo_export.schema.json"
     },
     "comparison": {
       "version": "1.0.0",
@@ -47,6 +47,18 @@
     "stress_test": {
       "version": "1.0.0",
       "input_schema": "schemas/catalyst_analytics_r_stress_test_input.schema.json"
+    },
+    "dataset": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_dataset.schema.json"
+    },
+    "indicator_registry": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_indicator.schema.json"
+    },
+    "data_analysis": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_data_analysis.schema.json"
     }
   },
   "models": [
@@ -65,7 +77,12 @@
     "browser_comparison_export": "outputs/example_browser_comparison_export.json",
     "uncertainty_input": "examples/uncertainty_input.json",
     "uncertainty_export": "outputs/example_uncertainty_export.json",
-    "stress_test_input": "examples/stress_test_input.json"
+    "stress_test_input": "examples/stress_test_input.json",
+    "data_intake_input": "examples/data_intake_input.json",
+    "indicator_registry_input": "examples/indicator_registry_input.json",
+    "data_analysis_export": "outputs/example_data_analysis_export.json",
+    "browser_data_export": "outputs/example_browser_data_export.json",
+    "data_indicator_contract": "tests/fixtures/data_indicator_contract_v1.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [
@@ -73,17 +90,16 @@
     "canonical scenario contract",
     "model registry",
     "comparative scenario engine",
-    "uncertainty distributions",
-    "Monte Carlo sampling",
-    "Latin hypercube sampling",
-    "scenario ensembles",
-    "probability thresholds",
-    "local and global sensitivity",
-    "stress testing",
-    "uncertainty export bundles",
-    "WordPress uncertainty demo"
+    "uncertainty and stress testing",
+    "governed CSV and JSON intake",
+    "dataset source and quality contracts",
+    "unit conversion registry",
+    "versioned indicator registry",
+    "indicator calculation trace",
+    "data-analysis export bundles",
+    "WordPress data-intake demo"
   ],
-  "method_path": "question -> assumptions -> scenarios -> uncertainty -> ensemble -> sensitivity -> stress tests -> interpretation -> review",
+  "method_path": "question -> source data -> validation -> units -> indicator definition -> calculation -> trace -> interpretation -> review",
   "boundaries": [
     "educational decision support",
     "not a forecast",

@@ -1,6 +1,6 @@
 # Export Bundle Specification
 
-Catalyst export bundles use manifest schema `1.1.0`.
+Catalyst run export bundles use manifest schema `1.2.0`. Specialized comparison, uncertainty, and data-analysis bundles have their own versioned manifests.
 
 ## Core files
 
@@ -26,7 +26,7 @@ The manifest records package version, model id, exact model version, model contr
 
 `scenario.json` is written only when the run contains a canonical scenario object.
 
-## Comparative scenario bundles — v0.4.0
+## Comparative scenario bundles - v0.3.0
 
 `export_scenario_comparison()` creates a `comparison_<id>` directory and optional ZIP archive.
 
@@ -50,3 +50,22 @@ Required contents include:
 - `plots/<metric>_terminal.png`
 
 The manifest records the package version, baseline id, model version, scenario and metric counts, relative file paths, byte sizes, and MD5 checksums.
+
+
+## Data-analysis bundles - v0.5.0
+
+`export_data_analysis()` creates a `data_analysis_<id>` directory and optional ZIP archive.
+
+Contents include:
+
+- `data.csv`
+- `dataset_manifest.json`
+- `source.json`
+- `quality_flags.csv`
+- `transformations.json`
+- `indicator_values.csv` when indicators are calculated
+- `indicator_definitions.json`
+- `indicator_trace.json`
+- `manifest.json`
+
+The manifest records the package version, dataset fingerprint, source id, dimensions, quality-flag count, indicator versions, output-row counts, file sizes, and MD5 checksums. The bundle explicitly records that source quality and unit compatibility require human review and that the result does not constitute a causal claim or autonomous decision.

@@ -79,6 +79,15 @@ export_catalyst_bundle <- function(
   write_df("trajectory_wide", results$trajectory_wide)
   write_df("trajectory_long", results$trajectory_long)
   write_df("sdg_indicators", results$sdg_indicators)
+  indicator_definitions <- list()
+  if (is.data.frame(results$sdg_indicators) && "indicator" %in% names(results$sdg_indicators)) {
+    indicator_ids <- unique(as.character(results$sdg_indicators$indicator))
+    for (indicator_id in indicator_ids) {
+      definition <- tryCatch(get_catalyst_indicator(indicator_id), error = function(error) NULL)
+      if (!is.null(definition)) indicator_definitions[[indicator_id]] <- .indicator_contract_record(definition)
+    }
+  }
+  if (length(indicator_definitions)) write_json("indicator_definitions", indicator_definitions)
   write_df("phase_plane", results$phase_plane)
   write_df("sensitivities", results$sensitivities)
   write_df("carbon_budget", as_one_row_df(results$carbon_budget))
@@ -123,7 +132,7 @@ export_catalyst_bundle <- function(
   }
 
   manifest <- list(
-    schema_version = "1.1.0",
+    schema_version = "1.2.0",
     package = "catalystanalyticsr",
     package_version = .catalyst_package_version(),
     model = if (!is.null(meta$model)) meta$model else NULL,
@@ -133,6 +142,8 @@ export_catalyst_bundle <- function(
     requested_run_id = run_id,
     scenario_schema_version = if (!is.null(results$scenario)) results$scenario$schema_version else NULL,
     scenario_fingerprint = scenario_fingerprint_value,
+    indicator_registry_version = if (length(indicator_definitions)) "1.0.0" else NULL,
+    indicator_definitions = names(indicator_definitions),
     created_at = format(Sys.time(), tz = "UTC", usetz = TRUE),
     files = basename(written),
     file_inventory = inventory(written)

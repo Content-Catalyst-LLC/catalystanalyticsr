@@ -1,0 +1,264 @@
+{
+  "schema_version": "1.0.0",
+  "id": "sample-country-timeseries",
+  "title": "Synthetic regional sustainability time series",
+  "fields": [
+    {
+      "name": "year",
+      "type": "numeric",
+      "unit": "year",
+      "required": true
+    },
+    {
+      "name": "region",
+      "type": "character",
+      "unit": null,
+      "required": true
+    },
+    {
+      "name": "gdp",
+      "type": "numeric",
+      "unit": "currency_index",
+      "required": true
+    },
+    {
+      "name": "population",
+      "type": "numeric",
+      "unit": "person_index",
+      "required": true
+    },
+    {
+      "name": "emissions",
+      "type": "numeric",
+      "unit": "tCO2e_index",
+      "required": true
+    },
+    {
+      "name": "natural_capital",
+      "type": "numeric",
+      "unit": "index",
+      "required": false
+    },
+    {
+      "name": "gross_savings",
+      "type": "numeric",
+      "unit": "currency_index",
+      "required": false
+    },
+    {
+      "name": "depreciation",
+      "type": "numeric",
+      "unit": "currency_index",
+      "required": false
+    },
+    {
+      "name": "depletion",
+      "type": "numeric",
+      "unit": "currency_index",
+      "required": false
+    },
+    {
+      "name": "damages",
+      "type": "numeric",
+      "unit": "currency_index",
+      "required": false
+    },
+    {
+      "name": "education_investment",
+      "type": "numeric",
+      "unit": "currency_index",
+      "required": false
+    }
+  ],
+  "time_field": "year",
+  "entity_fields": [
+    "region"
+  ],
+  "units": {
+    "year": "year",
+    "gdp": "currency_index",
+    "population": "person_index",
+    "emissions": "tCO2e_index",
+    "natural_capital": "index",
+    "gross_savings": "currency_index",
+    "depreciation": "currency_index",
+    "depletion": "currency_index",
+    "damages": "currency_index",
+    "education_investment": "currency_index"
+  },
+  "source": {
+    "id": "sample-country-timeseries-source",
+    "title": "Catalyst Analytics R synthetic country time series",
+    "publisher": "Content Catalyst LLC",
+    "url": "",
+    "license": "CC0-1.0 synthetic example",
+    "retrieved_at": "2026-07-17T00:00:00Z",
+    "citation": "Catalyst Analytics R v0.5.0 synthetic validation fixture.",
+    "metadata": {
+      "synthetic": true,
+      "production_data": false
+    }
+  },
+  "geography": {
+    "scope": "synthetic_regions",
+    "identifiers": [
+      "North",
+      "South"
+    ]
+  },
+  "sector": {},
+  "currency": {
+    "code": "INDEX",
+    "price_year": 2024
+  },
+  "missing_policy": "flag",
+  "transformations": [],
+  "quality": {
+    "row_count": 10,
+    "column_count": 11,
+    "missing_cells": 0,
+    "duplicate_rows": 0,
+    "duplicate_keys": 0,
+    "time_ordered": true,
+    "frequency": "regular:1",
+    "flags": []
+  },
+  "metadata": {
+    "package_version": "0.5.0",
+    "created_at": "2026-07-17T00:00:00Z",
+    "synthetic": true
+  },
+  "data": [
+    {
+      "year": 2020,
+      "region": "North",
+      "gdp": 100,
+      "population": 50,
+      "emissions": 42,
+      "natural_capital": 92,
+      "gross_savings": 24,
+      "depreciation": 8,
+      "depletion": 4,
+      "damages": 3,
+      "education_investment": 5
+    },
+    {
+      "year": 2021,
+      "region": "North",
+      "gdp": 104,
+      "population": 51,
+      "emissions": 41,
+      "natural_capital": 91,
+      "gross_savings": 25,
+      "depreciation": 8.2,
+      "depletion": 4.1,
+      "damages": 3.1,
+      "education_investment": 5.2
+    },
+    {
+      "year": 2022,
+      "region": "North",
+      "gdp": 109,
+      "population": 52,
+      "emissions": 39,
+      "natural_capital": 91.5,
+      "gross_savings": 27,
+      "depreciation": 8.5,
+      "depletion": 3.9,
+      "damages": 3.2,
+      "education_investment": 5.5
+    },
+    {
+      "year": 2023,
+      "region": "North",
+      "gdp": 115,
+      "population": 53,
+      "emissions": 36,
+      "natural_capital": 92.5,
+      "gross_savings": 29,
+      "depreciation": 8.8,
+      "depletion": 3.5,
+      "damages": 3.0,
+      "education_investment": 5.9
+    },
+    {
+      "year": 2024,
+      "region": "North",
+      "gdp": 122,
+      "population": 54,
+      "emissions": 32,
+      "natural_capital": 94,
+      "gross_savings": 32,
+      "depreciation": 9.1,
+      "depletion": 3.0,
+      "damages": 2.8,
+      "education_investment": 6.4
+    },
+    {
+      "year": 2020,
+      "region": "South",
+      "gdp": 80,
+      "population": 44,
+      "emissions": 38,
+      "natural_capital": 85,
+      "gross_savings": 18,
+      "depreciation": 6.5,
+      "depletion": 5.0,
+      "damages": 3.5,
+      "education_investment": 3.8
+    },
+    {
+      "year": 2021,
+      "region": "South",
+      "gdp": 83,
+      "population": 45,
+      "emissions": 37,
+      "natural_capital": 84,
+      "gross_savings": 18.5,
+      "depreciation": 6.7,
+      "depletion": 5.1,
+      "damages": 3.6,
+      "education_investment": 3.9
+    },
+    {
+      "year": 2022,
+      "region": "South",
+      "gdp": 87,
+      "population": 46,
+      "emissions": 36,
+      "natural_capital": 84.5,
+      "gross_savings": 19.5,
+      "depreciation": 7.0,
+      "depletion": 4.8,
+      "damages": 3.7,
+      "education_investment": 4.2
+    },
+    {
+      "year": 2023,
+      "region": "South",
+      "gdp": 92,
+      "population": 47,
+      "emissions": 34,
+      "natural_capital": 85.5,
+      "gross_savings": 21,
+      "depreciation": 7.3,
+      "depletion": 4.4,
+      "damages": 3.5,
+      "education_investment": 4.6
+    },
+    {
+      "year": 2024,
+      "region": "South",
+      "gdp": 98,
+      "population": 48,
+      "emissions": 31,
+      "natural_capital": 87,
+      "gross_savings": 23,
+      "depreciation": 7.7,
+      "depletion": 4.0,
+      "damages": 3.3,
+      "education_investment": 5.0
+    }
+  ],
+  "fingerprint": "0511de3c54fb86083d3ff2e4e6b669a2"
+}

@@ -105,8 +105,29 @@ export_uncertainty_analysis <- function(
 #' @export
 export_stress_test <- function(x, dir = "catalyst_stress_test_bundle", prefix = "stress-test") {
   if (!inherits(x, "catalyst_stress_test")) stop("`x` must be a catalyst_stress_test.", call. = FALSE)
-  paths <- export_scenario_comparison(x$comparison, dir = dir, prefix = prefix)
-  case_path <- file.path(dir, paste0(prefix, "-cases.json"))
-  jsonlite::write_json(list(schema_version = x$schema_version, baseline_id = x$baseline$id, cases = x$cases, meta = x$meta), case_path, auto_unbox = TRUE, pretty = TRUE, null = "null", na = "null")
-  invisible(c(paths, list(stress_cases = case_path)))
+  .assert_single_string(dir, "dir")
+  .assert_single_string(prefix, "prefix")
+  comparison_bundle <- export_scenario_comparison(
+    x$comparison,
+    dir = dir,
+    comparison_id = prefix,
+    zip = FALSE,
+    overwrite = TRUE,
+    quiet = TRUE
+  )
+  case_path <- file.path(comparison_bundle$bundle_dir, "stress_cases.json")
+  jsonlite::write_json(
+    list(
+      schema_version = x$schema_version,
+      baseline_id = x$baseline$id,
+      cases = x$cases,
+      meta = x$meta
+    ),
+    case_path,
+    auto_unbox = TRUE,
+    pretty = TRUE,
+    null = "null",
+    na = "null"
+  )
+  invisible(c(comparison_bundle, list(stress_cases = case_path)))
 }

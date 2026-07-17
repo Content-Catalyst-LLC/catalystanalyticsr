@@ -35,14 +35,17 @@ def validator(path: str):
 def test_release_manifest_versions_and_contracts_are_consistent():
     manifest = load_json("catalyst_analytics_r_manifest.json")
     assert manifest["repository"] == "catalystanalyticsr"
-    assert manifest["repository_version"] == "0.4.0"
-    assert manifest["r_package"]["version"] == description_version() == "0.4.0"
-    assert manifest["wordpress_demo"]["version"] == plugin_version() == "1.3.0"
-    assert manifest["wordpress_demo"]["compatible_repository_version"] == "0.4.0"
+    assert manifest["repository_version"] == "0.5.0"
+    assert manifest["r_package"]["version"] == description_version() == "0.5.0"
+    assert manifest["wordpress_demo"]["version"] == plugin_version() == "1.4.0"
+    assert manifest["wordpress_demo"]["compatible_repository_version"] == "0.5.0"
     assert manifest["wordpress_demo"]["shortcode"] == "[catalyst_analytics_r_demo]"
     assert manifest["contracts"]["scenario"]["version"] == "1.0.0"
     assert manifest["contracts"]["model_manifest"]["version"] == "1.0.0"
-    assert manifest["contracts"]["browser_export"]["version"] == "1.3.0"
+    assert manifest["contracts"]["browser_export"]["version"] == "1.4.0"
+    assert manifest["contracts"]["dataset"]["version"] == "1.0.0"
+    assert manifest["contracts"]["indicator_registry"]["version"] == "1.0.0"
+    assert manifest["contracts"]["data_analysis"]["version"] == "1.0.0"
 
 
 def test_canonical_scenario_examples_validate_against_schema():
@@ -205,16 +208,17 @@ def test_r_comparative_engine_exports_are_present():
     assert "baseline" in source and "counterfactual" in source
 
 
-def test_wordpress_demo_performs_seeded_uncertainty_analysis():
+def test_wordpress_demo_performs_governed_data_intake_and_indicator_calculation():
     php = (ROOT / "wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php").read_text(encoding="utf-8")
     js = (ROOT / "wordpress/catalyst-analytics-r-demo/assets/catalyst-analytics-r-demo.js").read_text(encoding="utf-8")
-    assert "Compare pathways under declared uncertainty" in php
-    assert "Latin hypercube" in php and "Monte Carlo" in php
-    assert "canonical_scenarios" in js
-    assert "mapped_uncertainty_contract" in js
-    assert "compatible_repository_version: '0.4.0'" in js
-    assert "uncertainty_contract_version: '1.0.0'" in js
-    assert "budget_probability" in js and "P10-P90" in php
+    assert "Validate data and calculate governed indicators" in php
+    assert "CSV records" in php and "Data-quality report" in php
+    assert "browser_data_intake" in js
+    assert "mapped_data_indicator_contract" in js
+    assert "compatible_repository_version: '0.5.0'" in js
+    assert "dataset_contract_version: '1.0.0'" in js
+    assert "indicator_contract_version: '1.0.0'" in js
+    assert "duplicate_keys" in js and "required_fields" in js
 
 
 def test_python_brief_supports_comparative_exports(tmp_path):
@@ -298,3 +302,74 @@ def test_python_brief_supports_uncertainty_exports():
     assert "Uncertainty intervals" in text
     assert "Threshold probabilities" in text
     assert "Strongest sensitivity signals" in text
+
+
+def test_dataset_indicator_and_data_analysis_contracts_validate():
+    dataset = load_json("examples/data_intake_input.json")
+    validator("schemas/catalyst_analytics_r_dataset.schema.json").validate(dataset)
+    indicator_validator = validator("schemas/catalyst_analytics_r_indicator.schema.json")
+    definitions = load_json("examples/indicator_registry_input.json")
+    for definition in definitions:
+        indicator_validator.validate(definition)
+    export = load_json("outputs/example_data_analysis_export.json")
+    validator("schemas/catalyst_analytics_r_data_analysis.schema.json").validate(export)
+    validator("schemas/catalyst_analytics_r_dataset.schema.json").validate(export["dataset"])
+    for definition in export["indicators"]:
+        indicator_validator.validate(definition)
+    assert export["dataset"]["quality"]["duplicate_keys"] == 0
+    assert export["indicator_trace"]
+
+
+def test_browser_data_export_validates_and_preserves_boundary():
+    export = load_json("outputs/example_browser_data_export.json")
+    validator("schemas/catalyst_analytics_r_data_demo_export.schema.json").validate(export)
+    assert export["engine"]["parity_status"] == "mapped_data_indicator_contract"
+    assert export["quality"]["row_count"] == 10
+    assert export["indicator_result"]["indicator"]["formula"] == "emissions / gdp"
+    assert export["boundary"]["source_verified"] is False
+    assert export["boundary"]["unit_compatibility_verified"] is False
+
+
+def test_r_data_and_indicator_exports_are_present():
+    namespace = (ROOT / "NAMESPACE").read_text(encoding="utf-8")
+    for name in (
+        "dataset_source", "as_catalyst_dataset", "read_catalyst_data",
+        "validate_catalyst_dataset", "dataset_fingerprint", "dataset_manifest",
+        "data_quality_report", "register_unit_conversion", "convert_dataset_unit",
+        "new_catalyst_indicator", "register_catalyst_indicator",
+        "list_catalyst_indicators", "get_catalyst_indicator",
+        "catalyst_indicator_manifest", "calculate_indicator",
+        "calculate_indicators", "indicator_trace", "export_data_analysis",
+    ):
+        assert f"export({name})" in namespace
+    data_source = (ROOT / "R/data_intake.R").read_text(encoding="utf-8")
+    indicator_source = (ROOT / "R/indicator_registry.R").read_text(encoding="utf-8")
+    export_source = (ROOT / "R/export_data_analysis.R").read_text(encoding="utf-8")
+    for token in ("duplicate_keys", "missing_policy", "dataset_fingerprint", "unit_conversion"):
+        assert token in data_source
+    for token in ("required_fields", "formula", "indicator_version", "calculation"):
+        assert token in indicator_source
+    assert "indicator_trace" in export_source and "quality_flags" in export_source
+
+
+def test_data_indicator_fixture_preserves_expected_values():
+    fixture = load_json("tests/fixtures/data_indicator_contract_v1.json")
+    assert fixture["expected"]["row_count"] == 10
+    assert fixture["expected"]["regions"] == ["North", "South"]
+    assert math.isclose(fixture["expected"]["carbon_intensity_2024_north"], 32 / 122, rel_tol=0, abs_tol=1e-8)
+    assert math.isclose(fixture["expected"]["adjusted_net_savings_2024_north"], 23.5, rel_tol=0, abs_tol=1e-8)
+    assert fixture["expected"]["cumulative_emissions_north"] == 190
+
+
+def test_python_brief_supports_data_analysis_exports():
+    import importlib.util
+    path = ROOT / "python/catalyst_analytics_brief.py"
+    spec = importlib.util.spec_from_file_location("catalyst_analytics_brief_data", path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec and spec.loader
+    spec.loader.exec_module(module)
+    text = module.brief(load_json("outputs/example_data_analysis_export.json"))
+    assert "# Catalyst Analytics R Data and Indicator Brief" in text
+    assert "Synthetic regional sustainability time series" in text
+    assert "Indicator definitions" in text
+    assert "Data-quality flags" in text

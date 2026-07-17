@@ -1,151 +1,339 @@
 (function () {
-  var supportedSampling = ['latin_hypercube', 'monte_carlo'];
-  function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
-  function round(value, digits) { var m = Math.pow(10, digits == null ? 2 : digits); return Math.round(value * m) / m; }
-  function pct(value) { return Math.round(value * 100) + '%'; }
-  function signed(value, digits) { var v = round(value, digits == null ? 1 : digits); return (v > 0 ? '+' : '') + v; }
-  function slug(value) { var out = String(value || 'scenario').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); if (!out) out = 'scenario'; if (!/^[a-z]/.test(out)) out = 'scenario-' + out; return out.slice(0, 80); }
-  function quantile(values, p) { var sorted = values.slice().sort(function (a, b) { return a - b; }); if (!sorted.length) return null; var index = (sorted.length - 1) * p; var lo = Math.floor(index), hi = Math.ceil(index); return lo === hi ? sorted[lo] : sorted[lo] + (sorted[hi] - sorted[lo]) * (index - lo); }
-  function mulberry32(seed) { return function () { var t = seed += 0x6D2B79F5; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-  function shuffled(values, random) { var out = values.slice(); for (var i = out.length - 1; i > 0; i--) { var j = Math.floor(random() * (i + 1)); var tmp = out[i]; out[i] = out[j]; out[j] = tmp; } return out; }
-  function triangular(u, min, mode, max) { var cut = (mode - min) / Math.max(0.0000001, max - min); return u < cut ? min + Math.sqrt(u * (max - min) * (mode - min)) : max - Math.sqrt((1 - u) * (max - min) * (max - mode)); }
+  'use strict';
 
-  function scenarioInput(fd, prefix, fallbackName) {
-    return { scenarioName: String(fd.get(prefix + 'Name') || fallbackName), role: prefix === 'baseline' ? 'baseline' : 'intervention', savings: Number(fd.get(prefix + 'Savings')) / 100, emissionsIntensity: Number(fd.get(prefix + 'EmissionsIntensity')) / 100, adaptation: Number(fd.get(prefix + 'Adaptation')) / 100, restoration: Number(fd.get(prefix + 'Restoration')) / 100, humanInvestment: Number(fd.get(prefix + 'HumanInvestment')) / 100 };
-  }
+  var units = {
+    year: 'year',
+    gdp: 'currency_index',
+    population: 'person_index',
+    emissions: 'tCO2e_index',
+    natural_capital: 'index',
+    gross_savings: 'currency_index',
+    depreciation: 'currency_index',
+    depletion: 'currency_index',
+    damages: 'currency_index',
+    education_investment: 'currency_index'
+  };
 
-  function read(form) {
-    var fd = new FormData(form);
+  function definition(id, title, description, formula, fields, unit, direction, aggregation, methodology) {
     return {
-      shared: { years: Number(fd.get('years') || 20), initialCapital: Number(fd.get('initialCapital') || 100), initialHuman: Number(fd.get('initialHuman') || 100), initialNatural: Number(fd.get('initialNatural') || 100), emissionsBudget: Number(fd.get('emissionsBudget') || 120) },
-      baseline: scenarioInput(fd, 'baseline', 'Reference baseline'), policy: scenarioInput(fd, 'policy', 'Transition policy'),
-      uncertainty: { sampling: supportedSampling.indexOf(String(fd.get('sampling'))) >= 0 ? String(fd.get('sampling')) : 'latin_hypercube', n: Number(fd.get('simulations') || 250), seed: Number(fd.get('seed') || 42), emissionsWidth: Number(fd.get('emissionsWidth') || 30) / 100, restorationWidth: Number(fd.get('restorationWidth') || 25) / 100, adaptationWidth: Number(fd.get('adaptationWidth') || 20) / 100 }
+      id: id,
+      version: '1.0.0',
+      title: title,
+      description: description,
+      formula: formula,
+      required_fields: fields,
+      unit: unit,
+      direction: direction,
+      aggregation: aggregation,
+      source: { type: 'derived', methodology: methodology },
+      targets: [],
+      metadata: { status: 'active', builtin: true, browser_contract: '1.0.0' }
     };
   }
 
-  function simulate(input, shared) {
-    var rows = [], K = shared.initialCapital, H = shared.initialHuman, N = shared.initialNatural, C = 0;
-    for (var year = 0; year <= shared.years; year++) {
-      var output = 0.42 * K + 0.34 * H + 0.24 * N;
-      var emissions = output * input.emissionsIntensity * (1 - 0.55 * input.adaptation);
-      var depletion = Math.max(0, emissions * 0.30 - input.restoration * 8);
-      var adjustedSavings = input.savings * output + input.humanInvestment * output * 0.35 + input.restoration * output * 0.25 - depletion - emissions * 0.15;
-      var composite = 0.38 * K + 0.32 * H + 0.30 * N - 0.18 * C;
-      rows.push({ year: year, produced_capital: round(K), human_capital: round(H), natural_capital: round(N), cumulative_emissions: round(C), adjusted_savings: round(adjustedSavings), composite_score: round(composite) });
-      C += emissions; K += (0.030 + input.savings * 0.09) * K - 0.018 * K; H += (0.012 + input.humanInvestment * 0.12) * H; N += input.restoration * 4 + (0.018 * input.adaptation) * 30 - 0.010 * emissions - depletion * 0.05; N = Math.max(1, N);
-    }
-    return { id: slug(input.scenarioName), input: input, trajectory: rows, final: rows[rows.length - 1], within_budget: rows[rows.length - 1].cumulative_emissions <= shared.emissionsBudget };
-  }
-
-  var metrics = [
-    { key: 'composite_score', label: 'Composite score', direction: 'higher_better' }, { key: 'adjusted_savings', label: 'Adjusted savings', direction: 'higher_better' },
-    { key: 'natural_capital', label: 'Natural capital', direction: 'higher_better' }, { key: 'produced_capital', label: 'Produced capital', direction: 'higher_better' },
-    { key: 'human_capital', label: 'Human capital', direction: 'higher_better' }, { key: 'cumulative_emissions', label: 'Cumulative emissions', direction: 'lower_better' }
+  var registry = [
+    definition('carbon_intensity', 'Carbon intensity', 'Emissions per unit of economic output.', 'emissions / gdp', ['emissions', 'gdp'], 'tCO2e/currency', 'lower_better', 'rowwise', 'Emissions divided by GDP.'),
+    definition('gdp_per_capita', 'GDP per capita', 'Economic output divided by population.', 'gdp / population', ['gdp', 'population'], 'currency/person', 'higher_better', 'rowwise', 'GDP divided by population.'),
+    definition('emissions_per_capita', 'Emissions per capita', 'Emissions divided by population.', 'emissions / population', ['emissions', 'population'], 'tCO2e/person', 'lower_better', 'rowwise', 'Emissions divided by population.'),
+    definition('adjusted_net_savings', 'Adjusted net savings', 'Savings adjusted for depreciation, depletion, damages, and education investment.', 'gross_savings - depreciation - depletion - damages + education_investment', ['gross_savings', 'depreciation', 'depletion', 'damages', 'education_investment'], 'currency', 'higher_better', 'rowwise', 'Transparent simplified adjusted-net-savings identity.'),
+    definition('cumulative_emissions', 'Cumulative emissions', 'Sum of emissions for each region.', 'sum(emissions)', ['emissions'], 'tCO2e', 'lower_better', 'sum', 'Unweighted sum across the supplied observations.'),
+    definition('natural_capital_change', 'Natural-capital change', 'Final natural-capital value minus the first value for each region.', 'last(natural_capital) - first(natural_capital)', ['natural_capital'], 'index', 'higher_better', 'last_minus_first', 'Final value minus initial value in record order.')
   ];
 
-  function sampleInputs(inputs) {
-    var random = mulberry32(inputs.uncertainty.seed), n = inputs.uncertainty.n, design = {};
-    ['emissions', 'restoration', 'adaptation'].forEach(function (key) {
-      var u = [];
-      for (var i = 0; i < n; i++) u.push(inputs.uncertainty.sampling === 'latin_hypercube' ? (i + random()) / n : random());
-      design[key] = inputs.uncertainty.sampling === 'latin_hypercube' ? shuffled(u, random) : u;
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>'"]/g, function (char) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char];
     });
-    var rows = [];
-    for (var j = 0; j < n; j++) {
-      var policy = Object.assign({}, inputs.policy);
-      var eMin = Math.max(0.001, policy.emissionsIntensity * (1 - inputs.uncertainty.emissionsWidth)), eMax = policy.emissionsIntensity * (1 + inputs.uncertainty.emissionsWidth);
-      var rMin = Math.max(0, policy.restoration * (1 - inputs.uncertainty.restorationWidth)), rMax = policy.restoration * (1 + inputs.uncertainty.restorationWidth);
-      var aMin = Math.max(0, policy.adaptation * (1 - inputs.uncertainty.adaptationWidth)), aMax = Math.min(0.95, policy.adaptation * (1 + inputs.uncertainty.adaptationWidth));
-      policy.emissionsIntensity = triangular(design.emissions[j], eMin, inputs.policy.emissionsIntensity, eMax);
-      policy.restoration = triangular(design.restoration[j], rMin, inputs.policy.restoration, rMax);
-      policy.adaptation = triangular(design.adaptation[j], aMin, inputs.policy.adaptation, aMax);
-      rows.push({ sample_id: j + 1, input: policy, run: simulate(policy, inputs.shared) });
+  }
+
+  function parseCSVLine(line) {
+    var values = [], current = '', quoted = false;
+    for (var i = 0; i < line.length; i += 1) {
+      var char = line[i];
+      if (char === '"') {
+        if (quoted && line[i + 1] === '"') { current += '"'; i += 1; }
+        else quoted = !quoted;
+      } else if (char === ',' && !quoted) {
+        values.push(current.trim()); current = '';
+      } else current += char;
     }
-    return rows;
+    values.push(current.trim());
+    return values;
   }
 
-  function analyze(inputs) {
-    var baseline = simulate(inputs.baseline, inputs.shared), policy = simulate(inputs.policy, inputs.shared), samples = sampleInputs(inputs), summaries = [], bands = {};
-    metrics.forEach(function (definition) {
-      var terminal = samples.map(function (sample) { return sample.run.final[definition.key]; });
-      var baselineValue = baseline.final[definition.key], med = quantile(terminal, 0.5), delta = med - baselineValue;
-      var improved = definition.direction === 'lower_better' ? delta < 0 : delta > 0;
-      summaries.push({ metric: definition.key, label: definition.label, direction: definition.direction, baseline_value: baselineValue, median: round(med), p10: round(quantile(terminal, 0.1)), p90: round(quantile(terminal, 0.9)), outcome: Math.abs(delta) < 0.000001 ? 'tied' : improved ? 'improved' : 'worsened' });
-      bands[definition.key] = [];
-      for (var year = 0; year <= inputs.shared.years; year++) {
-        var yearly = samples.map(function (sample) { return sample.run.trajectory[year][definition.key]; });
-        bands[definition.key].push({ year: year, p10: quantile(yearly, 0.1), median: quantile(yearly, 0.5), p90: quantile(yearly, 0.9) });
-      }
+  function coerce(value) {
+    if (value === '' || value.toLowerCase() === 'na' || value.toLowerCase() === 'null') return null;
+    var numeric = Number(value);
+    return Number.isFinite(numeric) ? numeric : value;
+  }
+
+  function parseCSV(text) {
+    var lines = text.replace(/\r/g, '').split('\n').filter(function (line) { return line.trim() !== ''; });
+    if (lines.length < 2) throw new Error('CSV input must contain a header and at least one record.');
+    var headers = parseCSVLine(lines[0]);
+    if (headers.some(function (header) { return !header; })) throw new Error('Every CSV column must have a name.');
+    if (new Set(headers).size !== headers.length) throw new Error('CSV column names must be unique.');
+    var rows = lines.slice(1).map(function (line, index) {
+      var values = parseCSVLine(line);
+      if (values.length !== headers.length) throw new Error('Row ' + (index + 2) + ' has ' + values.length + ' fields; expected ' + headers.length + '.');
+      return headers.reduce(function (record, header, fieldIndex) { record[header] = coerce(values[fieldIndex]); return record; }, {});
     });
-    var budgetProbability = samples.filter(function (sample) { return sample.run.within_budget; }).length / Math.max(1, samples.length);
-    var sensitivityRows = [
-      { target: 'parameters.emissions_intensity', metric: 'cumulative_emissions', estimate: inputs.uncertainty.emissionsWidth === 0 ? 0 : 0.82 },
-      { target: 'parameters.regen', metric: 'natural_capital', estimate: inputs.uncertainty.restorationWidth === 0 ? 0 : 0.67 },
-      { target: 'policy.a', metric: 'cumulative_emissions', estimate: inputs.uncertainty.adaptationWidth === 0 ? 0 : -0.48 }
-    ];
-    return { baseline: baseline, policy: policy, samples: samples, summary: summaries, bands: bands, budget_probability: budgetProbability, sensitivity: sensitivityRows, failures: [] };
+    return { headers: headers, rows: rows };
   }
 
-  function uncertaintySpecs(inputs) {
-    function triangularSpec(id, target, label, value, width) { return { id: id, target: target, distribution: 'triangular', parameters: { min: Math.max(0, value * (1 - width)), mode: value, max: value * (1 + width) }, label: label, enabled: true }; }
-    return [triangularSpec('emissions-intensity', 'parameters.emissions_intensity', 'Emissions intensity', inputs.policy.emissionsIntensity, inputs.uncertainty.emissionsWidth), triangularSpec('restoration-rate', 'parameters.regen', 'Natural regeneration', inputs.policy.restoration, inputs.uncertainty.restorationWidth), triangularSpec('adaptation-share', 'policy.a', 'Adaptation share', inputs.policy.adaptation, inputs.uncertainty.adaptationWidth)];
+  function selectedDefinition(form) {
+    var id = form.elements.indicator.value;
+    return registry.filter(function (item) { return item.id === id; })[0];
   }
 
-  function canonicalScenario(input, shared, generatedAt, uncertainty) {
-    var times = []; for (var year = 0; year <= shared.years; year++) times.push(year);
-    return { schema_version: '1.0.0', id: slug(input.scenarioName), title: input.scenarioName, role: input.role, model: { id: 'khncpa', version: '1.0.0' }, time: { start: 0, end: shared.years, step: 1, unit: 'year', values: times }, initial_state: { K: shared.initialCapital, H: shared.initialHuman, N: shared.initialNatural, C: 0, P: 1, A: 1 }, policy: { s: input.savings, e: input.humanInvestment, a: input.adaptation }, parameters: { emissions_intensity: input.emissionsIntensity, regen: input.restoration }, constraints: { emissions_budget: shared.emissionsBudget }, units: { time: 'year', states: { K: 'index', H: 'index', N: 'index', C: 'index', P: 'people_index', A: 'index' }, flows: { gdp: 'index', consumption: 'index', savings: 'index', education: 'index', abatement: 'share', emissions: 'tCO2e_index', depletion: 'index', damages: 'index' } }, scope: { geography: { type: 'global', id: 'WORLD', label: 'Global' }, sectors: ['all'] }, currency: { code: 'index', price_year: null }, sources: [], assumptions: [{ id: 'browser-uncertainty-mapping', statement: 'Browser controls map to the canonical scenario and uncertainty contracts; browser equations are not numerically identical to the R engine.', status: 'declared' }], uncertainty: uncertainty || [], review: { status: 'draft', reviewed_by: [], notes: [] }, metadata: { description: 'Generated by the Catalyst Analytics R uncertainty browser demo.', tags: ['browser', 'comparison', 'uncertainty'], created_by: 'catalyst-analytics-r-demo', created_at: generatedAt, browser_contract_version: '1.2.0' } };
+  function groupRows(rows) {
+    return rows.reduce(function (groups, row) {
+      var key = row.region === null || row.region === undefined ? 'dataset' : String(row.region);
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(row);
+      return groups;
+    }, {});
   }
 
-  function chart(svg, analysis, metric) {
-    var width = 760, height = 320, left = 62, right = 28, top = 30, bottom = 52, baseline = analysis.baseline.trajectory, band = analysis.bands[metric];
-    var values = baseline.map(function (r) { return r[metric]; }).concat(band.map(function (r) { return r.p10; }), band.map(function (r) { return r.p90; }));
-    var minY = Math.min.apply(null, values), maxY = Math.max.apply(null, values), pad = Math.max(1, (maxY - minY) * 0.10); minY -= pad; maxY += pad;
-    function xScale(year) { return left + (year / Math.max(1, baseline[baseline.length - 1].year)) * (width - left - right); }
-    function yScale(value) { return top + (1 - (value - minY) / Math.max(0.000001, maxY - minY)) * (height - top - bottom); }
-    function path(rows, key) { return rows.map(function (row, i) { return (i ? 'L ' : 'M ') + xScale(row.year) + ' ' + yScale(row[key]); }).join(' '); }
-    var polygon = band.map(function (row) { return xScale(row.year) + ',' + yScale(row.p90); }).concat(band.slice().reverse().map(function (row) { return xScale(row.year) + ',' + yScale(row.p10); })).join(' ');
-    var parts = ['<rect x="0" y="0" width="760" height="320" fill="#fbfaf6"/>'];
-    for (var i = 0; i <= 4; i++) { var y = top + i * (height - top - bottom) / 4; parts.push('<line x1="' + left + '" y1="' + y + '" x2="' + (width-right) + '" y2="' + y + '" stroke="#d9d2c4"/>'); parts.push('<text x="8" y="' + (y+4) + '">' + round(maxY - i * (maxY-minY)/4, 1) + '</text>'); }
-    parts.push('<polygon points="' + polygon + '" fill="rgba(155,17,17,0.16)" stroke="none"/>');
-    parts.push('<path d="' + path(baseline, metric) + '" fill="none" stroke="#555555" stroke-width="3"/>');
-    parts.push('<path d="' + path(band, 'median') + '" fill="none" stroke="#9b1111" stroke-width="3"/>');
-    parts.push('<line x1="' + left + '" y1="298" x2="' + (left+24) + '" y2="298" stroke="#555555" stroke-width="3"/><text x="' + (left+30) + '" y="302">Baseline</text>');
-    parts.push('<line x1="' + (left+150) + '" y1="298" x2="' + (left+174) + '" y2="298" stroke="#9b1111" stroke-width="3"/><text x="' + (left+180) + '" y="302">Policy median</text>');
+  function calculate(rows, indicator) {
+    var missingFields = indicator.required_fields.filter(function (field) { return !Object.prototype.hasOwnProperty.call(rows[0], field); });
+    if (missingFields.length) throw new Error('Selected indicator requires missing field(s): ' + missingFields.join(', ') + '.');
+    var result = [];
+    if (indicator.aggregation === 'rowwise') {
+      rows.forEach(function (row) {
+        var value;
+        if (indicator.id === 'carbon_intensity') value = Number(row.emissions) / Math.max(Number(row.gdp), Number.EPSILON);
+        if (indicator.id === 'gdp_per_capita') value = Number(row.gdp) / Math.max(Number(row.population), Number.EPSILON);
+        if (indicator.id === 'emissions_per_capita') value = Number(row.emissions) / Math.max(Number(row.population), Number.EPSILON);
+        if (indicator.id === 'adjusted_net_savings') value = Number(row.gross_savings) - Number(row.depreciation) - Number(row.depletion) - Number(row.damages) + Number(row.education_investment);
+        result.push({ year: row.year, region: row.region, value: value });
+      });
+    } else {
+      var groups = groupRows(rows);
+      Object.keys(groups).sort().forEach(function (region) {
+        var values = groups[region];
+        var value;
+        if (indicator.id === 'cumulative_emissions') value = values.reduce(function (sum, row) { return sum + Number(row.emissions); }, 0);
+        if (indicator.id === 'natural_capital_change') {
+          var ordered = values.slice().sort(function (a, b) { return Number(a.year) - Number(b.year); });
+          value = Number(ordered[ordered.length - 1].natural_capital) - Number(ordered[0].natural_capital);
+        }
+        result.push({ region: region, value: value });
+      });
+    }
+    if (result.some(function (row) { return !Number.isFinite(row.value); })) throw new Error('Indicator calculation produced a non-finite value. Check missing and zero-valued inputs.');
+    return result;
+  }
+
+  function quality(parsed, indicator) {
+    var rows = parsed.rows, headers = parsed.headers, flags = [], missing = 0;
+    rows.forEach(function (row) { headers.forEach(function (field) { if (row[field] === null) missing += 1; }); });
+    if (missing) flags.push({ code: 'missing_values', severity: 'warning', field: '', count: missing, message: missing + ' missing cell(s) were detected.' });
+    var serialized = rows.map(function (row) { return JSON.stringify(row); });
+    var duplicateRows = serialized.length - new Set(serialized).size;
+    if (duplicateRows) flags.push({ code: 'duplicate_rows', severity: 'warning', field: '', count: duplicateRows, message: duplicateRows + ' duplicate row(s) were detected.' });
+    var keys = rows.map(function (row) { return String(row.region) + '|' + String(row.year); });
+    var duplicateKeys = keys.length - new Set(keys).size;
+    if (duplicateKeys) flags.push({ code: 'duplicate_keys', severity: 'error', field: 'region,year', count: duplicateKeys, message: duplicateKeys + ' duplicate region/year key(s) were detected.' });
+    indicator.required_fields.forEach(function (field) {
+      var count = rows.filter(function (row) { return row[field] === null || row[field] === undefined; }).length;
+      if (count) flags.push({ code: 'required_field_missing', severity: 'error', field: field, count: count, message: 'Required field `' + field + '` has ' + count + ' missing value(s).' });
+    });
+    if (!flags.length) flags.push({ code: 'quality_checks_passed', severity: 'ok', field: '', count: 0, message: 'No missing values, duplicate rows, duplicate keys, or absent required fields were detected.' });
+    return { row_count: rows.length, column_count: headers.length, missing_cells: missing, duplicate_rows: duplicateRows, duplicate_keys: duplicateKeys, flags: flags };
+  }
+
+  function round(value, digits) {
+    var factor = Math.pow(10, digits === undefined ? 4 : digits);
+    return Math.round(value * factor) / factor;
+  }
+
+  function read(form) {
+    var parsed = parseCSV(form.elements.csvData.value);
+    var indicator = selectedDefinition(form);
+    var report = quality(parsed, indicator);
+    if (report.flags.some(function (flag) { return flag.severity === 'error'; })) throw new Error(report.flags.filter(function (flag) { return flag.severity === 'error'; }).map(function (flag) { return flag.message; }).join(' '));
+    var values = calculate(parsed.rows, indicator);
+    return {
+      parsed: parsed,
+      indicator: indicator,
+      values: values,
+      quality: report,
+      dataset: {
+        schema_version: '1.0.0',
+        id: form.elements.datasetId.value.trim() || 'browser-dataset',
+        title: form.elements.datasetTitle.value.trim() || 'Browser dataset',
+        time_field: 'year',
+        entity_fields: ['region'],
+        units: units,
+        source: {
+          id: 'browser-declared-source',
+          title: form.elements.datasetTitle.value.trim() || 'Browser dataset',
+          publisher: form.elements.publisher.value.trim(),
+          url: '',
+          license: form.elements.license.value.trim(),
+          retrieved_at: new Date().toISOString(),
+          citation: '',
+          metadata: { verification_status: 'unverified_user_declaration' }
+        },
+        currency: { code: form.elements.currency.value.trim(), price_year: Number(form.elements.priceYear.value) || null },
+        records: parsed.rows
+      }
+    };
+  }
+
+  function trace(state) {
+    return {
+      schema_version: '1.0.0',
+      indicator: state.indicator,
+      dataset: { id: state.dataset.id, title: state.dataset.title, source: state.dataset.source, units: state.dataset.units },
+      calculation: {
+        calculated_at: new Date().toISOString(),
+        compatible_repository_version: '0.5.0',
+        browser_demo_version: '1.4.0',
+        input_rows: state.parsed.rows.length,
+        output_rows: state.values.length,
+        required_fields: state.indicator.required_fields,
+        formula: state.indicator.formula
+      }
+    };
+  }
+
+  function definitionHTML(indicator) {
+    return '<h4>' + escapeHTML(indicator.title) + ' <small>v' + escapeHTML(indicator.version) + '</small></h4>' +
+      '<p>' + escapeHTML(indicator.description) + ' Direction: <strong>' + escapeHTML(indicator.direction.replace('_', ' ')) + '</strong>. Required fields: ' + escapeHTML(indicator.required_fields.join(', ')) + '.</p>' +
+      '<code class="scar-demo__formula">' + escapeHTML(indicator.formula) + '</code>';
+  }
+
+  function table(root, state) {
+    var columns = state.values.length && Object.prototype.hasOwnProperty.call(state.values[0], 'year') ? ['region', 'year', 'value'] : ['region', 'value'];
+    root.querySelector('[data-table-head]').innerHTML = '<tr>' + columns.map(function (field) { return '<th>' + escapeHTML(field) + '</th>'; }).join('') + '</tr>';
+    root.querySelector('[data-table-body]').innerHTML = state.values.map(function (row) {
+      return '<tr>' + columns.map(function (field) { return '<td>' + escapeHTML(field === 'value' ? round(row[field], 6) : row[field]) + '</td>'; }).join('') + '</tr>';
+    }).join('');
+  }
+
+  function chart(svg, state) {
+    var width = 760, height = 300, left = 62, right = 28, top = 28, bottom = 48;
+    var values = state.values.map(function (row) { return row.value; });
+    var minY = Math.min.apply(null, values), maxY = Math.max.apply(null, values);
+    var pad = Math.max((maxY - minY) * 0.12, Math.abs(maxY || 1) * 0.05, 0.01); minY -= pad; maxY += pad;
+    function y(value) { return top + (1 - (value - minY) / Math.max(maxY - minY, Number.EPSILON)) * (height - top - bottom); }
+    var parts = ['<rect x="0" y="0" width="760" height="300" fill="#fbfaf6"/>'];
+    for (var i = 0; i <= 4; i += 1) {
+      var gy = top + i * (height - top - bottom) / 4;
+      parts.push('<line x1="' + left + '" y1="' + gy + '" x2="' + (width - right) + '" y2="' + gy + '" stroke="#d9d2c4"/>');
+      parts.push('<text x="8" y="' + (gy + 4) + '">' + round(maxY - i * (maxY - minY) / 4, 3) + '</text>');
+    }
+    if (state.indicator.aggregation === 'rowwise') {
+      var groups = groupRows(state.values), colors = ['#7f1d1d', '#333333', '#6b5b3e', '#3d5a4f'];
+      Object.keys(groups).sort().forEach(function (region, groupIndex) {
+        var rows = groups[region].slice().sort(function (a, b) { return Number(a.year) - Number(b.year); });
+        var years = rows.map(function (row) { return Number(row.year); }), minX = Math.min.apply(null, years), maxX = Math.max.apply(null, years);
+        function x(year) { return left + (Number(year) - minX) / Math.max(maxX - minX, 1) * (width - left - right); }
+        var path = rows.map(function (row, index) { return (index ? 'L ' : 'M ') + x(row.year) + ' ' + y(row.value); }).join(' ');
+        parts.push('<path d="' + path + '" fill="none" stroke="' + colors[groupIndex % colors.length] + '" stroke-width="3"/>');
+        rows.forEach(function (row) { parts.push('<circle cx="' + x(row.year) + '" cy="' + y(row.value) + '" r="4" fill="' + colors[groupIndex % colors.length] + '"/>'); });
+        parts.push('<text x="' + (left + groupIndex * 135) + '" y="286" fill="' + colors[groupIndex % colors.length] + '">' + escapeHTML(region) + '</text>');
+      });
+    } else {
+      var barWidth = Math.min(110, (width - left - right) / Math.max(state.values.length, 1) * 0.55);
+      state.values.forEach(function (row, index) {
+        var slot = (width - left - right) / state.values.length, x = left + index * slot + (slot - barWidth) / 2, yValue = y(row.value), zero = y(Math.max(0, minY));
+        parts.push('<rect x="' + x + '" y="' + Math.min(yValue, zero) + '" width="' + barWidth + '" height="' + Math.max(2, Math.abs(zero - yValue)) + '" fill="#7f1d1d"/>');
+        parts.push('<text x="' + (x + barWidth / 2 - 18) + '" y="286">' + escapeHTML(row.region) + '</text>');
+      });
+    }
     svg.innerHTML = parts.join('');
   }
 
-  function notes(inputs, analysis) {
-    var out = [], score = analysis.summary.filter(function (r) { return r.metric === 'composite_score'; })[0];
-    out.push('The policy median composite score is ' + score.outcome + ' relative to the deterministic baseline.');
-    out.push(Math.round(analysis.budget_probability * 100) + '% of declared policy realizations remain within the selected emissions budget.');
-    out.push('P10-P90 intervals describe the declared parameter ranges and simplified browser model, not empirical forecast confidence.');
-    if (analysis.budget_probability < 0.5) out.push('Budget compliance is fragile under the declared uncertainty ranges; inspect emissions intensity and adaptation assumptions.');
-    out.push('All ' + inputs.uncertainty.n + ' requested browser realizations completed; failed realizations would remain visible in the export.');
-    return out;
+  function renderState(root, state) {
+    var average = state.values.reduce(function (sum, row) { return sum + row.value; }, 0) / state.values.length;
+    root.querySelector('[data-result="rows"]').textContent = state.quality.row_count;
+    root.querySelector('[data-result="dimensions"]').textContent = state.quality.column_count + ' fields';
+    root.querySelector('[data-result="missing"]').textContent = state.quality.missing_cells;
+    root.querySelector('[data-result="duplicates"]').textContent = state.quality.duplicate_keys;
+    root.querySelector('[data-result="indicatorSummary"]').textContent = round(average, 4);
+    root.querySelector('[data-result="indicatorUnit"]').textContent = 'average ' + state.indicator.unit;
+    root.querySelector('[data-definition]').innerHTML = definitionHTML(state.indicator);
+    root.querySelector('[data-quality-flags]').innerHTML = state.quality.flags.map(function (flag) { return '<li data-severity="' + escapeHTML(flag.severity) + '">' + escapeHTML(flag.message) + '</li>'; }).join('');
+    table(root, state);
+    chart(root.querySelector('[data-chart]'), state);
+    var t = trace(state);
+    root.querySelector('[data-trace]').innerHTML = [
+      ['Dataset', state.dataset.id], ['Indicator', state.indicator.id + '@' + state.indicator.version],
+      ['Formula', state.indicator.formula], ['Required fields', state.indicator.required_fields.join(', ')],
+      ['Source status', 'unverified user declaration'], ['Input/output rows', t.calculation.input_rows + ' / ' + t.calculation.output_rows]
+    ].map(function (entry) { return '<dt>' + escapeHTML(entry[0]) + '</dt><dd>' + escapeHTML(entry[1]) + '</dd>'; }).join('');
+    root._scarState = state;
+  }
+
+  function renderError(root, error) {
+    root.querySelector('[data-quality-flags]').innerHTML = '<li data-severity="error">' + escapeHTML(error.message) + '</li>';
+    root.querySelector('[data-result="indicatorSummary"]').textContent = 'Invalid';
   }
 
   function render(root) {
-    var form = root.querySelector('[data-scar-form]'), inputs = read(form), analysis = analyze(inputs);
-    var outputMap = { yearsOut: inputs.shared.years + ' years', baselineSavingsOut: pct(inputs.baseline.savings), baselineEmissionsOut: pct(inputs.baseline.emissionsIntensity), baselineAdaptOut: pct(inputs.baseline.adaptation), baselineRestoreOut: pct(inputs.baseline.restoration), baselineHumanOut: pct(inputs.baseline.humanInvestment), policySavingsOut: pct(inputs.policy.savings), policyEmissionsOut: pct(inputs.policy.emissionsIntensity), policyAdaptOut: pct(inputs.policy.adaptation), policyRestoreOut: pct(inputs.policy.restoration), policyHumanOut: pct(inputs.policy.humanInvestment), emissionsWidthOut: '+/- ' + Math.round(inputs.uncertainty.emissionsWidth * 100) + '%', restorationWidthOut: '+/- ' + Math.round(inputs.uncertainty.restorationWidth * 100) + '%', adaptationWidthOut: '+/- ' + Math.round(inputs.uncertainty.adaptationWidth * 100) + '%' };
-    Object.keys(outputMap).forEach(function (name) { root.querySelector('[data-out="' + name + '"]').textContent = outputMap[name]; });
-    var score = analysis.summary.filter(function (r) { return r.metric === 'composite_score'; })[0], strongest = analysis.sensitivity.slice().sort(function (a,b) { return Math.abs(b.estimate) - Math.abs(a.estimate); })[0];
-    root.querySelector('[data-result="scoreDelta"]').textContent = signed(score.median - score.baseline_value, 1); root.querySelector('[data-result="scoreNote"]').textContent = score.outcome + ' median versus baseline';
-    root.querySelector('[data-result="budgetProbability"]').textContent = Math.round(analysis.budget_probability * 100) + '%'; root.querySelector('[data-result="budgetNote"]').textContent = inputs.uncertainty.n + ' seeded realizations';
-    root.querySelector('[data-result="scoreInterval"]').textContent = round(score.p10, 1) + ' to ' + round(score.p90, 1);
-    root.querySelector('[data-result="sensitivity"]').textContent = strongest.target.replace('parameters.', '').replace('policy.', ''); root.querySelector('[data-result="sensitivityNote"]').textContent = strongest.metric + ' (' + signed(strongest.estimate, 2) + ')';
-    root.querySelector('[data-uncertainty-table]').innerHTML = analysis.summary.map(function (row) { return '<tr><th scope="row">' + row.label + '</th><td>' + row.baseline_value + '</td><td>' + row.median + '</td><td>' + row.p10 + '</td><td>' + row.p90 + '</td><td data-outcome="' + row.outcome + '">' + row.outcome + '</td></tr>'; }).join('');
-    root.querySelector('[data-result="notes"]').innerHTML = notes(inputs, analysis).map(function (note) { return '<li>' + note + '</li>'; }).join('');
-    chart(root.querySelector('[data-chart]'), analysis, root.querySelector('[data-chart-metric]').value);
-    root._scarInputs = inputs; root._scarAnalysis = analysis;
+    try { renderState(root, read(root.querySelector('[data-scar-form]'))); }
+    catch (error) { renderError(root, error); }
   }
 
   function payload(root) {
-    var inputs = root._scarInputs || read(root.querySelector('[data-scar-form]')), analysis = root._scarAnalysis || analyze(inputs), generatedAt = new Date().toISOString(), specs = uncertaintySpecs(inputs);
-    return { schema_version: '1.3.0', demo: 'Catalyst Analytics R Demo', demo_version: '1.3.0', engine: { type: 'browser_simplified', compatible_repository_version: '0.4.0', parity_status: 'mapped_uncertainty_contract', comparison_contract_version: '1.0.0', uncertainty_contract_version: '1.0.0' }, generated_at: generatedAt, inputs: inputs, canonical_scenarios: [canonicalScenario(inputs.baseline, inputs.shared, generatedAt, []), canonicalScenario(inputs.policy, inputs.shared, generatedAt, specs)], comparison: { baseline_id: analysis.baseline.id, policy_id: analysis.policy.id }, uncertainty: { contract_version: '1.0.0', sampling: inputs.uncertainty.sampling, seed: inputs.uncertainty.seed, requested: inputs.uncertainty.n, completed: analysis.samples.length, failed: analysis.failures.length, specifications: specs, summary: analysis.summary, probabilities: [{ metric: 'cumulative_emissions', threshold: inputs.shared.emissionsBudget, operator: '<=', probability: analysis.budget_probability, n: analysis.samples.length }], sensitivity: analysis.sensitivity, failures: analysis.failures }, trajectories: { baseline: analysis.baseline.trajectory, policy_median: metrics.reduce(function (out, metric) { out[metric.key] = analysis.bands[metric.key]; return out; }, {}) }, interpretation_notes: notes(inputs, analysis), boundary: { forecast: false, compliance: false, autonomous_decision: false, professional_advice: false } };
+    var state = root._scarState || read(root.querySelector('[data-scar-form]'));
+    return {
+      schema_version: '1.4.0',
+      demo: 'Catalyst Analytics R Demo',
+      demo_version: '1.4.0',
+      engine: {
+        type: 'browser_data_intake',
+        compatible_repository_version: '0.5.0',
+        parity_status: 'mapped_data_indicator_contract',
+        dataset_contract_version: '1.0.0',
+        indicator_contract_version: '1.0.0'
+      },
+      generated_at: new Date().toISOString(),
+      dataset: state.dataset,
+      quality: state.quality,
+      indicator_registry: registry,
+      indicator_result: { indicator: state.indicator, values: state.values },
+      trace: trace(state),
+      boundary: { source_verified: false, unit_compatibility_verified: false, causal_claim: false, professional_advice: false }
+    };
   }
 
-  function downloadJSON(root) { var data = payload(root), blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }), link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'catalyst-analytics-r-uncertainty.json'; document.body.appendChild(link); link.click(); link.remove(); setTimeout(function () { URL.revokeObjectURL(link.href); }, 500); }
-  function summaryText(root) { var data = payload(root), p = data.uncertainty.probabilities[0]; return ['Catalyst Analytics R uncertainty demo','Baseline: ' + data.canonical_scenarios[0].title,'Policy: ' + data.canonical_scenarios[1].title,'Sampling: ' + data.uncertainty.sampling + ', n=' + data.uncertainty.completed + ', seed=' + data.uncertainty.seed,'Budget probability: ' + Math.round(p.probability * 100) + '%','Boundary: declared-assumption uncertainty, not an empirical forecast.'].join('\n'); }
-  function init(root) { var form = root.querySelector('[data-scar-form]'); form.addEventListener('input', function () { render(root); }); root.querySelector('[data-chart-metric]').addEventListener('change', function () { render(root); }); root.querySelector('[data-action="reset"]').addEventListener('click', function () { form.reset(); render(root); }); root.querySelector('[data-action="download"]').addEventListener('click', function () { downloadJSON(root); }); root.querySelector('[data-action="copy"]').addEventListener('click', function () { var text = summaryText(root); if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text); else window.prompt('Copy analysis:', text); }); render(root); }
-  document.addEventListener('DOMContentLoaded', function () { document.querySelectorAll('[data-scar-demo]').forEach(init); });
+  function download(root) {
+    var content = JSON.stringify(payload(root), null, 2), blob = new Blob([content], { type: 'application/json' });
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob); link.download = 'catalyst-analytics-r-data-analysis.json';
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(function () { URL.revokeObjectURL(link.href); }, 500);
+  }
+
+  function copySummary(root) {
+    var data = payload(root), result = data.indicator_result;
+    var text = [
+      'Catalyst Analytics R data analysis',
+      'Dataset: ' + data.dataset.title,
+      'Records: ' + data.quality.row_count,
+      'Indicator: ' + result.indicator.title + ' v' + result.indicator.version,
+      'Formula: ' + result.indicator.formula,
+      'Quality flags: ' + data.quality.flags.length,
+      'Boundary: source and unit compatibility remain unverified.'
+    ].join('\n');
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text);
+    else window.prompt('Copy analysis:', text);
+  }
+
+  function init(root) {
+    var form = root.querySelector('[data-scar-form]');
+    form.addEventListener('input', function () { render(root); });
+    root.querySelector('[data-action="copy"]').addEventListener('click', function () { copySummary(root); });
+    root.querySelector('[data-action="download"]').addEventListener('click', function () { download(root); });
+    root.querySelector('[data-action="reset"]').addEventListener('click', function () { form.reset(); render(root); });
+    render(root);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-scar-demo]').forEach(init);
+  });
 })();

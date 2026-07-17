@@ -1,0 +1,76 @@
+[
+  {
+    "id": "carbon_intensity",
+    "version": "1.0.0",
+    "title": "Carbon intensity",
+    "description": "Emissions per unit of economic output.",
+    "formula": "emissions / gdp",
+    "required_fields": [
+      "emissions",
+      "gdp"
+    ],
+    "unit": "tCO2e/currency",
+    "direction": "lower_better",
+    "aggregation": "rowwise",
+    "source": {
+      "type": "derived",
+      "methodology": "Emissions divided by GDP."
+    },
+    "targets": [],
+    "metadata": {
+      "status": "active",
+      "builtin": true,
+      "created_at": "2026-07-17T00:00:00Z"
+    }
+  },
+  {
+    "id": "adjusted_net_savings",
+    "version": "1.0.0",
+    "title": "Adjusted net savings",
+    "description": "Savings adjusted for depreciation, depletion, damages, and education investment.",
+    "formula": "gross_savings - depreciation - depletion - damages + education_investment",
+    "required_fields": [
+      "gross_savings",
+      "depreciation",
+      "depletion",
+      "damages",
+      "education_investment"
+    ],
+    "unit": "currency",
+    "direction": "higher_better",
+    "aggregation": "rowwise",
+    "source": {
+      "type": "derived",
+      "methodology": "Transparent simplified adjusted-net-savings identity."
+    },
+    "targets": [],
+    "metadata": {
+      "status": "active",
+      "builtin": true,
+      "created_at": "2026-07-17T00:00:00Z"
+    }
+  },
+  {
+    "id": "cumulative_emissions",
+    "version": "1.0.0",
+    "title": "Cumulative emissions",
+    "description": "Sum of emissions over selected observations.",
+    "formula": "sum(emissions)",
+    "required_fields": [
+      "emissions"
+    ],
+    "unit": "tCO2e",
+    "direction": "lower_better",
+    "aggregation": "sum",
+    "source": {
+      "type": "derived",
+      "methodology": "Unweighted sum across aligned annual observations."
+    },
+    "targets": [],
+    "metadata": {
+      "status": "active",
+      "builtin": true,
+      "created_at": "2026-07-17T00:00:00Z"
+    }
+  }
+]

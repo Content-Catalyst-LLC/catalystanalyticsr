@@ -1,4 +1,4 @@
-# Online Comparative Demo
+# Online Data and Indicator Demo
 
 The WordPress plugin exposes the shortcode:
 
@@ -6,38 +6,36 @@ The WordPress plugin exposes the shortcode:
 [catalyst_analytics_r_demo]
 ```
 
-## v1.3.0 behavior
+## v1.4.0 behavior
 
-The demo now performs a real baseline-versus-policy comparison using simplified browser-side equations. Users can edit shared starting conditions and budget assumptions, then configure separate baseline and intervention policy controls.
+The public interface now demonstrates the v0.5.0 data-intake and indicator contracts. Users can paste tidy CSV records, declare source and license metadata, validate required fields and entity/time keys, select a registered indicator, inspect the definition and trace, and export the governed browser record.
 
 The interface provides:
 
-- Two independently named scenarios
-- Shared horizon, initial conditions, and emissions budget
-- Overlaid metric trajectories
-- Terminal baseline and policy values
-- Absolute and percentage deltas
-- Direction-aware improved, worsened, or tied status
-- Trade-off classification
-- Simplified two-scenario non-dominance status
-- Comparison notes
-- JSON download and copyable summary
+- CSV parsing with required-field checks
+- Missing-value, duplicate-row, and duplicate-key diagnostics
+- Dataset, source, license, currency, time, and entity metadata
+- Versioned built-in indicator definitions
+- Rowwise and grouped indicator calculations
+- Indicator formula, unit, direction, and required-field display
+- Result chart and table
+- Calculation trace and canonical JSON export
 
 ## Export mapping
 
 The browser export includes:
 
-- Browser comparison input
-- Two canonical scenario records using scenario schema 1.0.0
-- Comparison deltas
-- Trade-off classification
-- Simplified Pareto status
-- Budget status for both scenarios
-- Both trajectories
+- Browser-engine and repository compatibility metadata
+- Dataset contract version 1.0.0
+- Indicator contract version 1.0.0
+- Source and license records
+- Quality summary and flags
+- Selected indicator definition
+- Calculated values and trace metadata
 - Interpretation boundaries
 
-The browser export schema is 1.3.0 and declares compatibility with repository version 0.4.0.
+The browser export schema is 1.4.0 and declares compatibility with repository version 0.5.0.
 
-## Numerical boundary
+## Analytical boundary
 
-The browser equations are not the R KH-NC-PA implementation. The relationship is `mapped_comparison_contract`, not numerical parity. Use the browser tool for public explanation and preliminary exploration. Use the R package for reproducible model execution, rankings, target and threshold evaluation, and full Pareto diagnostics.
+The browser tool validates and calculates a limited public indicator registry. It does not execute arbitrary R functions, import remote data, or replace the R package's governed dataset, registry, export, and review workflows. Use the browser interface for explanation and preliminary inspection; use the R package for reproducible analysis and publication bundles.

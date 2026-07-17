@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate a Catalyst Analytics R Markdown brief from scenario, comparison, or uncertainty JSON."""
+"""Generate a Catalyst Analytics R Markdown brief from scenario, comparison, uncertainty, or data-analysis JSON."""
 
 from __future__ import annotations
 
@@ -130,7 +130,61 @@ def uncertainty_brief(payload: dict) -> str:
     ])
     return "\n".join(lines)
 
+
+def data_analysis_brief(payload: dict) -> str:
+    dataset = payload.get("dataset", {})
+    quality = payload.get("quality", dataset.get("quality", {}))
+    indicators = payload.get("indicators", payload.get("indicator_registry", []))
+    values = payload.get("indicator_values", payload.get("indicator_result", {}).get("values", []))
+    source = dataset.get("source", {})
+    lines = [
+        "# Catalyst Analytics R Data and Indicator Brief", "",
+        f"**Dataset:** {dataset.get('title', dataset.get('id', 'Untitled'))}",
+        f"**Dataset id:** {dataset.get('id', 'n/a')}",
+        f"**Source:** {source.get('title', 'n/a')}",
+        f"**Publisher:** {source.get('publisher', 'n/a')}",
+        f"**License:** {source.get('license', 'n/a')}",
+        f"**Rows:** {quality.get('row_count', len(dataset.get('records', dataset.get('data', []))))}",
+        f"**Columns:** {quality.get('column_count', 'n/a')}",
+        f"**Missing cells:** {quality.get('missing_cells', 'n/a')}",
+        f"**Duplicate keys:** {quality.get('duplicate_keys', 'n/a')}", "",
+        "## Indicator definitions", "",
+        "| Indicator | Version | Formula | Unit | Direction |",
+        "|---|---|---|---|---|",
+    ]
+    for item in indicators:
+        lines.append(
+            f"| {item.get('title', item.get('id', 'n/a'))} | {item.get('version', 'n/a')} | "
+            f"`{item.get('formula', 'n/a')}` | {item.get('unit', 'n/a')} | {item.get('direction', 'n/a')} |"
+        )
+    lines.extend(["", "## Calculated values", ""])
+    if values:
+        for row in values[:20]:
+            identity = ", ".join(
+                f"{key}={row.get(key)}" for key in ("region", "year", "indicator") if key in row
+            )
+            lines.append(f"- {identity or 'value'}: {row.get('value', 'n/a')}")
+        if len(values) > 20:
+            lines.append(f"- ... and {len(values) - 20} additional value(s).")
+    else:
+        lines.append("- No calculated values were included.")
+    flags = quality.get("flags", [])
+    lines.extend(["", "## Data-quality flags", ""])
+    if flags:
+        for flag in flags:
+            lines.append(f"- [{flag.get('severity', 'info')}] {flag.get('message', flag.get('code', 'flag'))}")
+    else:
+        lines.append("- No quality flags were included.")
+    lines.extend([
+        "", "## Boundary", "",
+        "This brief preserves declared source, quality, unit, and indicator metadata. It does not verify source truth, licensing rights, unit comparability, causal interpretation, or fitness for a specific decision.", ""
+    ])
+    return "\n".join(lines)
+
 def brief(payload: dict) -> str:
+    engine = payload.get("engine", {})
+    if "dataset" in payload and ("indicators" in payload or "indicator_registry" in payload or engine.get("type") == "browser_data_intake"):
+        return data_analysis_brief(payload)
     if payload.get("analysis_type") == "uncertainty_ensemble":
         return uncertainty_brief(payload)
     if "comparison" in payload or ("baseline_id" in payload and "deltas" in payload):

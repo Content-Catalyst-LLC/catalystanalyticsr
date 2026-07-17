@@ -13,6 +13,10 @@
       value = as.numeric(trajectory_wide[[source]]),
       unit = definition$unit,
       direction = definition$direction,
+      indicator_version = if (!is.null(definition$version)) definition$version else "model-defined",
+      formula = if (!is.null(definition$formula)) definition$formula else source,
+      source_fields = source,
+      registry_status = if (indicator_name %in% list_catalyst_indicators()$id) "registered" else "model-defined",
       stringsAsFactors = FALSE
     )
   })

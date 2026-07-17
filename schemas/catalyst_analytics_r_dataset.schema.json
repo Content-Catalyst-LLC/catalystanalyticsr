@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-dataset-v1.schema.json",
+  "title": "Catalyst Analytics R Dataset Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "fields", "entity_fields", "units", "source", "geography", "sector", "currency", "missing_policy", "transformations", "quality", "metadata", "fingerprint"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "id": {"$ref": "#/$defs/id"},
+    "title": {"type": "string", "minLength": 1},
+    "fields": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/field"}},
+    "time_field": {"type": ["string", "null"]},
+    "entity_fields": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "units": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}},
+    "source": {"$ref": "#/$defs/source"},
+    "geography": {"type": "object"},
+    "sector": {"type": "object"},
+    "currency": {"type": "object"},
+    "missing_policy": {"enum": ["flag", "error", "drop"]},
+    "transformations": {"type": "array", "items": {"type": "object"}},
+    "quality": {"$ref": "#/$defs/quality"},
+    "metadata": {"type": "object"},
+    "data": {"type": ["array", "null"], "items": {"type": "object"}},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{32}$"}
+  },
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "required"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "type": {"type": "string", "minLength": 1},
+        "unit": {"type": ["string", "null"]},
+        "required": {"type": "boolean"}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "publisher", "url", "license", "retrieved_at", "citation", "metadata"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "title": {"type": "string", "minLength": 1},
+        "publisher": {"type": "string"},
+        "url": {"type": "string"},
+        "license": {"type": "string"},
+        "retrieved_at": {"type": "string"},
+        "citation": {"type": "string"},
+        "metadata": {"type": "object"}
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["row_count", "column_count", "missing_cells", "duplicate_rows", "duplicate_keys", "frequency", "flags"],
+      "properties": {
+        "row_count": {"type": "integer", "minimum": 0},
+        "column_count": {"type": "integer", "minimum": 1},
+        "missing_cells": {"type": "integer", "minimum": 0},
+        "duplicate_rows": {"type": "integer", "minimum": 0},
+        "duplicate_keys": {"type": "integer", "minimum": 0},
+        "time_ordered": {"type": ["boolean", "null"]},
+        "frequency": {"type": "string"},
+        "flags": {"type": "array", "items": {"$ref": "#/$defs/qualityFlag"}}
+      }
+    },
+    "qualityFlag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "severity", "field", "count", "message"],
+      "properties": {
+        "code": {"type": "string", "minLength": 1},
+        "severity": {"enum": ["info", "warning", "error"]},
+        "field": {"type": "string"},
+        "count": {"type": "integer", "minimum": 0},
+        "message": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

@@ -401,13 +401,13 @@ print.catalyst_scenario_set <- function(x, ...) {
   metrics <- unique(values$metric)
   matrix_values <- matrix(NA_real_, nrow = length(scenario_ids), ncol = length(metrics), dimnames = list(scenario_ids, metrics))
   for (i in seq_len(nrow(values))) matrix_values[values$scenario_id[i], values$metric[i]] <- values$final_value[i]
-  direction_lookup <- setNames(values$direction[match(metrics, values$metric)], metrics)
+  direction_lookup <- stats::setNames(values$direction[match(metrics, values$metric)], metrics)
   oriented <- matrix_values
   for (metric in metrics) if (identical(direction_lookup[[metric]], "lower_better")) oriented[, metric] <- -oriented[, metric]
 
   dominance_rows <- list()
-  dominates_count <- setNames(integer(length(scenario_ids)), scenario_ids)
-  dominated_by_count <- setNames(integer(length(scenario_ids)), scenario_ids)
+  dominates_count <- stats::setNames(integer(length(scenario_ids)), scenario_ids)
+  dominated_by_count <- stats::setNames(integer(length(scenario_ids)), scenario_ids)
   for (i in seq_along(scenario_ids)) {
     for (j in seq_along(scenario_ids)) {
       if (i == j) next
@@ -423,7 +423,7 @@ print.catalyst_scenario_set <- function(x, ...) {
   dominance <- if (length(dominance_rows)) do.call(rbind, dominance_rows) else data.frame(dominator = character(), dominated = character(), stringsAsFactors = FALSE)
 
   remaining <- scenario_ids
-  layer <- setNames(integer(length(scenario_ids)), scenario_ids)
+  layer <- stats::setNames(integer(length(scenario_ids)), scenario_ids)
   rank_number <- 1L
   while (length(remaining)) {
     front <- remaining[vapply(remaining, function(id) {
@@ -594,14 +594,14 @@ plot_scenario_comparison <- function(comparison, metric = NULL, type = c("trajec
   }
   if (type == "terminal") {
     rows <- comparison$values[comparison$values$metric == metric, , drop = FALSE]
-    return(ggplot2::ggplot(rows, ggplot2::aes(x = reorder(scenario_id, final_value), y = final_value)) +
+    return(ggplot2::ggplot(rows, ggplot2::aes(x = stats::reorder(scenario_id, final_value), y = final_value)) +
       ggplot2::geom_col() +
       ggplot2::coord_flip() +
       ggplot2::labs(x = NULL, y = rows$unit[1L], title = paste("Terminal scenario values:", metric)) +
       theme_catalyst())
   }
   rows <- comparison$deltas[comparison$deltas$metric == metric & comparison$deltas$scenario_id != comparison$baseline_id, , drop = FALSE]
-  ggplot2::ggplot(rows, ggplot2::aes(x = reorder(scenario_id, absolute_delta), y = absolute_delta)) +
+  ggplot2::ggplot(rows, ggplot2::aes(x = stats::reorder(scenario_id, absolute_delta), y = absolute_delta)) +
     ggplot2::geom_col() +
     ggplot2::coord_flip() +
     ggplot2::geom_hline(yintercept = 0, linewidth = 0.4) +

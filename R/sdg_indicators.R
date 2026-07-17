@@ -27,14 +27,14 @@ sdg_indicators <- function(trajectory_wide) {
   emissions <- tw$emissions
 
   derived <- list(
-    gdp = list(value = gdp, unit = "index", direction = "higher_better"),
-    gdp_per_capita = list(value = gdp / P, unit = "index/person_index", direction = "higher_better"),
-    emissions = list(value = emissions, unit = "tCO2e_index", direction = "lower_better"),
-    emissions_per_capita = list(value = emissions / P, unit = "tCO2e_index/person_index", direction = "lower_better"),
-    carbon_intensity = list(value = emissions / pmax(gdp, 1e-12), unit = "tCO2e_index/index", direction = "lower_better"),
-    ans = list(value = tw$ans, unit = "index", direction = "higher_better"),
-    natural_capital = list(value = tw$N, unit = "index", direction = "higher_better"),
-    atmospheric_carbon = list(value = tw$C, unit = "index", direction = "lower_better")
+    gdp = list(value = gdp, unit = "index", direction = "higher_better", formula = "gdp", fields = "gdp"),
+    gdp_per_capita = list(value = gdp / P, unit = "index/person_index", direction = "higher_better", formula = "gdp / P", fields = "gdp,P"),
+    emissions = list(value = emissions, unit = "tCO2e_index", direction = "lower_better", formula = "emissions", fields = "emissions"),
+    emissions_per_capita = list(value = emissions / P, unit = "tCO2e_index/person_index", direction = "lower_better", formula = "emissions / P", fields = "emissions,P"),
+    carbon_intensity = list(value = emissions / pmax(gdp, 1e-12), unit = "tCO2e_index/index", direction = "lower_better", formula = "emissions / gdp", fields = "emissions,gdp"),
+    ans = list(value = tw$ans, unit = "index", direction = "higher_better", formula = "ans", fields = "ans"),
+    natural_capital = list(value = tw$N, unit = "index", direction = "higher_better", formula = "N", fields = "N"),
+    atmospheric_carbon = list(value = tw$C, unit = "index", direction = "lower_better", formula = "C", fields = "C")
   )
 
   out <- list()
@@ -47,6 +47,10 @@ sdg_indicators <- function(trajectory_wide) {
       value = as.numeric(derived[[nm]]$value),
       unit = derived[[nm]]$unit,
       direction = derived[[nm]]$direction,
+      indicator_version = "1.0.0",
+      formula = derived[[nm]]$formula,
+      source_fields = derived[[nm]]$fields,
+      registry_status = "registered",
       stringsAsFactors = FALSE
     )
     k <- k + 1

@@ -1,0 +1,419 @@
+{
+  "schema_version": "1.4.0",
+  "demo": "Catalyst Analytics R Demo",
+  "demo_version": "1.4.0",
+  "engine": {
+    "type": "browser_data_intake",
+    "compatible_repository_version": "0.5.0",
+    "parity_status": "mapped_data_indicator_contract",
+    "dataset_contract_version": "1.0.0",
+    "indicator_contract_version": "1.0.0"
+  },
+  "generated_at": "2026-07-17T00:00:00Z",
+  "dataset": {
+    "schema_version": "1.0.0",
+    "id": "sample-country-timeseries",
+    "title": "Synthetic regional sustainability time series",
+    "time_field": "year",
+    "entity_fields": [
+      "region"
+    ],
+    "units": {
+      "year": "year",
+      "gdp": "currency_index",
+      "population": "person_index",
+      "emissions": "tCO2e_index",
+      "natural_capital": "index",
+      "gross_savings": "currency_index",
+      "depreciation": "currency_index",
+      "depletion": "currency_index",
+      "damages": "currency_index",
+      "education_investment": "currency_index"
+    },
+    "source": {
+      "id": "sample-country-timeseries-source",
+      "title": "Catalyst Analytics R synthetic country time series",
+      "publisher": "Content Catalyst LLC",
+      "url": "",
+      "license": "CC0-1.0 synthetic example",
+      "retrieved_at": "2026-07-17T00:00:00Z",
+      "citation": "Catalyst Analytics R v0.5.0 synthetic validation fixture.",
+      "metadata": {
+        "synthetic": true,
+        "production_data": false
+      }
+    },
+    "currency": {
+      "code": "INDEX",
+      "price_year": 2024
+    },
+    "records": [
+      {
+        "year": 2020,
+        "region": "North",
+        "gdp": 100,
+        "population": 50,
+        "emissions": 42,
+        "natural_capital": 92,
+        "gross_savings": 24,
+        "depreciation": 8,
+        "depletion": 4,
+        "damages": 3,
+        "education_investment": 5
+      },
+      {
+        "year": 2021,
+        "region": "North",
+        "gdp": 104,
+        "population": 51,
+        "emissions": 41,
+        "natural_capital": 91,
+        "gross_savings": 25,
+        "depreciation": 8.2,
+        "depletion": 4.1,
+        "damages": 3.1,
+        "education_investment": 5.2
+      },
+      {
+        "year": 2022,
+        "region": "North",
+        "gdp": 109,
+        "population": 52,
+        "emissions": 39,
+        "natural_capital": 91.5,
+        "gross_savings": 27,
+        "depreciation": 8.5,
+        "depletion": 3.9,
+        "damages": 3.2,
+        "education_investment": 5.5
+      },
+      {
+        "year": 2023,
+        "region": "North",
+        "gdp": 115,
+        "population": 53,
+        "emissions": 36,
+        "natural_capital": 92.5,
+        "gross_savings": 29,
+        "depreciation": 8.8,
+        "depletion": 3.5,
+        "damages": 3.0,
+        "education_investment": 5.9
+      },
+      {
+        "year": 2024,
+        "region": "North",
+        "gdp": 122,
+        "population": 54,
+        "emissions": 32,
+        "natural_capital": 94,
+        "gross_savings": 32,
+        "depreciation": 9.1,
+        "depletion": 3.0,
+        "damages": 2.8,
+        "education_investment": 6.4
+      },
+      {
+        "year": 2020,
+        "region": "South",
+        "gdp": 80,
+        "population": 44,
+        "emissions": 38,
+        "natural_capital": 85,
+        "gross_savings": 18,
+        "depreciation": 6.5,
+        "depletion": 5.0,
+        "damages": 3.5,
+        "education_investment": 3.8
+      },
+      {
+        "year": 2021,
+        "region": "South",
+        "gdp": 83,
+        "population": 45,
+        "emissions": 37,
+        "natural_capital": 84,
+        "gross_savings": 18.5,
+        "depreciation": 6.7,
+        "depletion": 5.1,
+        "damages": 3.6,
+        "education_investment": 3.9
+      },
+      {
+        "year": 2022,
+        "region": "South",
+        "gdp": 87,
+        "population": 46,
+        "emissions": 36,
+        "natural_capital": 84.5,
+        "gross_savings": 19.5,
+        "depreciation": 7.0,
+        "depletion": 4.8,
+        "damages": 3.7,
+        "education_investment": 4.2
+      },
+      {
+        "year": 2023,
+        "region": "South",
+        "gdp": 92,
+        "population": 47,
+        "emissions": 34,
+        "natural_capital": 85.5,
+        "gross_savings": 21,
+        "depreciation": 7.3,
+        "depletion": 4.4,
+        "damages": 3.5,
+        "education_investment": 4.6
+      },
+      {
+        "year": 2024,
+        "region": "South",
+        "gdp": 98,
+        "population": 48,
+        "emissions": 31,
+        "natural_capital": 87,
+        "gross_savings": 23,
+        "depreciation": 7.7,
+        "depletion": 4.0,
+        "damages": 3.3,
+        "education_investment": 5.0
+      }
+    ]
+  },
+  "quality": {
+    "row_count": 10,
+    "column_count": 11,
+    "missing_cells": 0,
+    "duplicate_rows": 0,
+    "duplicate_keys": 0,
+    "time_ordered": true,
+    "frequency": "regular:1",
+    "flags": []
+  },
+  "indicator_registry": [
+    {
+      "id": "carbon_intensity",
+      "version": "1.0.0",
+      "title": "Carbon intensity",
+      "description": "Emissions per unit of economic output.",
+      "formula": "emissions / gdp",
+      "required_fields": [
+        "emissions",
+        "gdp"
+      ],
+      "unit": "tCO2e/currency",
+      "direction": "lower_better",
+      "aggregation": "rowwise",
+      "source": {
+        "type": "derived",
+        "methodology": "Emissions divided by GDP."
+      },
+      "targets": [],
+      "metadata": {
+        "status": "active",
+        "builtin": true,
+        "created_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "id": "adjusted_net_savings",
+      "version": "1.0.0",
+      "title": "Adjusted net savings",
+      "description": "Savings adjusted for depreciation, depletion, damages, and education investment.",
+      "formula": "gross_savings - depreciation - depletion - damages + education_investment",
+      "required_fields": [
+        "gross_savings",
+        "depreciation",
+        "depletion",
+        "damages",
+        "education_investment"
+      ],
+      "unit": "currency",
+      "direction": "higher_better",
+      "aggregation": "rowwise",
+      "source": {
+        "type": "derived",
+        "methodology": "Transparent simplified adjusted-net-savings identity."
+      },
+      "targets": [],
+      "metadata": {
+        "status": "active",
+        "builtin": true,
+        "created_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    {
+      "id": "cumulative_emissions",
+      "version": "1.0.0",
+      "title": "Cumulative emissions",
+      "description": "Sum of emissions over selected observations.",
+      "formula": "sum(emissions)",
+      "required_fields": [
+        "emissions"
+      ],
+      "unit": "tCO2e",
+      "direction": "lower_better",
+      "aggregation": "sum",
+      "source": {
+        "type": "derived",
+        "methodology": "Unweighted sum across aligned annual observations."
+      },
+      "targets": [],
+      "metadata": {
+        "status": "active",
+        "builtin": true,
+        "created_at": "2026-07-17T00:00:00Z"
+      }
+    }
+  ],
+  "indicator_result": {
+    "indicator": {
+      "id": "carbon_intensity",
+      "version": "1.0.0",
+      "title": "Carbon intensity",
+      "description": "Emissions per unit of economic output.",
+      "formula": "emissions / gdp",
+      "required_fields": [
+        "emissions",
+        "gdp"
+      ],
+      "unit": "tCO2e/currency",
+      "direction": "lower_better",
+      "aggregation": "rowwise",
+      "source": {
+        "type": "derived",
+        "methodology": "Emissions divided by GDP."
+      },
+      "targets": [],
+      "metadata": {
+        "status": "active",
+        "builtin": true,
+        "created_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    "values": [
+      {
+        "year": 2020,
+        "region": "North",
+        "value": 0.42
+      },
+      {
+        "year": 2021,
+        "region": "North",
+        "value": 0.39423077
+      },
+      {
+        "year": 2022,
+        "region": "North",
+        "value": 0.35779817
+      },
+      {
+        "year": 2023,
+        "region": "North",
+        "value": 0.31304348
+      },
+      {
+        "year": 2024,
+        "region": "North",
+        "value": 0.26229508
+      },
+      {
+        "year": 2020,
+        "region": "South",
+        "value": 0.475
+      },
+      {
+        "year": 2021,
+        "region": "South",
+        "value": 0.44578313
+      },
+      {
+        "year": 2022,
+        "region": "South",
+        "value": 0.4137931
+      },
+      {
+        "year": 2023,
+        "region": "South",
+        "value": 0.36956522
+      },
+      {
+        "year": 2024,
+        "region": "South",
+        "value": 0.31632653
+      }
+    ]
+  },
+  "trace": {
+    "schema_version": "1.0.0",
+    "indicator": {
+      "id": "carbon_intensity",
+      "version": "1.0.0",
+      "title": "Carbon intensity",
+      "description": "Emissions per unit of economic output.",
+      "formula": "emissions / gdp",
+      "required_fields": [
+        "emissions",
+        "gdp"
+      ],
+      "unit": "tCO2e/currency",
+      "direction": "lower_better",
+      "aggregation": "rowwise",
+      "source": {
+        "type": "derived",
+        "methodology": "Emissions divided by GDP."
+      },
+      "targets": [],
+      "metadata": {
+        "status": "active",
+        "builtin": true,
+        "created_at": "2026-07-17T00:00:00Z"
+      }
+    },
+    "dataset": {
+      "id": "sample-country-timeseries",
+      "title": "Synthetic regional sustainability time series",
+      "fingerprint": "0511de3c54fb86083d3ff2e4e6b669a2",
+      "source": {
+        "id": "sample-country-timeseries-source",
+        "title": "Catalyst Analytics R synthetic country time series",
+        "publisher": "Content Catalyst LLC",
+        "url": "",
+        "license": "CC0-1.0 synthetic example",
+        "retrieved_at": "2026-07-17T00:00:00Z",
+        "citation": "Catalyst Analytics R v0.5.0 synthetic validation fixture.",
+        "metadata": {
+          "synthetic": true,
+          "production_data": false
+        }
+      },
+      "units": {
+        "year": "year",
+        "gdp": "currency_index",
+        "population": "person_index",
+        "emissions": "tCO2e_index",
+        "natural_capital": "index",
+        "gross_savings": "currency_index",
+        "depreciation": "currency_index",
+        "depletion": "currency_index",
+        "damages": "currency_index",
+        "education_investment": "currency_index"
+      }
+    },
+    "calculation": {
+      "calculated_at": "2026-07-17T00:00:00Z",
+      "package_version": "0.5.0",
+      "group_by": [],
+      "na_rm": false,
+      "input_rows": 10,
+      "output_rows": 10,
+      "missing_required_cells": 0
+    }
+  },
+  "boundary": {
+    "source_verified": false,
+    "unit_compatibility_verified": false,
+    "causal_claim": false,
+    "professional_advice": false
+  }
+}

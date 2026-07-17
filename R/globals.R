@@ -1,7 +1,7 @@
 if (getRversion() >= "2.15.1") utils::globalVariables(c(
   "x", "dx", "y", "dy", "xend", "yend",
   "value", "scenario", "param", "state", "t", "final_value", "scenario_id",
-  "x_value", "y_value", "non_dominated"
+  "x_value", "y_value", "non_dominated", "absolute_delta"
 ))
 
 #' Internal constants for catalystanalyticsr

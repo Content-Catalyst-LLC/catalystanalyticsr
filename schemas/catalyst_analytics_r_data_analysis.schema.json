@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-data-analysis-v1.schema.json",
+  "title": "Catalyst Analytics R Data Analysis Export",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "created_at",
+    "package",
+    "dataset",
+    "indicators",
+    "indicator_values",
+    "indicator_trace",
+    "boundaries"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "const": "catalystanalyticsr"
+        },
+        "version": {
+          "const": "0.5.0"
+        }
+      }
+    },
+    "dataset": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "id",
+        "title",
+        "fields",
+        "source",
+        "quality",
+        "fingerprint"
+      ]
+    },
+    "indicators": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "version",
+          "title",
+          "formula",
+          "required_fields",
+          "unit",
+          "direction",
+          "aggregation"
+        ]
+      }
+    },
+    "indicator_values": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "value",
+          "indicator",
+          "indicator_version",
+          "unit",
+          "direction"
+        ]
+      }
+    },
+    "indicator_trace": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object"
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_quality_requires_review",
+        "unit_compatibility_requires_review",
+        "causal_claim",
+        "autonomous_decision"
+      ],
+      "properties": {
+        "source_quality_requires_review": {
+          "const": true
+        },
+        "unit_compatibility_requires_review": {
+          "const": true
+        },
+        "causal_claim": {
+          "const": false
+        },
+        "autonomous_decision": {
+          "const": false
+        }
+      }
+    }
+  }
+}
