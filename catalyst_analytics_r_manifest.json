@@ -1,33 +1,61 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "0.1.4",
+  "repository_version": "0.2.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "0.1.4"
+    "version": "0.2.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "1.0.1",
-    "compatible_repository_version": "0.1.4",
+    "version": "1.1.0",
+    "compatible_repository_version": "0.2.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
-  "schemas": {
-    "scenario_input": "schemas/catalyst_analytics_r_scenario.schema.json",
-    "demo_export": "schemas/catalyst_analytics_r_demo_export.schema.json",
-    "demo_export_version": "1.0.0"
+  "contracts": {
+    "scenario": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_scenario.schema.json"
+    },
+    "model_manifest": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_model_manifest.schema.json"
+    },
+    "browser_input": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
+    },
+    "browser_export": {
+      "version": "1.1.0",
+      "schema": "schemas/catalyst_analytics_r_demo_export.schema.json"
+    }
+  },
+  "models": [
+    {
+      "id": "khncpa",
+      "version": "1.0.0",
+      "manifest": "inst/extdata/models/khncpa_model_manifest_v1.json"
+    }
+  ],
+  "fixtures": {
+    "canonical_scenario": "inst/extdata/scenarios/canonical_baseline_v1.json",
+    "browser_mapping": "tests/fixtures/browser_contract_mapping_v1.json",
+    "numerical_reference": "tests/fixtures/khncpa_reference_v1.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [
     "R package",
+    "canonical scenario contract",
+    "model registry",
+    "scenario migration",
     "scenario modeling",
     "indicator computation",
     "carbon budget review",
     "WordPress demo",
     "JSON exports"
   ],
-  "method_path": "question \u2192 assumptions \u2192 scenario \u2192 model \u2192 indicators \u2192 output \u2192 interpretation \u2192 review",
+  "method_path": "question -> assumptions -> scenario -> model -> indicators -> output -> interpretation -> review",
   "boundaries": [
     "educational decision support",
     "not a forecast",

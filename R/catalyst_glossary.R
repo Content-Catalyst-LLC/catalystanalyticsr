@@ -68,7 +68,7 @@ catalyst_glossary <- function(include_internal = FALSE) {
   )
   
   if (isTRUE(include_internal)) {
-    # Reserved for future internal/helper entries; none are exposed in v0.1.4.
+    # Reserved for future internal/helper entries; none are exposed in v0.2.0.
   }
   
   df

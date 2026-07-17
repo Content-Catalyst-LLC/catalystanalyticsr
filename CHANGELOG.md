@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.0 - Canonical Scenario Contract and Model Registry
+
+- Added the versioned `catalyst_scenario` contract and JSON schema 1.0.0.
+- Added scenario construction, validation, JSON import/export, stable fingerprints, and execution.
+- Added legacy R scenario and browser-input migration to the canonical contract.
+- Added the governed `catalyst_model` interface, registry, discovery, exact version lookup, and serializable manifests.
+- Registered KH-NC-PA model version 1.0.0 with state, flow, unit, parameter, policy, and indicator contracts.
+- Refactored the shared numerical integrator to execute registered model callbacks.
+- Added deterministic canonical, browser mapping, model manifest, and RK4 numerical fixtures.
+- Added tolerance-based numerical regression tests and custom-model registry tests.
+- Added scenario and model provenance to export bundles.
+- Updated the WordPress demo to v1.1.0 with canonical scenario exports and `mapped_contract` parity status.
+- Added scenario, model, browser-input, and browser-export schema validation to the release suite.
+
 ## 0.1.4 — Repository Integrity and Package Contract Repair
 
 - Repaired duplicate functions and duplicated documentation blocks.

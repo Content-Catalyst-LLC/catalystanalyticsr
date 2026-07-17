@@ -14,4 +14,5 @@ test_that("catalyst_export writes governed metadata and parameter records", {
   expect_true(file.exists(file.path(out$bundle_dir, "run_metadata.json")))
   expect_equal(out$manifest$run_id, "test-run")
   expect_true(length(out$manifest$file_inventory) >= 1)
+  expect_equal(out$manifest$model_version, "1.0.0")
 })

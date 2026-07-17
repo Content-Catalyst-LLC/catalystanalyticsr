@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Catalyst Analytics R Demo
  * Description: Browser-based Sustainable Catalyst analytics demo for scenario exploration, emissions budget review, and adjusted-net-savings style reasoning. Use shortcode [catalyst_analytics_r_demo].
- * Version: 1.0.1
+ * Version: 1.1.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 function scar_demo_enqueue_assets() {
     $url = plugin_dir_url(__FILE__);
-    $ver = '1.0.1';
+    $ver = '1.1.0';
     wp_enqueue_style('scar-demo-style', $url . 'assets/catalyst-analytics-r-demo.css', array(), $ver);
     wp_enqueue_script('scar-demo-script', $url . 'assets/catalyst-analytics-r-demo.js', array(), $ver, true);
 }
@@ -27,7 +27,7 @@ function scar_demo_shortcode($atts = array(), $content = null) {
         <p class="scar-demo__eyebrow">Catalyst Analytics R Demo</p>
         <h3>Scenario Engine for Sustainable-Development Analysis</h3>
         <p>
-          Explore one policy scenario using simplified browser-side logic inspired by the Catalyst Analytics R package.
+          Explore one policy scenario using simplified browser-side logic mapped to the Catalyst Analytics R canonical scenario contract.
           Adjust savings, emissions intensity, adaptation investment, restoration, and social investment to see how trajectory,
           adjusted-net-savings style indicators, and emissions-budget status change.
         </p>
@@ -135,7 +135,7 @@ function scar_demo_shortcode($atts = array(), $content = null) {
       <details class="scar-demo__details">
         <summary>What this demo does and does not do</summary>
         <p>
-          This browser demo is a simplified educational companion to Catalyst Analytics R v0.1.4. Its equations are conceptually related but are not numerically identical to the R engine. It is not a full R runtime,
+          This browser demo is a simplified educational companion to Catalyst Analytics R v0.2.0. Its exports now include a canonical scenario record. Its equations remain conceptually related but are not numerically identical to the R engine. It is not a full R runtime,
           not a forecast, not compliance advice, and not a guarantee of impact. Use it to understand scenario structure,
           assumptions, indicators, and reviewable exports.
         </p>

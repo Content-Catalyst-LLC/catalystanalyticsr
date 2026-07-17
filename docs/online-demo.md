@@ -1,33 +1,19 @@
-# WordPress Online Demo
+# Online Demo
 
-The repository includes a WordPress shortcode plugin:
+The WordPress plugin version is `1.1.0` and the shortcode is:
 
 ```text
 [catalyst_analytics_r_demo]
 ```
 
-## What the demo does
+The demo provides exploratory controls for capital, investment, adaptation, restoration, emissions intensity, horizon, and budget review.
 
-The browser demo lets a visitor adjust a simplified scenario:
+Downloaded JSON uses browser export schema `1.1.0` and includes:
 
-- savings / reinvestment rate
-- emissions intensity
-- adaptation or resilience investment
-- natural-capital restoration
-- human or social investment
-- initial produced, human, and natural capital
-- emissions budget
-- time horizon
+- Original browser inputs
+- A canonical scenario schema `1.0.0` record
+- Browser trajectory and summary values
+- Interpretation notes
+- Explicit non-forecast and non-advice boundaries
 
-It then creates:
-
-- a trajectory chart
-- adjusted-savings style estimate
-- emissions budget status
-- composite score
-- interpretation notes
-- downloadable JSON export
-
-## Important boundary
-
-The demo does not run R in WordPress. It is a public-facing educational companion that mirrors the *logic* of scenario analysis while keeping the full R package separate.
+The engine declares `parity_status: mapped_contract`. The canonical record can be imported into R, but the browser trajectory itself must not be presented as an R result.

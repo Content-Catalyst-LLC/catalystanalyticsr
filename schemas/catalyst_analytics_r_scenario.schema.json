@@ -1,77 +1,222 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-scenario.schema.json",
-  "title": "Catalyst Analytics R Browser Scenario Input",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-scenario-v1.schema.json",
+  "title": "Catalyst Analytics R Canonical Scenario",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "scenarioName",
-    "years",
-    "savings",
-    "emissionsIntensity",
-    "adaptation",
-    "restoration",
-    "humanInvestment",
-    "initialCapital",
-    "initialHuman",
-    "initialNatural",
-    "emissionsBudget"
+    "schema_version",
+    "id",
+    "title",
+    "role",
+    "model",
+    "time",
+    "initial_state",
+    "policy",
+    "parameters",
+    "constraints",
+    "units",
+    "scope",
+    "currency",
+    "sources",
+    "assumptions",
+    "uncertainty",
+    "review",
+    "metadata"
   ],
   "properties": {
-    "scenarioName": {
+    "schema_version": { "const": "1.0.0" },
+    "id": { "$ref": "#/$defs/id" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "role": {
+      "enum": ["baseline", "intervention", "counterfactual", "exploratory"]
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "version": { "$ref": "#/$defs/semver" }
+      }
+    },
+    "time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "step", "unit", "values"],
+      "properties": {
+        "start": { "type": "number" },
+        "end": { "type": "number" },
+        "step": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "unit": { "type": "string", "minLength": 1 },
+        "values": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "number" }
+        }
+      }
+    },
+    "initial_state": { "$ref": "#/$defs/numericMap" },
+    "policy": { "$ref": "#/$defs/numericMap" },
+    "parameters": { "$ref": "#/$defs/numericMapAllowEmpty" },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["number", "string", "boolean", "null"]
+      }
+    },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["time", "states", "flows"],
+      "properties": {
+        "time": { "type": "string", "minLength": 1 },
+        "states": { "$ref": "#/$defs/stringMap" },
+        "flows": { "$ref": "#/$defs/stringMap" }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["geography", "sectors"],
+      "properties": {
+        "geography": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "id", "label"],
+          "properties": {
+            "type": { "type": "string", "minLength": 1 },
+            "id": { "type": "string", "minLength": 1 },
+            "label": { "type": "string", "minLength": 1 }
+          }
+        },
+        "sectors": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "currency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "price_year"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "price_year": { "type": ["integer", "null"], "minimum": 1800, "maximum": 3000 }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/assumption" }
+    },
+    "uncertainty": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/uncertainty" }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reviewed_by", "notes"],
+      "properties": {
+        "status": { "enum": ["draft", "under_review", "approved", "rejected", "archived"] },
+        "reviewed_by": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["description", "tags", "created_by", "created_at"],
+      "properties": {
+        "description": { "type": "string" },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "created_by": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "migrations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "id": {
       "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]*$",
       "minLength": 1,
-      "maxLength": 80
+      "maxLength": 100
     },
-    "years": {
-      "type": "integer",
-      "minimum": 5,
-      "maximum": 40
+    "semver": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$"
     },
-    "savings": {
-      "type": "number",
-      "minimum": 0.05,
-      "maximum": 0.45
+    "numericMap": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "number" }
     },
-    "emissionsIntensity": {
-      "type": "number",
-      "minimum": 0.01,
-      "maximum": 0.2
+    "numericMapAllowEmpty": {
+      "type": "object",
+      "additionalProperties": { "type": "number" }
     },
-    "adaptation": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 0.25
+    "stringMap": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "minLength": 1 }
     },
-    "restoration": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 0.2
+    "source": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "title", "type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "uri": { "type": "string" },
+        "version": { "type": "string" },
+        "license": { "type": "string" },
+        "accessed_at": { "type": "string", "format": "date-time" }
+      }
     },
-    "humanInvestment": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 0.2
+    "assumption": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "statement", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "statement": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["declared", "tested", "contested", "retired"] },
+        "source_ids": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" }
+        }
+      }
     },
-    "initialCapital": {
-      "type": "number",
-      "minimum": 10,
-      "maximum": 1000
-    },
-    "initialHuman": {
-      "type": "number",
-      "minimum": 10,
-      "maximum": 1000
-    },
-    "initialNatural": {
-      "type": "number",
-      "minimum": 10,
-      "maximum": 1000
-    },
-    "emissionsBudget": {
-      "type": "number",
-      "minimum": 10,
-      "maximum": 1000
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "target", "distribution"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "target": { "type": "string", "minLength": 1 },
+        "distribution": { "type": "string", "minLength": 1 }
+      }
     }
   }
 }

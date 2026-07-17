@@ -1,22 +1,27 @@
-# Export Specification
+# Export Bundle Specification
 
-Browser demo exports are JSON records intended for review, documentation, and downstream analysis.
+Catalyst export bundles use manifest schema `1.1.0`.
 
-## Top-level fields
+## Core files
 
-```json
-{
-  "demo": "Catalyst Analytics R Demo",
-  "generated_at": "ISO-8601 timestamp",
-  "inputs": {},
-  "final": {},
-  "composite_score": 0,
-  "budget_ratio": 0,
-  "interpretation_notes": [],
-  "trajectory": []
-}
-```
+Depending on the run, a bundle may contain:
 
-## Review standard
+- `trajectory_wide.csv`
+- `trajectory_long.csv`
+- `sdg_indicators.csv`
+- `carbon_budget.csv`
+- `scorecard.csv`
+- `phase_plane.csv`
+- `sensitivities.csv`
+- `parameters.csv`
+- `policy.csv`
+- `run_metadata.json`
+- `scenario.json`
+- Plot PNG files
+- `manifest.json`
 
-Exports should be treated as structured records of assumptions and simplified outputs, not forecasts or professional analysis.
+## Manifest provenance
+
+The manifest records package version, model id, exact model version, model contract version, requested and normalized run ids, scenario schema version, scenario fingerprint, creation time, files, sizes, and checksums.
+
+`scenario.json` is written only when the run contains a canonical scenario object.

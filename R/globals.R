@@ -20,7 +20,8 @@ catalyst_globals <- function(dummy = NULL) {
     required_state_names = c("K", "H", "N", "C", "P", "A"),
     required_traj_long_cols = c("t", "scenario", "metric", "value"),
     model_id = "khncpa",
-    model_contract_version = "0.1.4",
-    demo_export_schema_version = "1.0.0"
+    model_contract_version = "1.0.0",
+    scenario_schema_version = "1.0.0",
+    demo_export_schema_version = "1.1.0"
   )
 }

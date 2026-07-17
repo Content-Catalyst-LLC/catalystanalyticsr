@@ -7,9 +7,11 @@
 catalyst_run(
   times,
   x0,
-  policy = list(s = 0.2, e = 0.05, a = 0),
+  policy = NULL,
   params = list(),
   scenario = "baseline",
+  model = "khncpa",
+  model_version = NULL,
   method = c("rk4", "euler"),
   emissions_budget = NULL,
   carbon_budget_value = NULL,
@@ -27,6 +29,10 @@ catalyst_run(
 \item{params}{List of model parameters.}
 
 \item{scenario}{Scenario label.}
+
+\item{model}{Registered model id or \code{catalyst_model} object.}
+
+\item{model_version}{Optional exact model version.}
 
 \item{method}{Integration method.}
 

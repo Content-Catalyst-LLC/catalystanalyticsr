@@ -1,14 +1,6 @@
 {
-  "schema_version": "1.1.0",
-  "demo": "Catalyst Analytics R Demo",
-  "demo_version": "1.1.0",
-  "engine": {
-    "type": "browser_simplified",
-    "compatible_repository_version": "0.2.0",
-    "parity_status": "mapped_contract"
-  },
-  "generated_at": "2026-07-16T00:00:00Z",
-  "inputs": {
+  "fixture_version": "1.0.0",
+  "browser_input": {
     "scenarioName": "Policy pathway",
     "years": 20,
     "savings": 0.22,
@@ -21,7 +13,7 @@
     "initialNatural": 100,
     "emissionsBudget": 120
   },
-  "canonical_scenario": {
+  "expected_canonical_scenario": {
     "schema_version": "1.0.0",
     "id": "policy-pathway",
     "title": "Policy pathway",
@@ -138,27 +130,5 @@
       "created_at": "2026-07-16T00:00:00Z",
       "browser_contract_version": "1.0.0"
     }
-  },
-  "final": {
-    "year": 20,
-    "produced_capital": 166.4,
-    "human_capital": 134.8,
-    "natural_capital": 104.5,
-    "cumulative_emissions": 99.7,
-    "adjusted_savings": 18.3,
-    "composite_score": 105.2
-  },
-  "composite_score": 72.5,
-  "budget_ratio": 0.831,
-  "interpretation_notes": [
-    "Cumulative emissions remain within the selected budget, but review the margin.",
-    "Final-period adjusted savings are positive.",
-    "Treat this as an exploratory demo, not a forecast or professional analysis."
-  ],
-  "trajectory": [],
-  "boundary": {
-    "forecast": false,
-    "compliance": false,
-    "professional_advice": false
   }
 }

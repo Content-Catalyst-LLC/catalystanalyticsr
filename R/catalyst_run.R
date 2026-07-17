@@ -8,6 +8,8 @@
 #' @param policy List of policy controls (s,e,a).
 #' @param params List of model parameters.
 #' @param scenario Scenario label.
+#' @param model Registered model id or `catalyst_model` object.
+#' @param model_version Optional exact model version.
 #' @param method Integration method.
 #' @param emissions_budget Optional non-negative cumulative emissions budget.
 #' @param carbon_budget_value Deprecated alias for `emissions_budget`.
@@ -24,16 +26,21 @@
 catalyst_run <- function(
   times,
   x0,
-  policy = list(s = 0.20, e = 0.05, a = 0.00),
+  policy = NULL,
   params = list(),
   scenario = "baseline",
+  model = "khncpa",
+  model_version = NULL,
   method = c("rk4", "euler"),
   emissions_budget = NULL,
   carbon_budget_value = NULL,
   include_phase_plane = TRUE,
   include_sensitivity = TRUE
 ) {
-  method <- match.arg(method)
+  model_object <- .resolve_catalyst_model(model, model_version)
+  method <- match.arg(method, model_object$integration_methods)
+  if (is.null(policy)) policy <- model_object$default_policy
+  model_object$validate_policy(policy)
   .assert_flag(include_phase_plane, "include_phase_plane")
   .assert_flag(include_sensitivity, "include_sensitivity")
 
@@ -50,21 +57,27 @@ catalyst_run <- function(
     x0 = x0,
     policy = policy,
     params = params,
+    model = model_object,
     method = method,
     scenario = scenario,
     return_long = TRUE
   )
 
-  sdg <- sdg_indicators(res$trajectory_wide)
+  sdg_required <- c("P", "N", "C", "gdp", "emissions", "ans")
+  sdg <- if (all(sdg_required %in% names(res$trajectory_wide))) {
+    sdg_indicators(res$trajectory_wide)
+  } else {
+    .model_indicators(res$trajectory_wide, model_object)
+  }
   cb <- if (is.null(emissions_budget)) NULL else {
     carbon_budget(res$trajectory_wide, budget = emissions_budget)
   }
 
-  state0 <- as.numeric(res$trajectory_wide[1, c("K", "H", "N", "C", "P", "A")])
-  names(state0) <- c("K", "H", "N", "C", "P", "A")
+  state0 <- as.numeric(res$trajectory_wide[1, model_object$required_states])
+  names(state0) <- model_object$required_states
 
   pp <- NULL
-  if (include_phase_plane) {
+  if (include_phase_plane && identical(model_object$id, "khncpa")) {
     safe_range <- function(values) {
       value_range <- range(values, finite = TRUE)
       if (diff(value_range) == 0) {
@@ -87,7 +100,7 @@ catalyst_run <- function(
     )
   }
 
-  sens <- if (include_sensitivity) {
+  sens <- if (include_sensitivity && identical(model_object$id, "khncpa")) {
     sensitivity_jacobian(state = state0, params = params, t = times[1], policy = policy)
   } else NULL
 
@@ -112,9 +125,16 @@ catalyst_run <- function(
   }
   scorecard <- make_score(res$trajectory_wide, c("gdp", "emissions", "ans", "N", "C"))
 
+  dashboard_indicators <- intersect(
+    c("gdp", "emissions", "ans", "carbon_intensity"),
+    unique(sdg$indicator)
+  )
+  if (!length(dashboard_indicators)) {
+    dashboard_indicators <- utils::head(unique(sdg$indicator), 4L)
+  }
   plots <- list(
     trajectory = plot_trajectory(res$trajectory_long, metrics = c("gdp", "emissions", "ans")),
-    sdg_dashboard = plot_sdg_dashboard(sdg)
+    sdg_dashboard = plot_sdg_dashboard(sdg, indicators = dashboard_indicators)
   )
   if (!is.null(pp)) plots$phase_plane <- plot_phase_plane(pp, res$trajectory_wide)
   if (!is.null(sens)) plots$sensitivity_heatmap <- plot_sensitivity_heatmap(sens)

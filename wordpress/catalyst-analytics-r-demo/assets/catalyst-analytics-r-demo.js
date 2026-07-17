@@ -3,6 +3,56 @@
     return Math.max(min, Math.min(max, value));
   }
 
+
+  function slug(value) {
+    var out = String(value || 'scenario').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    if (!out) out = 'scenario';
+    if (!/^[a-z]/.test(out)) out = 'scenario-' + out;
+    return out.slice(0, 80);
+  }
+
+  function canonicalScenario(x, generatedAt) {
+    var times = [];
+    for (var year = 0; year <= x.years; year++) times.push(year);
+    return {
+      schema_version: '1.0.0',
+      id: slug(x.scenarioName),
+      title: x.scenarioName,
+      role: 'exploratory',
+      model: { id: 'khncpa', version: '1.0.0' },
+      time: { start: 0, end: x.years, step: 1, unit: 'year', values: times },
+      initial_state: { K: x.initialCapital, H: x.initialHuman, N: x.initialNatural, C: 0, P: 1, A: 1 },
+      policy: { s: x.savings, e: x.humanInvestment, a: x.adaptation },
+      parameters: { emissions_intensity: x.emissionsIntensity, regen: x.restoration },
+      constraints: { emissions_budget: x.emissionsBudget },
+      units: {
+        time: 'year',
+        states: { K: 'index', H: 'index', N: 'index', C: 'index', P: 'people_index', A: 'index' },
+        flows: {
+          gdp: 'index', consumption: 'index', savings: 'index', education: 'index',
+          abatement: 'share', emissions: 'tCO2e_index', depletion: 'index', damages: 'index'
+        }
+      },
+      scope: { geography: { type: 'global', id: 'WORLD', label: 'Global' }, sectors: ['all'] },
+      currency: { code: 'index', price_year: null },
+      sources: [],
+      assumptions: [{
+        id: 'browser-mapping',
+        statement: 'Browser controls were mapped to the canonical KH-NC-PA contract; equations remain conceptually related rather than numerically identical.',
+        status: 'declared'
+      }],
+      uncertainty: [],
+      review: { status: 'draft', reviewed_by: [], notes: [] },
+      metadata: {
+        description: 'Migrated from the Catalyst Analytics R browser scenario input contract.',
+        tags: ['browser', 'compatibility'],
+        created_by: 'catalyst-analytics-r-demo',
+        created_at: generatedAt,
+        browser_contract_version: '1.0.0'
+      }
+    };
+  }
+
   function pct(n) {
     return Math.round(n * 100) + '%';
   }
@@ -158,17 +208,19 @@
 
   function downloadJSON(root) {
     var run = root._scarRun || simulate(read(root.querySelector('[data-scar-form]')));
+    var generatedAt = new Date().toISOString();
     var payload = {
-      schema_version: '1.0.0',
+      schema_version: '1.1.0',
       demo: 'Catalyst Analytics R Demo',
-      demo_version: '1.0.1',
+      demo_version: '1.1.0',
       engine: {
         type: 'browser_simplified',
-        compatible_repository_version: '0.1.4',
-        parity_status: 'conceptual_only'
+        compatible_repository_version: '0.2.0',
+        parity_status: 'mapped_contract'
       },
-      generated_at: new Date().toISOString(),
+      generated_at: generatedAt,
       inputs: run.inputs,
+      canonical_scenario: canonicalScenario(run.inputs, generatedAt),
       final: run.final,
       composite_score: run.score,
       budget_ratio: round(run.budgetRatio, 3),

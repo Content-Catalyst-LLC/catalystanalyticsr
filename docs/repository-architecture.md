@@ -1,23 +1,28 @@
 # Repository Architecture
 
-Catalyst Analytics R has two layers:
+Catalyst Analytics R has three governed layers.
 
-## 1. R package layer
+## 1. Contract layer
 
-The R package contains deeper reproducible analytics:
+- Canonical scenario schema and R object
+- Model definitions and registry
+- Model manifests
+- Scenario migrations and browser mappings
+- Numerical and compatibility fixtures
 
-- vector dynamics
-- RK4 / Euler simulation
-- adjusted net savings
-- carbon budget checks
-- indicator summaries
-- plots
-- export bundles
+## 2. R analytical layer
 
-## 2. WordPress demo layer
+- Registered-model simulation with RK4 or Euler integration
+- Adjusted Net Savings
+- Carbon-budget checks
+- Indicator summaries
+- Phase-plane and local sensitivity tools for KH-NC-PA
+- Plots and portable export bundles
 
-The WordPress plugin provides a lightweight browser demo for public education and lead-in explanation. It does not run the R package server-side.
+## 3. WordPress demo layer
 
-## Why separate them?
+The public plugin runs a lightweight JavaScript model. It now emits the same canonical scenario structure but does not execute the R equations.
 
-This separation keeps the public site fast and low-risk while preserving the R package for serious reproducible work.
+## Separation boundary
+
+`mapped_contract` means the browser and R layers share scenario structure, control meaning, model identity, units, and provenance fields. It does not mean their trajectories are numerically identical.

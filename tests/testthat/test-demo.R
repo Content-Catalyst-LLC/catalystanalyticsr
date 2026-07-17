@@ -6,7 +6,8 @@ test_that("catalyst_demo returns a complete reproducible run", {
   expect_true(is.list(run$carbon_budget))
   expect_true(run$carbon_budget$within_budget)
   expect_equal(run$meta$model, "khncpa")
-  expect_equal(run$meta$model_contract_version, "0.1.4")
+  expect_equal(run$meta$model_version, "1.0.0")
+  expect_equal(run$meta$model_contract_version, "1.0.0")
 })
 
 test_that("catalyst_demo supports deterministic pass and fail budgets", {

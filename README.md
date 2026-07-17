@@ -1,109 +1,133 @@
 # Catalyst Analytics R
 
-Catalyst Analytics R is the reproducible analytics layer for the Sustainable Catalyst platform. It provides an R package for sustainable-development scenario modeling, indicator computation, carbon-budget review, adjusted-net-savings style reasoning, plots, and export bundles.
+Catalyst Analytics R is the reproducible analytics layer for the Sustainable Catalyst platform. It provides an R package for governed sustainability scenarios, versioned analytical models, vector-dynamics simulation, indicator computation, carbon-budget review, adjusted-net-savings reasoning, visualization, and portable export bundles.
 
-The repository also includes a WordPress demo plugin so the public Catalyst Analytics R page can show a browser-based exploratory scenario tool without requiring a server-side R runtime.
+The repository also includes a WordPress demo plugin so the public Catalyst Analytics R page can offer an exploratory browser tool without requiring a server-side R runtime.
 
-## What this repository supports
+## v0.2.0 foundation
 
-- Scenario simulation with R package functions.
-- Adjusted Net Savings style indicator logic.
-- Carbon-budget comparison.
-- SDG-style indicator summaries.
-- Plotting and export bundles.
-- Browser-based WordPress demo: `[catalyst_analytics_r_demo]`.
-- JSON export schema for shareable scenario records.
-- Documentation for methodology, reproducibility, and review.
+Version 0.2.0 introduces the shared contracts required for future analytical expansion:
+
+- Canonical `catalyst_scenario` objects with schema version `1.0.0`
+- Governed `catalyst_model` definitions and an in-process model registry
+- Exact model id and version resolution
+- JSON scenario import, export, migration, and fingerprints
+- Legacy R scenario migration from schema `0.1.0`
+- Browser-input mapping to and from canonical scenarios
+- Deterministic numerical reference fixtures
+- Tolerance-based RK4 regression tests
+- Model and scenario provenance in export bundles
+- Browser exports containing a canonical scenario record
 
 ## Repository structure
 
 ```text
-R/                                  R package functions
+R/                                  R package functions and contracts
 man/                                R package documentation
-tests/testthat/                     R package tests
+tests/testthat/                     R package behavior and numerical tests
+tests/fixtures/                     Mapping and numerical reference fixtures
+inst/extdata/scenarios/             Packaged canonical and legacy scenarios
+inst/extdata/models/                Packaged model manifests
 wordpress/catalyst-analytics-r-demo WordPress shortcode demo plugin
-docs/                               Methodology and implementation docs
-schemas/                            JSON schema for exported demo records
-inst/extdata/                       Packaged sample scenario inputs
-examples/                           Example scenario records
-outputs/                            Example outputs
+docs/                               Methodology and contract documentation
+schemas/                            Canonical JSON schemas
+examples/                           Example canonical and browser records
+outputs/                            Example browser export
 python/                             Lightweight brief generator
 .github/workflows/                  CI checks
 ```
 
-## WordPress demo
+## Release versions
 
-Install the plugin from `wordpress/catalyst-analytics-r-demo` or upload the generated zip from `dist/catalyst-analytics-r-demo.zip`.
+- Repository and R package: **0.2.0**
+- Canonical scenario schema: **1.0.0**
+- KH-NC-PA model: **1.0.0**
+- Model manifest schema: **1.0.0**
+- WordPress demo plugin: **1.1.0**
+- Browser export schema: **1.1.0**
 
-Use this shortcode on the Catalyst Analytics R page:
+See `RELEASE_CONTRACT.md` and `docs/releases/v0.2.0.md`.
+
+## Canonical scenario quickstart
+
+```r
+scenario <- catalyst_scenario(
+  title = "Policy pathway",
+  id = "policy-pathway",
+  role = "intervention",
+  times = 0:20,
+  policy = list(s = 0.22, e = 0.05, a = 0.08),
+  parameters = list(
+    emissions_intensity = 0.07,
+    regen = 0.06
+  ),
+  constraints = list(emissions_budget = 5)
+)
+
+validate_catalyst_scenario(scenario)
+scenario_fingerprint(scenario)
+
+json <- scenario_to_json(scenario)
+restored <- scenario_from_json(json)
+
+run <- run_catalyst_scenario(
+  restored,
+  include_phase_plane = FALSE,
+  include_sensitivity = FALSE
+)
+
+summary(run)
+plot(run)
+```
+
+## Model registry
+
+```r
+list_catalyst_models()
+
+model <- get_catalyst_model("khncpa", "1.0.0")
+print(model)
+
+manifest <- catalyst_model_manifest(model)
+```
+
+Custom models can be defined with `new_catalyst_model()` and registered with `register_catalyst_model()`. The shared integrator resolves the model's declared states, defaults, units, flow mapping, indicator mapping, and supported numerical methods.
+
+## Browser compatibility
+
+The WordPress demo shortcode is:
 
 ```text
 [catalyst_analytics_r_demo]
 ```
 
-The demo lets visitors adjust a simplified sustainable-development scenario and review:
+The browser engine remains simplified. Version 1.1.0 maps browser inputs into the canonical scenario contract and includes that record in downloaded JSON. `parity_status: mapped_contract` means the structures and assumptions are transferable; it does not claim numerical identity between the JavaScript and R equations.
 
-- Produced capital trajectory
-- Human capital trajectory
-- Natural capital trajectory
-- Cumulative emissions
-- Adjusted-savings style estimate
-- Emissions budget status
-- Composite scenario score
-- JSON export
+## Export bundles
 
-The browser demo is educational and exploratory. It uses a simplified browser engine with conceptual—not numerical—parity to the R package. It is not a forecast, compliance tool, or substitute for professional analysis.
-
-## Release versions
-
-- Repository and R package: **0.1.4**
-- WordPress demo plugin: **1.0.1**
-- Browser export schema: **1.0.0**
-
-See `RELEASE_CONTRACT.md` and `docs/releases/v0.1.4.md`.
-
-## R package quickstart
+`catalyst_export()` writes trajectories, indicators, plots, parameters, policy controls, run metadata, a file inventory, and—when a canonical scenario was used—the complete `scenario.json` plus its fingerprint and exact model version.
 
 ```r
-# From package root
-# install.packages(c("ggplot2", "jsonlite", "testthat", "devtools"))
-
-devtools::load_all()
-
-run <- catalyst_demo()
-
-run
-summary(run)
-
-plot(run)
-plot(run, which = "sdg_dashboard")
-plot(run, which = "phase_plane")
-plot(run, which = "sensitivity_heatmap")
-
-catalyst_glossary()
-
-catalyst_export(
+out <- catalyst_export(
   run,
-  dir = "demo_out",
-  run_id = "video_demo",
-  zip = FALSE,
+  dir = "analysis_outputs",
+  run_id = "policy-pathway",
+  zip = TRUE,
   overwrite = TRUE
 )
 ```
 
 ## Methodology
 
-Catalyst Analytics R follows the Sustainable Catalyst methodology:
-
 ```text
-question → assumptions → scenario → model → indicators → output → interpretation → review
+question -> assumptions -> scenario -> model -> indicators -> output -> interpretation -> review
 ```
 
-The goal is not to produce certainty. The goal is to make assumptions visible, calculations reproducible, outputs exportable, and interpretation reviewable.
+The goal is not to produce certainty. The goal is to make assumptions visible, contracts versioned, calculations reproducible, outputs exportable, and interpretation reviewable.
 
 ## Boundaries
 
-Catalyst Analytics R is an educational, open-source, decision-support package. It does not provide legal, financial, investment, engineering, environmental, compliance, scientific, or professional advice. Outputs depend on data quality, assumptions, model design, and interpretation.
+Catalyst Analytics R is an educational, open-source decision-support package. It does not provide legal, financial, investment, engineering, environmental, compliance, scientific, or other professional advice. Outputs depend on data quality, assumptions, model design, numerical configuration, and interpretation.
 
 ## License
 

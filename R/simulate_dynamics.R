@@ -1,13 +1,14 @@
-#' Simulate dynamics
+#' Simulate registered model dynamics
 #'
-#' Runs the KH-NC-PA model over `times` and returns wide and optional long
-#' trajectories for analysis, plotting, and export.
+#' Runs a registered Catalyst model over `times` and returns wide and optional
+#' long trajectories for analysis, plotting, and export.
 #'
 #' @param times Numeric vector of time points.
-#' @param x0 Named numeric vector of initial state (K,H,N,C,P,A).
-#' @param policy List of policy controls (s,e,a).
-#' @param params List of parameter overrides.
-#' @param model Dynamics model. Currently only "khncpa" is supported.
+#' @param x0 Named numeric vector of initial state.
+#' @param policy Named policy list. Uses model defaults when omitted.
+#' @param params Named parameter overrides.
+#' @param model Registered model id or `catalyst_model` object.
+#' @param model_version Optional exact model version when `model` is an id.
 #' @param method Integration method ("rk4" or "euler").
 #' @param scenario Non-empty scenario label.
 #' @param return_long Logical. If TRUE, also return a long trajectory.
@@ -22,44 +23,51 @@
 simulate_dynamics <- function(
   times,
   x0,
-  policy = list(s = 0.20, e = 0.05, a = 0.00),
+  policy = NULL,
   params = list(),
   model = "khncpa",
+  model_version = NULL,
   method = c("rk4", "euler"),
   scenario = "baseline",
   return_long = TRUE
 ) {
-  method <- match.arg(method)
-  model <- match.arg(model, "khncpa")
+  model_object <- .resolve_catalyst_model(model, model_version)
+  method <- match.arg(method, model_object$integration_methods)
   .validate_times(times)
-  x0 <- .validate_state(x0, "x0")
-  .validate_policy(policy)
-  .validate_params(params)
+  x0 <- model_object$validate_state(x0)
+  if (is.null(policy)) policy <- model_object$default_policy
+  model_object$validate_policy(policy)
+  model_object$validate_params(params)
   .assert_single_string(scenario, "scenario")
   .assert_flag(return_long, "return_long")
 
-  required_states <- .khncpa_required_states()
-  p <- .khncpa_build_params(params, x0)
+  required_states <- model_object$required_states
+  p <- model_object$build_params(params, x0)
 
   n <- length(times)
   states <- matrix(NA_real_, nrow = n, ncol = length(required_states))
   colnames(states) <- required_states
-  states[1, ] <- as.numeric(x0[required_states])
+  states[1L, ] <- as.numeric(x0[required_states])
 
-  Y <- emissions <- depletion <- damages <- savings <- education <-
-    consumption <- abatement <- ans_series <- rep(NA_real_, n)
+  flow_names <- names(model_object$flow_map)
+  flows <- matrix(NA_real_, nrow = n, ncol = length(flow_names))
+  colnames(flows) <- flow_names
+  ans_series <- rep(NA_real_, n)
 
   record_flows <- function(i, time) {
-    fl <- .khncpa_flows_from_state(time, states[i, ], policy, p)
-    Y[i] <<- fl$Y
-    emissions[i] <<- fl$emissions
-    depletion[i] <<- fl$depletion
-    damages[i] <<- fl$damages
-    savings[i] <<- fl$savings
-    education[i] <<- fl$education
-    consumption[i] <<- fl$consumption
-    abatement[i] <<- fl$a
-    ans_series[i] <<- ans(fl$savings, fl$education, fl$depletion, fl$damages)
+    raw <- model_object$flows(time, states[i, ], policy, p)
+    if (!is.list(raw) || !all(unname(model_object$flow_map) %in% names(raw))) {
+      stop(sprintf("Model `%s` returned an invalid flow record.", model_object$id), call. = FALSE)
+    }
+    values <- vapply(model_object$flow_map, function(raw_name) {
+      value <- raw[[raw_name]]
+      if (!is.numeric(value) || length(value) != 1L || !is.finite(value)) {
+        stop(sprintf("Model flow `%s` must be one finite numeric value.", raw_name), call. = FALSE)
+      }
+      as.numeric(value)
+    }, numeric(1))
+    flows[i, ] <<- values[flow_names]
+    ans_series[i] <<- ans(values[["savings"]], values[["education"]], values[["depletion"]], values[["damages"]])
   }
   record_flows(1L, times[1L])
 
@@ -68,14 +76,26 @@ simulate_dynamics <- function(
     h <- times[i + 1L] - times[i]
     xi <- states[i, ]
 
+    derivative <- function(time, state) {
+      value <- model_object$derivative(time, state, policy, p)
+      if (!is.numeric(value) || length(value) != length(required_states)) {
+        stop(sprintf("Model `%s` returned an invalid derivative.", model_object$id), call. = FALSE)
+      }
+      if (!is.null(names(value))) value <- value[required_states]
+      if (any(!is.finite(value))) {
+        stop(sprintf("Model `%s` returned an invalid derivative.", model_object$id), call. = FALSE)
+      }
+      as.numeric(value)
+    }
+
     xnext <- if (method == "euler") {
-      k1 <- .khncpa_deriv(t, xi, policy, p)
+      k1 <- derivative(t, xi)
       xi + h * k1
     } else {
-      k1 <- .khncpa_deriv(t, xi, policy, p)
-      k2 <- .khncpa_deriv(t + h / 2, xi + (h / 2) * k1, policy, p)
-      k3 <- .khncpa_deriv(t + h / 2, xi + (h / 2) * k2, policy, p)
-      k4 <- .khncpa_deriv(t + h, xi + h * k3, policy, p)
+      k1 <- derivative(t, xi)
+      k2 <- derivative(t + h / 2, xi + (h / 2) * k1)
+      k3 <- derivative(t + h / 2, xi + (h / 2) * k2)
+      k4 <- derivative(t + h, xi + h * k3)
       xi + (h / 6) * (k1 + 2 * k2 + 2 * k3 + k4)
     }
 
@@ -86,54 +106,35 @@ simulate_dynamics <- function(
     record_flows(i + 1L, times[i + 1L])
   }
 
-  trajectory_wide <- data.frame(
-    t = times,
-    scenario = scenario,
-    K = states[, "K"],
-    H = states[, "H"],
-    N = states[, "N"],
-    C = states[, "C"],
-    P = states[, "P"],
-    A = states[, "A"],
-    gdp = Y,
-    consumption = consumption,
-    savings = savings,
-    education = education,
-    abatement = abatement,
-    emissions = emissions,
-    depletion = depletion,
-    damages = damages,
-    ans = ans_series,
-    stringsAsFactors = FALSE
-  )
+  trajectory_wide <- data.frame(t = times, scenario = scenario, stringsAsFactors = FALSE)
+  for (state_name in required_states) trajectory_wide[[state_name]] <- states[, state_name]
+  for (flow_name in flow_names) trajectory_wide[[flow_name]] <- flows[, flow_name]
+  trajectory_wide$ans <- ans_series
 
   meta <- list(
     package_version = .catalyst_package_version(),
-    model = model,
+    model = model_object$id,
+    model_version = model_object$version,
     model_contract_version = catalyst_globals()$model_contract_version,
     integration_method = method,
     scenario = scenario,
     time_start = times[1L],
     time_end = times[n],
     time_steps = n,
+    time_values = as.numeric(times),
     initial_state = as.list(x0[required_states]),
     params = p,
+    parameter_overrides = params,
     policy = policy
   )
 
-  if (!return_long) {
-    return(list(trajectory_wide = trajectory_wide, meta = meta))
-  }
+  if (!return_long) return(list(trajectory_wide = trajectory_wide, meta = meta))
 
-  metric_cols <- c(
-    "gdp", "consumption", "ans", "emissions", "damages", "depletion",
-    "K", "H", "N", "C", "P", "A"
-  )
+  metric_cols <- c(required_states, flow_names, "ans")
   units <- c(
-    gdp = "index", consumption = "index", ans = "index",
-    emissions = "tCO2e_index", damages = "index", depletion = "index",
-    K = "index", H = "index", N = "index", C = "index",
-    P = "people_index", A = "index"
+    model_object$state_units[required_states],
+    model_object$flow_units[flow_names],
+    ans = "index"
   )
   trajectory_long <- do.call(rbind, lapply(metric_cols, function(metric) {
     data.frame(

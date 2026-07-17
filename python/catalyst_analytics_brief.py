@@ -17,6 +17,8 @@ def brief(payload: dict) -> str:
     inputs = payload.get("inputs", {})
     final = payload.get("final", {})
     notes = payload.get("interpretation_notes", [])
+    canonical = payload.get("canonical_scenario", {})
+    model = canonical.get("model", {})
     lines = [
         "# Catalyst Analytics R Scenario Brief",
         "",
@@ -24,6 +26,8 @@ def brief(payload: dict) -> str:
         f"**Time horizon:** {inputs.get('years', 'n/a')} years",
         f"**Composite score:** {payload.get('composite_score', 'n/a')}",
         f"**Budget ratio:** {payload.get('budget_ratio', 'n/a')}",
+        f"**Scenario contract:** {canonical.get('schema_version', 'n/a')}",
+        f"**Model:** {model.get('id', 'n/a')}@{model.get('version', 'n/a')}",
         "",
         "## Final-period values",
         "",

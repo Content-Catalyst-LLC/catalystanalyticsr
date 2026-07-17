@@ -7,9 +7,10 @@
 simulate_dynamics(
   times,
   x0,
-  policy = list(s = 0.2, e = 0.05, a = 0),
+  policy = NULL,
   params = list(),
   model = "khncpa",
+  model_version = NULL,
   method = c("rk4", "euler"),
   scenario = "baseline",
   return_long = TRUE
@@ -24,7 +25,9 @@ simulate_dynamics(
 
 \item{params}{List of parameter overrides.}
 
-\item{model}{Which dynamics model to run. Currently only "khncpa" is supported.}
+\item{model}{Registered model id or \code{catalyst_model} object.}
+
+\item{model_version}{Optional exact model version.}
 
 \item{method}{Integration method ("rk4" or "euler").}
 
@@ -36,8 +39,7 @@ simulate_dynamics(
 A list with `trajectory_wide`, and if `return_long=TRUE`, `trajectory_long`, plus `meta`.
 }
 \description{
-One-step wrapper that runs the KH-NC-PA model over `times` and returns
-both wide and long trajectories for plotting/export.
+Runs a registered Catalyst model over \code{times} and returns wide and long trajectories for plotting and export.
 }
 \examples{
 times <- seq(0, 5, by = 1)

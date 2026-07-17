@@ -89,6 +89,15 @@ export_catalyst_bundle <- function(
   write_df("policy", .named_list_table(meta$policy))
   write_json("run_metadata", meta)
 
+  scenario_fingerprint_value <- NULL
+  if (!is.null(results$scenario)) {
+    scenario <- as_catalyst_scenario(results$scenario)
+    scenario_path <- file.path(out_dir, "scenario.json")
+    scenario_to_json(scenario, path = scenario_path, pretty = TRUE)
+    written <- c(written, scenario_path)
+    scenario_fingerprint_value <- scenario_fingerprint(scenario)
+  }
+
   if (is.list(results$plots)) {
     for (name in names(results$plots)) {
       plot <- results$plots[[name]]
@@ -114,13 +123,16 @@ export_catalyst_bundle <- function(
   }
 
   manifest <- list(
-    schema_version = "1.0.0",
+    schema_version = "1.1.0",
     package = "catalystanalyticsr",
     package_version = .catalyst_package_version(),
     model = if (!is.null(meta$model)) meta$model else NULL,
+    model_version = if (!is.null(meta$model_version)) meta$model_version else NULL,
     model_contract_version = if (!is.null(meta$model_contract_version)) meta$model_contract_version else NULL,
     run_id = safe_run_id,
     requested_run_id = run_id,
+    scenario_schema_version = if (!is.null(results$scenario)) results$scenario$schema_version else NULL,
+    scenario_fingerprint = scenario_fingerprint_value,
     created_at = format(Sys.time(), tz = "UTC", usetz = TRUE),
     files = basename(written),
     file_inventory = inventory(written)

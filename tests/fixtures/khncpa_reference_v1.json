@@ -1,0 +1,193 @@
+{
+  "fixture_version": "1.0.0",
+  "model": {
+    "id": "khncpa",
+    "version": "1.0.0"
+  },
+  "integration_method": "rk4",
+  "tolerance": 1e-10,
+  "scenario": {
+    "schema_version": "1.0.0",
+    "id": "canonical-baseline",
+    "title": "Canonical baseline",
+    "role": "baseline",
+    "model": {
+      "id": "khncpa",
+      "version": "1.0.0"
+    },
+    "time": {
+      "start": 0,
+      "end": 4,
+      "step": 1,
+      "unit": "year",
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "initial_state": {
+      "K": 1,
+      "H": 1,
+      "N": 1,
+      "C": 0,
+      "P": 1,
+      "A": 1
+    },
+    "policy": {
+      "s": 0.2,
+      "e": 0.05,
+      "a": 0
+    },
+    "parameters": {},
+    "constraints": {
+      "emissions_budget": 10
+    },
+    "units": {
+      "time": "year",
+      "states": {
+        "K": "index",
+        "H": "index",
+        "N": "index",
+        "C": "index",
+        "P": "people_index",
+        "A": "index"
+      },
+      "flows": {
+        "gdp": "index",
+        "consumption": "index",
+        "savings": "index",
+        "education": "index",
+        "abatement": "share",
+        "emissions": "tCO2e_index",
+        "depletion": "index",
+        "damages": "index"
+      }
+    },
+    "scope": {
+      "geography": {
+        "type": "global",
+        "id": "WORLD",
+        "label": "Global"
+      },
+      "sectors": [
+        "all"
+      ]
+    },
+    "currency": {
+      "code": "index",
+      "price_year": null
+    },
+    "sources": [],
+    "assumptions": [],
+    "uncertainty": [],
+    "review": {
+      "status": "draft",
+      "reviewed_by": [],
+      "notes": []
+    },
+    "metadata": {
+      "description": "Deterministic reference scenario for Catalyst Analytics R v0.2.0.",
+      "tags": [
+        "reference",
+        "canonical"
+      ],
+      "created_by": "catalystanalyticsr",
+      "created_at": "2026-07-16T00:00:00Z"
+    }
+  },
+  "checkpoints": [
+    {
+      "t": 0,
+      "K": 1.0,
+      "H": 1.0,
+      "N": 1.0,
+      "C": 0.0,
+      "P": 1.0,
+      "A": 1.0,
+      "gdp": 1.0,
+      "consumption": 0.75,
+      "savings": 0.2,
+      "education": 0.05,
+      "abatement": 0,
+      "emissions": 0.3,
+      "depletion": 0.01,
+      "damages": 0.0,
+      "ans": 0.24
+    },
+    {
+      "t": 1,
+      "K": 1.1524903746124044,
+      "H": 1.0212579086939704,
+      "N": 0.9897873159203292,
+      "C": 0.2946042000153203,
+      "P": 1.0100501670833333,
+      "A": 1.0100501670833333,
+      "gdp": 1.0627517739742778,
+      "consumption": 0.7970638304807083,
+      "savings": 0.21255035479485557,
+      "education": 0.05313758869871389,
+      "abatement": 0,
+      "emissions": 0.3188255321922833,
+      "depletion": 0.010627517739742779,
+      "damages": 9.223796370812761e-05,
+      "ans": 0.25496818779011854
+    },
+    {
+      "t": 2,
+      "K": 1.309758227305069,
+      "H": 1.0449716828045086,
+      "N": 0.9791569495328198,
+      "C": 0.579047865528998,
+      "P": 1.0202013400250696,
+      "A": 1.0202013400250696,
+      "gdp": 1.1252929155261138,
+      "consumption": 0.8439696866445854,
+      "savings": 0.22505858310522275,
+      "education": 0.05626464577630569,
+      "abatement": 0,
+      "emissions": 0.33758787465783413,
+      "depletion": 0.011252929155261137,
+      "damages": 0.0003773066979257652,
+      "ans": 0.26969299302834154
+    },
+    {
+      "t": 3,
+      "K": 1.4715659688870517,
+      "H": 1.071067552556455,
+      "N": 0.9681174132322503,
+      "C": 0.854291607468188,
+      "P": 1.030454533950962,
+      "A": 1.030454533950962,
+      "gdp": 1.1879803783989025,
+      "consumption": 0.8909852837991769,
+      "savings": 0.2375960756797805,
+      "education": 0.059399018919945125,
+      "abatement": 0,
+      "emissions": 0.3563941135196707,
+      "depletion": 0.011879803783989024,
+      "damages": 0.0008670048907794716,
+      "ans": 0.28424828592495716
+    },
+    {
+      "t": 4,
+      "K": 1.6377496402294933,
+      "H": 1.0994895999345906,
+      "N": 0.9566739002995145,
+      "C": 1.121295330167017,
+      "P": 1.0408107741889476,
+      "A": 1.0408107741889476,
+      "gdp": 1.2510979059065062,
+      "consumption": 0.9383234294298797,
+      "savings": 0.2502195811813012,
+      "education": 0.0625548952953253,
+      "abatement": 0,
+      "emissions": 0.37532937177195186,
+      "depletion": 0.012510979059065062,
+      "damages": 0.0015730094224466618,
+      "ans": 0.29869048799511483
+    }
+  ]
+}
