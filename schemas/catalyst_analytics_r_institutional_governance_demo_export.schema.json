@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-institutional-governance-demo-v2.6.json",
+  "title": "Browser institutional governance preview",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "export_type",
+    "contract",
+    "workflow",
+    "boundary",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "export_type": {
+      "const": "browser_institutional_governance_preview"
+    },
+    "contract": {
+      "type": "object"
+    },
+    "workflow": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object"
+    },
+    "created_at": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "export_type": "institutional_governance_bundle",
+  "workflow_id": "transition-review",
+  "project_id": "transition-evidence",
+  "package": {
+    "name": "catalystanalyticsr",
+    "version": "1.6.0"
+  },
+  "created_at": "2026-07-17T22:50:00Z",
+  "file_count": 9,
+  "files": [
+    {
+      "file": "institutional-governance.json",
+      "bytes": 8120,
+      "md5": "cccccccccccccccccccccccccccccccc"
+    }
+  ],
+  "integrity": {
+    "hash_algorithm": "md5",
+    "complete": true,
+    "scope": "all_bundle_files_except_manifest"
+  },
+  "boundary": {
+    "human_approval_required": true,
+    "automated_publication": false,
+    "access_policy_enforced": true
+  }
+}

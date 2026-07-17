@@ -1,0 +1,37 @@
+{
+  "repository_version": "1.6.0",
+  "wordpress_version": "2.6.0",
+  "contract_version": "1.0.0",
+  "roles": [
+    "analyst",
+    "reviewer",
+    "approver",
+    "publisher",
+    "administrator"
+  ],
+  "states": [
+    "draft",
+    "in_review",
+    "changes_requested",
+    "approved",
+    "signed",
+    "archived",
+    "rejected"
+  ],
+  "required_exports": [
+    "institutional-governance.json",
+    "governance-summary.json",
+    "review-assignments.csv",
+    "structured-comments.csv",
+    "change-requests.csv",
+    "approvals.csv",
+    "signed-releases.csv",
+    "audit-log.csv",
+    "manifest.json"
+  ],
+  "boundaries": {
+    "human_approval_required": true,
+    "automated_publication": false,
+    "identity_provider_not_included": true
+  }
+}

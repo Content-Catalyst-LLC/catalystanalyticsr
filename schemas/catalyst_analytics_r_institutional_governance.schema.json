@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-institutional-governance-v1.json",
+  "title": "Catalyst Analytics R institutional governance workflow",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "governance_type",
+    "id",
+    "title",
+    "institution",
+    "project",
+    "roles",
+    "actors",
+    "template",
+    "access_policy",
+    "review_assignments",
+    "comments",
+    "change_requests",
+    "approvals",
+    "signed_releases",
+    "audit",
+    "retention",
+    "status",
+    "metadata"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "governance_type": {
+      "const": "collaborative_institutional_review"
+    },
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "institution": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "fingerprint"
+      ]
+    },
+    "roles": {
+      "type": "object"
+    },
+    "actors": {
+      "type": "object"
+    },
+    "template": {
+      "type": "object",
+      "required": [
+        "id",
+        "review_stages",
+        "required_roles",
+        "required_approvals",
+        "retention_days"
+      ]
+    },
+    "access_policy": {
+      "type": "object",
+      "required": [
+        "id",
+        "classification",
+        "export_allowed",
+        "publication_allowed"
+      ]
+    },
+    "review_assignments": {
+      "type": "object"
+    },
+    "comments": {
+      "type": "object"
+    },
+    "change_requests": {
+      "type": "object"
+    },
+    "approvals": {
+      "type": "object"
+    },
+    "signed_releases": {
+      "type": "object"
+    },
+    "audit": {
+      "type": "array"
+    },
+    "retention": {
+      "type": "object",
+      "required": [
+        "retention_days",
+        "archive_status"
+      ]
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "in_review",
+        "changes_requested",
+        "approved",
+        "signed",
+        "archived",
+        "rejected"
+      ]
+    },
+    "metadata": {
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,248 @@
+{
+  "schema_version": "1.0.0",
+  "export_type": "browser_institutional_governance_preview",
+  "contract": {
+    "plugin_version": "2.6.0",
+    "compatible_repository_version": "1.6.0",
+    "institutional_governance_schema_version": "1.0.0",
+    "parity_status": "mapped_institutional_governance_contract_not_r_execution"
+  },
+  "workflow": {
+    "schema_version": "1.0.0",
+    "governance_type": "collaborative_institutional_review",
+    "id": "transition-review",
+    "title": "Transition Evidence Project - Institutional review",
+    "institution": {
+      "id": "sustainable-catalyst",
+      "name": "Sustainable Catalyst"
+    },
+    "project": {
+      "id": "transition-evidence",
+      "title": "Transition Evidence Project",
+      "fingerprint": "0123456789abcdef0123456789abcdef"
+    },
+    "roles": {
+      "analyst": {
+        "id": "analyst",
+        "title": "Analyst",
+        "permissions": [
+          "comment",
+          "submit_change",
+          "respond_change"
+        ],
+        "description": ""
+      },
+      "reviewer": {
+        "id": "reviewer",
+        "title": "Reviewer",
+        "permissions": [
+          "comment",
+          "review",
+          "request_change"
+        ],
+        "description": ""
+      },
+      "approver": {
+        "id": "approver",
+        "title": "Approver",
+        "permissions": [
+          "comment",
+          "approve",
+          "reject",
+          "request_change"
+        ],
+        "description": ""
+      },
+      "publisher": {
+        "id": "publisher",
+        "title": "Publisher",
+        "permissions": [
+          "comment",
+          "publish",
+          "archive"
+        ],
+        "description": ""
+      }
+    },
+    "actors": {
+      "analyst-1": {
+        "id": "analyst-1",
+        "name": "Amina Analyst",
+        "roles": [
+          "analyst"
+        ],
+        "institution": "Sustainable Catalyst",
+        "email": "amina@example.org",
+        "active": true
+      },
+      "reviewer-1": {
+        "id": "reviewer-1",
+        "name": "Ravi Reviewer",
+        "roles": [
+          "reviewer"
+        ],
+        "institution": "Sustainable Catalyst",
+        "email": "ravi@example.org",
+        "active": true
+      },
+      "approver-1": {
+        "id": "approver-1",
+        "name": "Ada Approver",
+        "roles": [
+          "approver"
+        ],
+        "institution": "Sustainable Catalyst",
+        "email": "ada@example.org",
+        "active": true
+      },
+      "publisher-1": {
+        "id": "publisher-1",
+        "name": "Pia Publisher",
+        "roles": [
+          "publisher"
+        ],
+        "institution": "Sustainable Catalyst",
+        "email": "pia@example.org",
+        "active": true
+      }
+    },
+    "template": {
+      "id": "standard-institutional-review",
+      "title": "Standard institutional review",
+      "review_stages": [
+        "analysis",
+        "methodology",
+        "governance",
+        "publication"
+      ],
+      "required_roles": [
+        "analyst",
+        "reviewer",
+        "approver",
+        "publisher"
+      ],
+      "required_approvals": 1,
+      "retention_days": 2555,
+      "metadata": {}
+    },
+    "access_policy": {
+      "id": "institutional-internal",
+      "classification": "internal",
+      "allowed_roles": [
+        "analyst",
+        "reviewer",
+        "approver",
+        "publisher"
+      ],
+      "allowed_actor_ids": [],
+      "export_allowed": true,
+      "publication_allowed": true,
+      "reason": "Institutional review before public release."
+    },
+    "review_assignments": {
+      "method-review": {
+        "id": "method-review",
+        "reviewer_id": "reviewer-1",
+        "review_type": "methodology",
+        "target_type": "project",
+        "target_id": "transition-evidence",
+        "due_at": "2026-08-01",
+        "status": "assigned",
+        "assigned_by": "system",
+        "assigned_at": "2026-07-17T22:00:00Z",
+        "completed_at": null
+      }
+    },
+    "comments": {
+      "comment-1": {
+        "id": "comment-1",
+        "author_id": "reviewer-1",
+        "body": "Document the emissions baseline source and uncertainty range.",
+        "target_type": "project",
+        "target_id": "transition-evidence",
+        "severity": "major",
+        "disposition": "resolved",
+        "parent_id": null,
+        "created_at": "2026-07-17T22:10:00Z",
+        "resolved_at": "2026-07-17T22:30:00Z"
+      }
+    },
+    "change_requests": {
+      "change-1": {
+        "id": "change-1",
+        "requester_id": "reviewer-1",
+        "title": "Add uncertainty source note",
+        "description": "Record the provenance and interval method.",
+        "priority": "high",
+        "target_type": "project",
+        "target_id": "transition-evidence",
+        "status": "resolved",
+        "resolution": "Provenance and method added.",
+        "created_at": "2026-07-17T22:12:00Z",
+        "resolved_at": "2026-07-17T22:32:00Z",
+        "resolved_by": "analyst-1"
+      }
+    },
+    "approvals": {
+      "approval-1": {
+        "id": "approval-1",
+        "actor_id": "approver-1",
+        "decision": "approved",
+        "scope": "project",
+        "note": "Approved within the documented scope.",
+        "project_fingerprint": "0123456789abcdef0123456789abcdef",
+        "decided_at": "2026-07-17T22:40:00Z"
+      }
+    },
+    "signed_releases": {
+      "release-1": {
+        "id": "release-1",
+        "title": "Transition Evidence v1",
+        "actor_id": "publisher-1",
+        "project_id": "transition-evidence",
+        "project_fingerprint": "0123456789abcdef0123456789abcdef",
+        "artifact_hashes": {
+          "report.html": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "statement": "Approved for governed publication subject to the recorded scope and limitations.",
+        "signature": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "signed_at": "2026-07-17T22:45:00Z",
+        "revocation_status": "active"
+      }
+    },
+    "audit": [
+      {
+        "id": "audit-1",
+        "action": "workflow_created",
+        "actor_id": "system",
+        "object_type": "workflow",
+        "object_id": "transition-review",
+        "details": {
+          "project_id": "transition-evidence"
+        },
+        "recorded_at": "2026-07-17T22:00:00Z"
+      }
+    ],
+    "retention": {
+      "retention_days": 2555,
+      "archive_status": "active",
+      "archive_reason": null,
+      "archived_at": null,
+      "disposal_eligible_at": null
+    },
+    "status": "signed",
+    "metadata": {
+      "package_version": "1.6.0",
+      "created_at": "2026-07-17T22:00:00Z",
+      "updated_at": "2026-07-17T22:45:00Z"
+    }
+  },
+  "boundary": {
+    "r_not_executed": true,
+    "identity_not_verified": true,
+    "signature_not_cryptographic": true,
+    "automated_publication": false,
+    "human_approval_required": true
+  },
+  "created_at": "2026-07-17T22:55:00Z"
+}

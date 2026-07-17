@@ -1,12 +1,8 @@
-# Catalyst Analytics R v1.5.0 Release Contract
+# Catalyst Analytics R v1.6.0 Release Contract
 
-The release is valid only when:
-
-- `DESCRIPTION`, the repository manifest, public API manifest, and WordPress compatibility record identify repository version 1.5.0.
-- WordPress companion version 2.5.0 maps to repository 1.5.0.
-- API request, response, public manifest, platform handoff, handoff export, and browser export schemas validate.
-- All six first-party target products are represented.
-- Every handoff requires human review and forbids autonomous publication or decision authorization.
-- Existing analytical contracts remain valid.
-- R source is ASCII-portable, exported functions are documented, JavaScript and PHP parse, repository tests pass, and archives are intact.
-- `R CMD check --no-manual` reports no errors, warnings, or notes before commit and push.
+- Repository and R package version: 1.6.0.
+- WordPress companion version: 2.6.0.
+- Institutional governance and export contracts: 1.0.0.
+- Roles, assignments, comments, change requests, approvals, signatures, access controls, audit history, retention, and archival records are validated.
+- Existing scenario, project, workspace, econometric, API, and handoff contracts remain compatible.
+- Human approval remains mandatory; automated publication and identity verification are outside the package boundary.

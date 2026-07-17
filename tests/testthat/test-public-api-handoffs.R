@@ -13,7 +13,7 @@ test_that("API request and response envelopes validate and round trip through di
   response <- dispatch_api_request(request)
   expect_s3_class(response, "catalyst_api_response")
   expect_identical(response$status, "ok")
-  expect_identical(response$data$package_version, "1.5.0")
+  expect_identical(response$data$package_version, "1.6.0")
   expect_true(response$boundary$human_review_required)
 })
 
@@ -48,7 +48,7 @@ test_that("all first-party handoffs preserve provenance and review boundaries", 
     expect_identical(handoff$target, target)
     expect_true(handoff$review$human_reviewer_required)
     expect_true(handoff$boundary$human_review_required)
-    expect_identical(handoff$package_version, "1.5.0")
+    expect_identical(handoff$package_version, "1.6.0")
     restored <- handoff_from_json(handoff_to_json(handoff))
     expect_identical(restored$handoff_type, handoff$handoff_type)
   }
@@ -61,7 +61,7 @@ test_that("platform handoff export writes all target artifacts and integrity man
   expect_true(file.exists(paths$manifest)); expect_true(file.exists(paths$index)); expect_true(file.exists(paths$api_manifest))
   expect_true(all(vapply(c("site_intelligence", "research_lab", "workbench", "catalyst_canvas", "decision_studio", "knowledge_library"), function(target) file.exists(paths[[target]]), logical(1))))
   manifest <- jsonlite::fromJSON(paths$manifest, simplifyVector = FALSE)
-  expect_identical(manifest$package$version, "1.5.0")
+  expect_identical(manifest$package$version, "1.6.0")
   expect_gte(manifest$file_count, 9L)
   expect_false(manifest$boundary$automated_platform_action)
 })

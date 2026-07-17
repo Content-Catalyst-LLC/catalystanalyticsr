@@ -86,6 +86,9 @@
         },
         "platform_handoffs": {
           "type": "object"
+        },
+        "institutional_governance": {
+          "type": "object"
         }
       }
     },

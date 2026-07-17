@@ -9,7 +9,7 @@ test_that("policy pathway export writes reproducible analytical artifacts", {
   paths <- export_policy_pathway_analysis(analysis, dir = dir, prefix = "policy", zip_bundle = FALSE)
   expect_true(file.exists(paths$analysis)); expect_true(file.exists(paths$candidates)); expect_true(file.exists(paths$pareto)); expect_true(file.exists(paths$manifest))
   manifest <- jsonlite::fromJSON(paths$manifest)
-  expect_identical(manifest$package$version, "1.5.0")
+  expect_identical(manifest$package$version, "1.6.0")
   expect_true(manifest$boundary$recommendation_not_authorization)
   expect_true(manifest$file_count >= 8L)
 })

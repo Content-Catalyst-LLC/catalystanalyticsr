@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.6.0
+
+- Added collaborative institutional review workflows and role-based governance.
+- Added review assignments, structured comments, change requests, approvals, and signed releases.
+- Added institutional templates, restricted-access policies, audit history, retention, and archival controls.
+- Added governance workspace storage and portable governance bundles.
+- Added WordPress companion v2.6.0.
+
 ## v1.5.0 repair — WordPress compatibility test parity
 
 - Updated the production-readiness regression test to expect WordPress companion v2.5.0.

@@ -85,6 +85,7 @@
   if (is.null(workspace$libraries$policy_optimizations)) workspace$libraries$policy_optimizations <- list()
   if (is.null(workspace$libraries$policy_pathways)) workspace$libraries$policy_pathways <- list()
   if (is.null(workspace$libraries$policy_evaluations)) workspace$libraries$policy_evaluations <- list()
+  if (is.null(workspace$libraries$institutional_governance)) workspace$libraries$institutional_governance <- list()
   if (length(workspace$libraries$policy_pathways)) {
     workspace$libraries$policy_pathways <- lapply(workspace$libraries$policy_pathways, function(pathway) {
       if (inherits(pathway, "catalyst_policy_pathway")) return(pathway)
@@ -135,7 +136,7 @@ catalyst_workspace <- function(workspace_id, title, description = "", owner = ""
     tags = unique(tags[nzchar(trimws(tags))]),
     active_project_id = NULL,
     projects = list(),
-    libraries = list(scenarios = list(), parameter_sets = list(), policy_packages = list(), regional_portfolios = list(), policy_optimizations = list(), policy_pathways = list(), policy_evaluations = list(), platform_handoffs = list()),
+    libraries = list(scenarios = list(), parameter_sets = list(), policy_packages = list(), regional_portfolios = list(), policy_optimizations = list(), policy_pathways = list(), policy_evaluations = list(), platform_handoffs = list(), institutional_governance = list()),
     snapshots = list(),
     activity = list(),
     metadata = utils::modifyList(list(
@@ -212,6 +213,10 @@ validate_catalyst_workspace <- function(workspace) {
   if (!is.null(workspace$libraries$platform_handoffs)) {
     .workspace_named_list(workspace$libraries$platform_handoffs, "workspace$libraries$platform_handoffs")
     invisible(lapply(workspace$libraries$platform_handoffs, validate_platform_handoff))
+  }
+  if (!is.null(workspace$libraries$institutional_governance)) {
+    .workspace_named_list(workspace$libraries$institutional_governance, "workspace$libraries$institutional_governance")
+    invisible(lapply(workspace$libraries$institutional_governance, validate_institutional_governance))
   }
   if (!is.list(workspace$snapshots) || !is.list(workspace$activity) || !is.list(workspace$metadata)) stop("Workspace snapshots, activity, and metadata must be lists.", call. = FALSE)
   restored_fingerprint <- workspace[[".restored_workspace_fingerprint", exact = TRUE]]
@@ -628,7 +633,7 @@ workspace_manifest <- function(workspace) {
     counts = list(
       projects = length(workspace$projects), scenarios = length(workspace$libraries$scenarios),
       parameter_sets = length(workspace$libraries$parameter_sets), policy_packages = length(workspace$libraries$policy_packages),
-      regional_portfolios = length(workspace$libraries$regional_portfolios), policy_optimizations = length(workspace$libraries$policy_optimizations), policy_pathways = length(workspace$libraries$policy_pathways), policy_evaluations = length(workspace$libraries$policy_evaluations), platform_handoffs = length(workspace$libraries$platform_handoffs), runs = nrow(workspace_run_history(workspace)), snapshots = length(workspace$snapshots)
+      regional_portfolios = length(workspace$libraries$regional_portfolios), policy_optimizations = length(workspace$libraries$policy_optimizations), policy_pathways = length(workspace$libraries$policy_pathways), policy_evaluations = length(workspace$libraries$policy_evaluations), platform_handoffs = length(workspace$libraries$platform_handoffs), institutional_governance = length(workspace$libraries$institutional_governance), runs = nrow(workspace_run_history(workspace)), snapshots = length(workspace$snapshots)
     ),
     projects = lapply(workspace$projects, function(project) list(id = project$id, title = project$title, fingerprint = project_fingerprint(project), review_status = project$metadata$review_status, publication_status = project$metadata$publication_status)),
     scenario_library = lapply(workspace$libraries$scenarios, function(entry) entry[c("id", "title", "description", "tags", "source_project_id", "fingerprint")]),
@@ -638,6 +643,7 @@ workspace_manifest <- function(workspace) {
     policy_optimizations = workspace$libraries$policy_optimizations,
     policy_evaluations = workspace$libraries$policy_evaluations,
     platform_handoffs = lapply(workspace$libraries$platform_handoffs, function(handoff) list(target = handoff$target, handoff_type = handoff$handoff_type, project_id = handoff$project_id, project_fingerprint = handoff$project_fingerprint, review_status = handoff$review$status)),
+    institutional_governance = lapply(workspace$libraries$institutional_governance, governance_summary),
     policy_pathways = lapply(workspace$libraries$policy_pathways, function(pathway) list(id=pathway$id,title=pathway$title,stages=length(pathway$stages),fingerprint=.project_hash(pathway))),
     snapshots = lapply(workspace$snapshots, function(entry) entry[c("id", "note", "created_at", "workspace_fingerprint")]),
     metadata = workspace$metadata
@@ -760,6 +766,8 @@ export_workspace <- function(workspace, dir = ".", prefix = "catalyst-workspace"
   paths$policy_evaluations <- file.path(bundle_dir, "policy-evaluations.csv"); utils::write.csv(evaluation_index, paths$policy_evaluations, row.names = FALSE)
   handoff_index <- if (!length(workspace$libraries$platform_handoffs)) data.frame(id=character(),target=character(),handoff_type=character(),project_id=character(),review_status=character(),stringsAsFactors=FALSE) else do.call(rbind,lapply(names(workspace$libraries$platform_handoffs),function(id){handoff<-workspace$libraries$platform_handoffs[[id]];data.frame(id=id,target=handoff$target,handoff_type=handoff$handoff_type,project_id=handoff$project_id,review_status=handoff$review$status,stringsAsFactors=FALSE)}))
   paths$platform_handoffs <- file.path(bundle_dir, "platform-handoffs.csv"); utils::write.csv(handoff_index, paths$platform_handoffs, row.names = FALSE)
+  governance_index <- if (!length(workspace$libraries$institutional_governance)) data.frame(id=character(),project_id=character(),institution=character(),status=character(),open_change_requests=integer(),signed_releases=integer(),stringsAsFactors=FALSE) else do.call(rbind,lapply(workspace$libraries$institutional_governance,function(workflow){summary<-governance_summary(workflow);data.frame(id=workflow$id,project_id=workflow$project$id,institution=workflow$institution$name,status=workflow$status,open_change_requests=summary$open_change_requests,signed_releases=summary$signed_releases,stringsAsFactors=FALSE)}))
+  paths$institutional_governance <- file.path(bundle_dir, "institutional-governance.csv"); utils::write.csv(governance_index, paths$institutional_governance, row.names = FALSE)
   paths$run_history <- file.path(bundle_dir, "run-history.csv"); utils::write.csv(.workspace_index_or_empty(history, c("project_id", "project_title", "run_id", "label", "status", "created_at", "input_hash", "output_hash", "review_status")), paths$run_history, row.names = FALSE)
   paths$readme <- file.path(bundle_dir, "README.md"); writeLines(.workspace_markdown(workspace), paths$readme, useBytes = TRUE)
   files <- list.files(bundle_dir, recursive = TRUE, full.names = TRUE, all.files = FALSE)
@@ -884,6 +892,7 @@ workspace_add_policy_evaluation <- function(workspace, analysis, replace = FALSE
   if (!inherits(analysis, "catalyst_policy_evaluation_analysis")) stop("`analysis` must be a policy-evaluation analysis.", call. = FALSE)
   .assert_flag(replace, "replace")
   if (is.null(workspace$libraries$policy_evaluations)) workspace$libraries$policy_evaluations <- list()
+  if (is.null(workspace$libraries$institutional_governance)) workspace$libraries$institutional_governance <- list()
   if (!is.null(workspace$libraries$policy_evaluations[[analysis$id]]) && !replace) stop("Policy evaluation already exists in the workspace.", call. = FALSE)
   workspace$libraries$policy_evaluations[[analysis$id]] <- list(
     id = analysis$id, title = analysis$title, effects = analysis$effects,

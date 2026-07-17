@@ -1,16 +1,16 @@
 {
-  "schema_version": "2.5.0",
+  "schema_version": "2.6.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "1.5.0",
+  "repository_version": "1.6.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "1.5.0"
+    "version": "1.6.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "2.5.0",
-    "compatible_repository_version": "1.5.0",
+    "version": "2.6.0",
+    "compatible_repository_version": "1.6.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -27,8 +27,8 @@
       "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
     },
     "browser_export": {
-      "version": "2.5.0",
-      "schema": "schemas/catalyst_analytics_r_platform_demo_export.schema.json"
+      "version": "2.6.0",
+      "schema": "schemas/catalyst_analytics_r_institutional_governance_demo_export.schema.json"
     },
     "comparison": {
       "version": "1.0.0",
@@ -191,6 +191,14 @@
     "platform_handoff_export": {
       "version": "1.0.0",
       "schema": "schemas/catalyst_analytics_r_platform_handoff_export.schema.json"
+    },
+    "institutional_governance": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_institutional_governance.schema.json"
+    },
+    "institutional_governance_export": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_institutional_governance_export.schema.json"
     }
   },
   "models": [
@@ -249,7 +257,11 @@
     "policy_evaluation_input": "examples/policy_evaluation_input.json",
     "policy_evaluation_export": "outputs/example_policy_evaluation_export.json",
     "econometrics_policy_evaluation_contract": "tests/fixtures/econometrics_policy_evaluation_contract_v1.json",
-    "browser_policy_evaluation_export": "outputs/example_browser_policy_evaluation_export.json"
+    "browser_policy_evaluation_export": "outputs/example_browser_policy_evaluation_export.json",
+    "institutional_governance_input": "examples/institutional_governance_input.json",
+    "institutional_governance_export": "outputs/example_institutional_governance_export.json",
+    "browser_institutional_governance_export": "outputs/example_browser_institutional_governance_export.json",
+    "institutional_governance_contract": "tests/fixtures/institutional_governance_contract_v1.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [

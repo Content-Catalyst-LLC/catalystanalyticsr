@@ -9,7 +9,7 @@ Catalyst Analytics R is the reproducible statistical, scenario-modeling, uncerta
 
 ## Public API and platform handoffs
 
-Version 1.5.0 adds a transport-neutral `/v1` API manifest, governed request and response envelopes, in-process dispatch for validation and discovery, and first-party handoffs to Site Intelligence, Research Lab, Workbench, Catalyst Canvas, Decision Studio, and Knowledge Library. The host platform remains responsible for HTTP transport, authentication, authorization, rate limiting, and durable operations.
+Version 1.6.0 adds collaborative institutional review and governance while retaining the transport-neutral `/v1` API manifest, governed request and response envelopes, in-process dispatch for validation and discovery, and first-party handoffs to Site Intelligence, Research Lab, Workbench, Catalyst Canvas, Decision Studio, and Knowledge Library. The host platform remains responsible for HTTP transport, authentication, authorization, rate limiting, and durable operations. The new governance layer records analyst, reviewer, approver, and publisher roles; structured comments; change requests; approvals; signed analytical releases; restricted access; audit history; retention; and archival controls.
 
 ## v1.4.0 econometrics and policy evaluation
 

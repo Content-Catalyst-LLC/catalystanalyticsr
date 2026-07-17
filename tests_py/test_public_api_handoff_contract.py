@@ -20,7 +20,7 @@ def test_public_api_contract_has_all_products_and_boundaries():
     for token in ('site_intelligence_handoff','research_lab_handoff','workbench_handoff','catalyst_canvas_handoff','decision_studio','knowledge_library','transport_server_not_included','human_review_required'):
         assert token in source
     fixture=load('tests/fixtures/public_api_handoff_contract_v1.json')
-    assert fixture['repository_version']=='1.5.0'
+    assert fixture['repository_version']=='1.6.0'
     assert len(fixture['targets'])==6
 
 def test_new_rd_usage_is_real_multiline_r_code():
