@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.1.0 - Saved Workspaces and Scenario Libraries
+
+### R CMD check workspace snapshot fingerprint repair
+
+- Preserved exact in-memory snapshot state instead of eagerly flattening nested project objects.
+- Added a restoration fingerprint identity that survives canonical JSON import and is cleared by the next semantic workspace change.
+- Excluded restoration-only fingerprint metadata from canonical workspace JSON.
+- Added regression coverage for in-memory restoration, JSON-imported restoration, and fingerprint invalidation after edits.
+
+### R CMD check workspace null-contract repair
+
+- Preserved `active_project_id` as an explicit named `NULL` field when the last workspace project is removed.
+- Normalized missing and JSON-null active-project values during workspace import and snapshot restoration.
+- Preserved omitted run results as an explicit `result: null` field so R cannot partially match `$result` to `result_summary`.
+- Added regression coverage for empty-workspace JSON round trips, project removal, snapshot restoration, and lightweight workspace exports.
+
+- Added persistent multi-project workspaces and active-project selection.
+- Added reusable scenario, parameter-set, and policy-package libraries.
+- Added scenario cloning, consolidated run history, and project comparison.
+- Added workspace snapshots with complete state restoration.
+- Added portable workspace JSON, CSV, Markdown, integrity, and ZIP bundles.
+- Added workspace schemas, fixtures, documentation, and regression tests.
+- Upgraded the WordPress companion to v2.1.0.
+
 ## 1.0.0 - Reproducible Sustainability Analytics Engine
 
 - Declared the stable 1.x public API and compatibility policy.

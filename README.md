@@ -2,9 +2,33 @@
 
 Catalyst Analytics R is the reproducible statistical, scenario-modeling, uncertainty-analysis, sustainability-accounting, model-governance, and analytical-publication engine for the Sustainable Catalyst platform.
 
-**Current release:** `1.0.0`  
-**WordPress companion:** `1.8.0`  
+**Current release:** `1.1.0`  
+**WordPress companion:** `2.1.0`  
 **Shortcode:** `[catalyst_analytics_r_demo]`
+
+
+## v1.1.0 saved workspaces and scenario libraries
+
+Catalyst Analytics R now provides a persistent workspace layer for multiple projects and reusable analytical records.
+
+```r
+workspace <- catalyst_workspace("transition-workspace", "Transition Workspace")
+workspace <- workspace_add_project(workspace, project)
+workspace <- workspace_clone_scenario(
+  workspace, "baseline", "transition-copy",
+  new_scenario_id = "transition-copy", role = "intervention"
+)
+workspace <- workspace_snapshot(workspace, "review-candidate")
+export_workspace(workspace, "outputs")
+```
+
+- Multiple governed projects in one workspace
+- Active-project selection
+- Reusable scenario and parameter libraries
+- Policy packages with validated references
+- Consolidated run history and project comparison
+- Workspace snapshots and restoration
+- Complete JSON and ZIP workspace portability
 
 ## v1.0.0 reproducible projects and analytical publication
 
@@ -69,7 +93,7 @@ scripts/                            Release validation
 python3 scripts/check_release.py
 Rscript scripts/check_r_sources.R
 R CMD build .
-R CMD check --no-manual catalystanalyticsr_1.0.0.tar.gz
+R CMD check --no-manual catalystanalyticsr_1.1.0.tar.gz
 ```
 
 ## Boundary

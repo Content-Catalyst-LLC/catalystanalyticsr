@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "saved_workspaces_and_scenario_libraries",
+  "repository_version": "1.1.0",
+  "wordpress_plugin_version": "2.1.0",
+  "capabilities": [
+    "multiple_projects",
+    "active_project",
+    "scenario_library",
+    "parameter_library",
+    "policy_packages",
+    "run_history",
+    "workspace_snapshots",
+    "snapshot_restore",
+    "portable_workspace_export"
+  ],
+  "boundaries": [
+    "browser companion does not execute R",
+    "workspace persistence is explicit export/import",
+    "human review remains required"
+  ]
+}

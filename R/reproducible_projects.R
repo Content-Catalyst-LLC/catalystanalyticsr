@@ -503,7 +503,14 @@ project_from_json <- function(path) {
   for (field in c("notes", "reviews", "snapshots", "publications")) project[[field]] <- rows_to_records(project[[field]])
   for (id in names(project$scenarios)) project$scenarios[[id]] <- structure(project$scenarios[[id]], class = "catalyst_scenario")
   for (id in names(project$datasets)) project$datasets[[id]] <- structure(project$datasets[[id]], class = "catalyst_dataset")
-  for (id in names(project$runs)) project$runs[[id]] <- structure(project$runs[[id]], class = "catalyst_project_run")
+  for (id in names(project$runs)) {
+    run <- project$runs[[id]]
+    result <- if ("result" %in% names(run)) run[["result", exact = TRUE]] else NULL
+    if (!"result" %in% names(run) || (is.list(result) && length(result) == 0L)) {
+      run["result"] <- list(NULL)
+    }
+    project$runs[[id]] <- structure(run, class = "catalyst_project_run")
+  }
   project <- structure(project, class = "catalyst_project")
   validate_catalyst_project(project)
   project

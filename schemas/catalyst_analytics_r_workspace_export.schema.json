@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-workspace-export-v1.json",
+  "title": "Catalyst Analytics R workspace bundle manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "export_type",
+    "workspace_id",
+    "workspace_fingerprint",
+    "package",
+    "created_at",
+    "include_project_results",
+    "file_count",
+    "files",
+    "integrity",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "export_type": {
+      "const": "persistent_analytical_workspace_bundle"
+    },
+    "workspace_id": {
+      "type": "string"
+    },
+    "workspace_fingerprint": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{32}$"
+    },
+    "package": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "file_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "file",
+          "bytes",
+          "md5"
+        ],
+        "properties": {
+          "md5": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{32}$"
+          }
+        }
+      }
+    },
+    "integrity": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object"
+    }
+  }
+}

@@ -1,16 +1,16 @@
 {
-  "schema_version": "2.0.0",
+  "schema_version": "2.1.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "1.0.0",
+  "repository_version": "1.1.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "2.0.0",
-    "compatible_repository_version": "1.0.0",
+    "version": "2.1.0",
+    "compatible_repository_version": "1.1.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -27,8 +27,8 @@
       "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
     },
     "browser_export": {
-      "version": "2.0.0",
-      "schema": "schemas/catalyst_analytics_r_project_demo_export.schema.json"
+      "version": "2.1.0",
+      "schema": "schemas/catalyst_analytics_r_workspace_demo_export.schema.json"
     },
     "comparison": {
       "version": "1.0.0",
@@ -123,6 +123,22 @@
     "release_readiness": {
       "version": "1.0.0",
       "schema": "schemas/catalyst_analytics_r_release_readiness.schema.json"
+    },
+    "workspace": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_workspace.schema.json"
+    },
+    "workspace_export": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_workspace_export.schema.json"
+    },
+    "workspace_browser_export": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_workspace_demo_export.schema.json"
+    },
+    "project_browser_export": {
+      "version": "2.0.0",
+      "schema": "schemas/catalyst_analytics_r_project_demo_export.schema.json"
     }
   },
   "models": [
@@ -165,7 +181,11 @@
     "project_publication_export": "outputs/example_project_publication_export.json",
     "browser_project_publication_export": "outputs/example_browser_project_publication_export.json",
     "project_publication_contract": "tests/fixtures/project_publication_contract_v1.json",
-    "release_readiness": "outputs/example_release_readiness.json"
+    "release_readiness": "outputs/example_release_readiness.json",
+    "workspace_input": "examples/workspace_input.json",
+    "workspace_export": "outputs/example_workspace_export.json",
+    "browser_workspace_export": "outputs/example_browser_workspace_export.json",
+    "workspace_contract": "tests/fixtures/workspace_contract_v1.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [
@@ -206,7 +226,12 @@
     "compatibility and migration policy",
     "production release-readiness gates",
     "accessibility and browser-boundary review",
-    "security and privacy release guidance"
+    "security and privacy release guidance",
+    "persistent multi-project workspaces",
+    "reusable scenario and parameter libraries",
+    "policy package libraries",
+    "workspace snapshots and restoration",
+    "portable workspace bundles"
   ],
   "method_path": "question -> evidence and scenarios -> models and parameter sets -> governed runs -> hashes and environment -> indicators and plots -> interpretation -> review -> snapshot -> publication -> Decision Studio and Knowledge Library handoffs",
   "boundaries": [

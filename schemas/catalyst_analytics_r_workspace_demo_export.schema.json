@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-workspace-demo-export-v1.json",
+  "title": "Catalyst Analytics R browser workspace export",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "export_type",
+    "contract",
+    "workspace",
+    "workspace_manifest",
+    "comparison",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "export_type": {
+      "const": "browser_saved_workspace_and_scenario_library"
+    },
+    "contract": {
+      "type": "object"
+    },
+    "workspace": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-workspace-v1.json",
+      "title": "Catalyst Analytics R persistent workspace",
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "schema_version",
+        "workspace_type",
+        "id",
+        "title",
+        "description",
+        "owner",
+        "tags",
+        "active_project_id",
+        "projects",
+        "libraries",
+        "snapshots",
+        "activity",
+        "metadata"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "workspace_type": {
+          "const": "persistent_analytical_workspace"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "active_project_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "projects": {
+          "type": "object"
+        },
+        "libraries": {
+          "type": "object",
+          "required": [
+            "scenarios",
+            "parameter_sets",
+            "policy_packages"
+          ],
+          "properties": {
+            "scenarios": {
+              "type": "object"
+            },
+            "parameter_sets": {
+              "type": "object"
+            },
+            "policy_packages": {
+              "type": "object"
+            }
+          }
+        },
+        "snapshots": {
+          "type": "array"
+        },
+        "activity": {
+          "type": "array"
+        },
+        "metadata": {
+          "type": "object",
+          "required": [
+            "package_version",
+            "created_at",
+            "updated_at",
+            "status"
+          ]
+        }
+      }
+    },
+    "workspace_manifest": {
+      "type": "object"
+    },
+    "comparison": {
+      "type": "array"
+    },
+    "boundary": {
+      "type": "object"
+    }
+  }
+}

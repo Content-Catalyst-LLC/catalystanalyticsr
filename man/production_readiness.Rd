@@ -21,4 +21,4 @@ validate_release_readiness(x, require_ready = FALSE)
 \item{require_ready}{Require every readiness gate to pass.}
 }
 \value{A machine-readable API, compatibility, or release-readiness record.}
-\description{Declares the stable v1 public API, compatibility policy, and production release gates.}
+\description{Declares the stable v1.1 public API, compatibility policy, and production release gates.}
