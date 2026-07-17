@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_policy_optimization.schema.json",
+  "title": "Catalyst Analytics R policy optimization",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_type",
+    "id",
+    "title",
+    "spec",
+    "candidates",
+    "recommendation",
+    "pareto_frontier",
+    "feasible_region",
+    "metadata",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_type": {
+      "const": "policy_optimization"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "spec": {
+      "type": "object"
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "recommendation": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "pareto_frontier": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "feasible_region": {
+      "type": "object",
+      "required": [
+        "total_candidates",
+        "feasible_candidates",
+        "feasible_share",
+        "variable_bounds"
+      ]
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object",
+      "required": [
+        "human_review_required",
+        "recommendation_not_authorization"
+      ]
+    }
+  }
+}

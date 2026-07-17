@@ -25,7 +25,7 @@ test_that("comparative bundles preserve scenarios, tables, plots, and manifests"
 
   manifest <- jsonlite::read_json(file.path(out$bundle_dir, "manifest.json"), simplifyVector = TRUE)
   expect_equal(manifest$schema_version, "1.0.0")
-  expect_equal(manifest$package_version, "1.2.0")
+  expect_equal(manifest$package_version, "1.3.0")
   expect_equal(manifest$baseline_id, "reference-baseline")
   expect_equal(manifest$scenario_count, 2)
   expect_true("comparison.json" %in% manifest$files)

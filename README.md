@@ -2,10 +2,21 @@
 
 Catalyst Analytics R is the reproducible statistical, scenario-modeling, uncertainty-analysis, sustainability-accounting, model-governance, and analytical-publication engine for the Sustainable Catalyst platform.
 
-**Current release:** `1.2.0`  
-**WordPress companion:** `2.2.0`  
+**Current release:** `1.3.0`  
+**WordPress companion:** `2.3.0`  
 **Shortcode:** `[catalyst_analytics_r_demo]`
 
+
+## v1.3.0 optimization and policy pathway design
+
+- Constrained single- and multi-objective optimization
+- Grid and reproducible random-search candidate generation
+- Feasible-policy regions, target-seeking scenarios, and Pareto frontiers
+- Cost-effectiveness and marginal-abatement analysis
+- Staged adaptive pathways, decision gates, and evidence triggers
+- Robustness and normalized regret across futures
+- Portable optimization and pathway publication bundles
+- WordPress companion v2.3.0 with an explicit non-authoritative browser boundary
 
 ## v1.2.0 regional, sector, and portfolio analytics
 
@@ -103,7 +114,7 @@ scripts/                            Release validation
 python3 scripts/check_release.py
 Rscript scripts/check_r_sources.R
 R CMD build .
-R CMD check --no-manual catalystanalyticsr_1.2.0.tar.gz
+R CMD check --no-manual catalystanalyticsr_1.3.0.tar.gz
 ```
 
 ## Boundary

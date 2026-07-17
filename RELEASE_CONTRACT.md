@@ -40,3 +40,8 @@
 - Regional carbon budgets preserve cumulative and overshoot evidence.
 - Sector pathways preserve output, emissions, and intensity change.
 - Portfolio aggregation does not confer allocation or decision authority.
+
+
+## v1.3.0 optimization and policy pathway contract
+
+The release must preserve governed variables, objectives, constraints, feasible and Pareto diagnostics, adaptive pathways, human decision gates, non-executing triggers, robust regret evidence, and an explicit prohibition on autonomous policy authorization.

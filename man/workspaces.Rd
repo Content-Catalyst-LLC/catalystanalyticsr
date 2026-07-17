@@ -23,6 +23,10 @@
 \alias{export_workspace}
 \alias{workspace_add_regional_portfolio}
 \alias{workspace_get_regional_portfolio}
+\alias{workspace_add_policy_optimization}
+\alias{workspace_get_policy_optimization}
+\alias{workspace_add_policy_pathway}
+\alias{workspace_get_policy_pathway}
 \title{Persistent workspaces and reusable analytical libraries}
 \usage{
 catalyst_workspace(workspace_id, title, description = "", owner = "",
@@ -85,6 +89,14 @@ export_workspace(workspace, dir = ".", prefix = "catalyst-workspace",
 workspace_add_regional_portfolio(workspace, portfolio, replace = FALSE)
 
 workspace_get_regional_portfolio(workspace, portfolio_id)
+workspace_add_policy_optimization(workspace, optimization, replace = FALSE)
+
+workspace_get_policy_optimization(workspace, optimization_id)
+
+workspace_add_policy_pathway(workspace, pathway, replace = FALSE)
+
+workspace_get_policy_pathway(workspace, pathway_id)
+
 }
 \arguments{
 \item{workspace_id}{Stable workspace identifier.}
@@ -124,6 +136,10 @@ workspace_get_regional_portfolio(workspace, portfolio_id)
 \item{zip_bundle}{Create a ZIP archive.}
 \item{portfolio}{A regional portfolio.}
 \item{portfolio_id}{Regional portfolio identifier.}
+\item{optimization}{Policy optimization result.}
+\item{optimization_id}{Optimization identifier.}
+\item{pathway}{Adaptive policy pathway.}
+\item{pathway_id}{Pathway identifier.}
 }
 \value{Constructors and mutators return a workspace. Retrieval functions return stored records. Index and comparison functions return data frames. Serialization and export functions return paths or generated artifact maps.}
-\description{Creates persistent multi-project workspaces with reusable scenario, parameter, and policy-package libraries, consolidated run history, version snapshots, restoration, and portable export bundles.}
+\description{Creates persistent multi-project workspaces with reusable scenario, parameter, policy-package, optimization, pathway, and regional-portfolio libraries, consolidated run history, version snapshots, restoration, and portable export bundles.}

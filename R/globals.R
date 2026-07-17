@@ -48,7 +48,7 @@ catalyst_globals <- function(dummy = NULL) {
     model_governance_schema_version = "1.0.0",
     regional_portfolio_schema_version = "1.0.0",
     regional_portfolio_analysis_schema_version = "1.0.0",
-    demo_export_schema_version = "2.2.0"
+    demo_export_schema_version = "2.3.0"
   )
 }
 

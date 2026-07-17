@@ -5,3 +5,4 @@
 .scar-demo__actions{flex-wrap:wrap}.scar-demo__ledger>div small{display:block;opacity:.72;margin-top:.2rem}.scar-demo__handoffs article{min-width:0}.scar-demo__metrics strong{overflow-wrap:anywhere}
 
 .scar-demo__checks strong{color:var(--accent)} .scar-demo__handoffs article p{text-transform:none}
+.scar-demo__pareto{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.scar-demo__pareto article{padding:13px;border:1px solid var(--line);border-radius:10px;background:var(--soft)}.scar-demo__pareto strong{font-size:12px}.scar-demo__pareto p{margin:5px 0 0;color:var(--muted);font-size:11px;line-height:1.5}@media(max-width:700px){.scar-demo__pareto{grid-template-columns:1fr}}

@@ -74,6 +74,12 @@
         },
         "regional_portfolios": {
           "type": "object"
+        },
+        "policy_optimizations": {
+          "type": "object"
+        },
+        "policy_pathways": {
+          "type": "object"
         }
       }
     },

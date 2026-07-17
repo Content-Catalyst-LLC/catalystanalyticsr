@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0.0",
+  "analysis_type": "optimization_and_policy_pathway_input",
+  "spec": {
+    "schema_version": "1.0.0",
+    "analysis_type": "policy_optimization_specification",
+    "id": "transition-optimization",
+    "title": "Transition policy optimization",
+    "description": "Illustrative multi-objective transition design.",
+    "variables": {
+      "carbon_price": {
+        "schema_version": "1.0.0",
+        "record_type": "policy_decision_variable",
+        "id": "carbon_price",
+        "label": "Carbon price",
+        "target": "policy$e",
+        "lower": 0,
+        "upper": 20,
+        "initial": 10,
+        "step": 5,
+        "type": "continuous",
+        "unit": "index",
+        "description": ""
+      },
+      "investment": {
+        "schema_version": "1.0.0",
+        "record_type": "policy_decision_variable",
+        "id": "investment",
+        "label": "Transition investment",
+        "target": "policy$a",
+        "lower": 0,
+        "upper": 20,
+        "initial": 10,
+        "step": 5,
+        "type": "continuous",
+        "unit": "index",
+        "description": ""
+      }
+    },
+    "objectives": {
+      "emissions": {
+        "schema_version": "1.0.0",
+        "record_type": "policy_objective",
+        "id": "emissions",
+        "label": "Minimize emissions",
+        "metric": "emissions",
+        "direction": "minimize",
+        "weight": 0.65,
+        "target": null,
+        "tolerance": null,
+        "unit": "MtCO2e"
+      },
+      "cost": {
+        "schema_version": "1.0.0",
+        "record_type": "policy_objective",
+        "id": "cost",
+        "label": "Minimize cost",
+        "metric": "cost",
+        "direction": "minimize",
+        "weight": 0.35,
+        "target": null,
+        "tolerance": null,
+        "unit": "index"
+      }
+    },
+    "constraints": {
+      "jobs-floor": {
+        "schema_version": "1.0.0",
+        "record_type": "policy_constraint",
+        "id": "jobs-floor",
+        "label": "Protect jobs",
+        "metric": "jobs",
+        "operator": ">=",
+        "value": 48,
+        "lower": null,
+        "upper": null,
+        "tolerance": 1e-08,
+        "hard": true
+      },
+      "emissions-target": {
+        "schema_version": "1.0.0",
+        "record_type": "policy_constraint",
+        "id": "emissions-target",
+        "label": "Meet emissions target",
+        "metric": "emissions",
+        "operator": "<=",
+        "value": 70,
+        "lower": null,
+        "upper": null,
+        "tolerance": 1e-08,
+        "hard": true
+      }
+    },
+    "method": "grid",
+    "max_evaluations": 100,
+    "seed": 13,
+    "metadata": {}
+  },
+  "pathway": {
+    "schema_version": "1.0.0",
+    "pathway_type": "adaptive_policy_pathway",
+    "id": "adaptive-transition",
+    "title": "Adaptive transition pathway",
+    "description": "Stage policy action and review evidence.",
+    "stages": {
+      "launch": {
+        "id": "launch",
+        "label": "Launch",
+        "start": 2026,
+        "end": 2028,
+        "actions": [
+          "Establish investment program"
+        ],
+        "triggers": {
+          "emissions-off-track": {
+            "id": "emissions-off-track",
+            "label": "Emissions off track",
+            "metric": "emissions",
+            "operator": ">",
+            "threshold": 85,
+            "action": "Review carbon price",
+            "review_period": 1,
+            "description": ""
+          }
+        },
+        "decision_gate": true
+      },
+      "scale": {
+        "id": "scale",
+        "label": "Scale",
+        "start": 2029,
+        "end": 2032,
+        "actions": [
+          "Scale infrastructure"
+        ],
+        "triggers": {
+          "jobs-pressure": {
+            "id": "jobs-pressure",
+            "label": "Jobs pressure",
+            "metric": "jobs",
+            "operator": "<",
+            "threshold": 48,
+            "action": "Activate worker transition support",
+            "review_period": 1,
+            "description": ""
+          }
+        },
+        "decision_gate": true
+      },
+      "consolidate": {
+        "id": "consolidate",
+        "label": "Consolidate",
+        "start": 2033,
+        "end": 2035,
+        "actions": [
+          "Consolidate proven measures"
+        ],
+        "triggers": {},
+        "decision_gate": true
+      }
+    },
+    "objectives": {
+      "emissions": {
+        "schema_version": "1.0.0",
+        "record_type": "policy_objective",
+        "id": "emissions",
+        "label": "Minimize emissions",
+        "metric": "emissions",
+        "direction": "minimize",
+        "weight": 0.65,
+        "target": null,
+        "tolerance": null,
+        "unit": "MtCO2e"
+      },
+      "cost": {
+        "schema_version": "1.0.0",
+        "record_type": "policy_objective",
+        "id": "cost",
+        "label": "Minimize cost",
+        "metric": "cost",
+        "direction": "minimize",
+        "weight": 0.35,
+        "target": null,
+        "tolerance": null,
+        "unit": "index"
+      }
+    },
+    "metadata": {
+      "created_at": "2026-07-17T00:00:00Z",
+      "status": "draft"
+    },
+    "boundary": {
+      "human_decision_gates_required": true,
+      "triggers_are_review_prompts": true
+    }
+  },
+  "boundary": {
+    "human_review_required": true,
+    "no_autonomous_decision": true
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_policy_pathway_export.schema.json",
+  "title": "Catalyst Analytics R policy pathway export manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "export_type",
+    "analysis_id",
+    "package",
+    "created_at",
+    "file_count",
+    "files",
+    "integrity",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "export_type": {
+      "const": "optimization_and_policy_pathway_bundle"
+    },
+    "analysis_id": {
+      "type": "string"
+    },
+    "package": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "file_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "integrity": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object",
+      "required": [
+        "human_review_required",
+        "recommendation_not_authorization",
+        "triggers_not_execution"
+      ]
+    }
+  }
+}

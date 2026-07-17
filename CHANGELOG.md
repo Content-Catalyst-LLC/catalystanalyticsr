@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.0 - Optimization and Policy Pathway Design
+
+- Added governed decision variables, objectives, constraints, and optimization specifications.
+- Added grid and reproducible random-search evaluation with feasible-region and Pareto diagnostics.
+- Added target-seeking canonical scenarios, cost-effectiveness, and marginal-abatement analysis.
+- Added adaptive stages, human decision gates, evidence triggers, pathway sequencing, and robustness/regret analysis.
+- Added workspace optimization and pathway libraries, portable export bundles, schemas, fixtures, and tests.
+- Added WordPress companion v2.3.0.
+
+
 ## 1.2.0 - Regional, Sector, and Portfolio Analytics
 
 ### v1.2.0 R CMD check repair
