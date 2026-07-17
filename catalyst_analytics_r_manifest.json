@@ -1,16 +1,16 @@
 {
-  "schema_version": "1.5.0",
+  "schema_version": "1.6.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "0.6.0",
+  "repository_version": "0.7.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "0.6.0"
+    "version": "0.7.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "1.5.0",
-    "compatible_repository_version": "0.6.0",
+    "version": "1.6.0",
+    "compatible_repository_version": "0.7.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -27,8 +27,8 @@
       "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
     },
     "browser_export": {
-      "version": "1.5.0",
-      "schema": "schemas/catalyst_analytics_r_climate_demo_export.schema.json"
+      "version": "1.6.0",
+      "schema": "schemas/catalyst_analytics_r_inclusive_demo_export.schema.json"
     },
     "comparison": {
       "version": "1.0.0",
@@ -75,6 +75,26 @@
     "boundary": {
       "version": "1.0.0",
       "schema": "schemas/catalyst_analytics_r_boundary.schema.json"
+    },
+    "wealth": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_wealth.schema.json"
+    },
+    "human_development": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_human_development.schema.json"
+    },
+    "distribution": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_distribution.schema.json"
+    },
+    "composite_score": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_composite_score.schema.json"
+    },
+    "inclusive_development": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_inclusive_development.schema.json"
     }
   },
   "models": [
@@ -103,7 +123,12 @@
     "boundary_definitions": "examples/boundary_definitions.json",
     "climate_accounting_export": "outputs/example_climate_accounting_export.json",
     "browser_climate_export": "outputs/example_browser_climate_export.json",
-    "climate_accounting_contract": "tests/fixtures/climate_accounting_contract_v1.json"
+    "climate_accounting_contract": "tests/fixtures/climate_accounting_contract_v1.json",
+    "inclusive_development_input": "examples/inclusive_development_input.json",
+    "composite_score_definition": "examples/composite_score_definition.json",
+    "inclusive_development_export": "outputs/example_inclusive_development_export.json",
+    "browser_inclusive_export": "outputs/example_browser_inclusive_export.json",
+    "inclusive_development_contract": "tests/fixtures/inclusive_development_contract_v1.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [
@@ -122,15 +147,27 @@
     "natural-capital stock-and-flow accounts",
     "sustainability boundary assessment",
     "climate-accounting export bundles",
-    "WordPress climate-accounting demo"
+    "WordPress climate-accounting demo",
+    "produced-, human-, and natural-capital accounts",
+    "inclusive-wealth and per-capita accounting",
+    "Adjusted Net Savings decomposition",
+    "human-development dimension indices",
+    "distribution and social-floor diagnostics",
+    "intergenerational wealth analysis",
+    "transparent composite scores and weight sensitivity",
+    "inclusive-development export bundles",
+    "WordPress inclusive-development demo"
   ],
-  "method_path": "question -> source data -> inventory boundary -> emissions and removals -> carbon budget -> Kaya drivers -> natural-capital account -> boundary assessment -> interpretation -> review",
+  "method_path": "question -> source data -> capital accounts -> shadow prices -> inclusive wealth -> Adjusted Net Savings -> human development -> distribution -> intergenerational comparison -> composite sensitivity -> interpretation -> review",
   "boundaries": [
     "educational decision support",
     "source and scope review required",
-    "carbon-budget allocation review required",
-    "GWP basis review required",
-    "natural-capital valuation review required",
+    "capital measurement review required",
+    "shadow-price and valuation review required",
+    "human-development goalpost review required",
+    "social-floor and distribution-weight review required",
+    "intergenerational discount-rate review required",
+    "composite-weight review required",
     "not a forecast",
     "not compliance advice",
     "not professional advice"

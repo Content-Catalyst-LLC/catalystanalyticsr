@@ -1,0 +1,225 @@
+{
+  "schema_version": "1.0.0",
+  "analysis_id": "example-inclusive-development",
+  "title": "Inclusive wealth, human development, and distribution",
+  "entity": "Example region",
+  "time": [
+    2025,
+    2030,
+    2035
+  ],
+  "population": [
+    5,
+    5.15,
+    5.3
+  ],
+  "capital_accounts": {
+    "produced": {
+      "opening_stock": [
+        500,
+        535,
+        570
+      ],
+      "investment": [
+        55,
+        58,
+        62
+      ],
+      "depreciation": [
+        20,
+        23,
+        25
+      ],
+      "closing_stock": [
+        535,
+        570,
+        607
+      ],
+      "shadow_price": 1
+    },
+    "human": {
+      "opening_stock": [
+        400,
+        424,
+        450
+      ],
+      "investment": [
+        36,
+        39,
+        42
+      ],
+      "depreciation": [
+        12,
+        13,
+        14
+      ],
+      "closing_stock": [
+        424,
+        450,
+        478
+      ],
+      "shadow_price": 1.2
+    },
+    "natural": {
+      "opening_stock": [
+        300,
+        298,
+        297
+      ],
+      "investment": [
+        12,
+        14,
+        16
+      ],
+      "depletion": [
+        8,
+        9,
+        9
+      ],
+      "damages": [
+        6,
+        6,
+        6
+      ],
+      "closing_stock": [
+        298,
+        297,
+        298
+      ],
+      "shadow_price": 1.5
+    }
+  },
+  "adjusted_net_savings": {
+    "gross_savings": [
+      80,
+      86,
+      94
+    ],
+    "produced_capital_depreciation": [
+      20,
+      23,
+      25
+    ],
+    "education_investment": [
+      22,
+      24,
+      27
+    ],
+    "health_investment": [
+      14,
+      15,
+      16
+    ],
+    "natural_resource_depletion": [
+      8,
+      9,
+      9
+    ],
+    "pollution_damages": [
+      5,
+      5,
+      4
+    ],
+    "climate_damages": [
+      6,
+      6,
+      6
+    ],
+    "gni": [
+      1000,
+      1100,
+      1220
+    ]
+  },
+  "human_development": {
+    "life_expectancy": [
+      72,
+      73,
+      74
+    ],
+    "expected_schooling": [
+      13,
+      13.5,
+      14
+    ],
+    "mean_schooling": [
+      9,
+      9.4,
+      9.8
+    ],
+    "income_per_capita": [
+      16000,
+      17500,
+      19300
+    ]
+  },
+  "distribution": {
+    "values": [
+      18,
+      31,
+      45,
+      63,
+      98
+    ],
+    "weights": [
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.2
+    ],
+    "groups": [
+      "Quintile 1",
+      "Quintile 2",
+      "Quintile 3",
+      "Quintile 4",
+      "Quintile 5"
+    ],
+    "social_floor": 25
+  },
+  "composite_definition": {
+    "schema_version": "1.0.0",
+    "id": "inclusive-development-score",
+    "title": "Inclusive development score",
+    "components": [
+      {
+        "component": "wealth_per_capita",
+        "weight": 0.3,
+        "direction": "higher",
+        "lower_bound": 250,
+        "upper_bound": 350
+      },
+      {
+        "component": "adjusted_savings_rate",
+        "weight": 0.25,
+        "direction": "higher",
+        "lower_bound": -5,
+        "upper_bound": 15
+      },
+      {
+        "component": "human_development",
+        "weight": 0.25,
+        "direction": "higher",
+        "lower_bound": 0.55,
+        "upper_bound": 0.9
+      },
+      {
+        "component": "natural_share",
+        "weight": 0.2,
+        "direction": "higher",
+        "lower_bound": 0.15,
+        "upper_bound": 0.35
+      }
+    ],
+    "missing_policy": "error",
+    "meta": {
+      "package_version": "0.7.0",
+      "created_at": "2026-07-17T15:45:00Z",
+      "normalization": "bounded_min_max",
+      "score_range": [
+        0,
+        100
+      ]
+    }
+  }
+}

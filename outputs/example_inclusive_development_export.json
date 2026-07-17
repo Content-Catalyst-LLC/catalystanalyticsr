@@ -1,0 +1,888 @@
+{
+  "schema_version": "1.0.0",
+  "analysis_type": "inclusive_wealth_human_development_distribution",
+  "id": "example-inclusive-development",
+  "title": "Inclusive wealth, human development, and distribution",
+  "summary": [
+    {
+      "analysis_id": "example-inclusive-development",
+      "closing_inclusive_wealth": 1627.6,
+      "inclusive_wealth_change": 197.5999999999999,
+      "closing_per_capita_wealth": 307.0943396226415,
+      "adjusted_net_savings": 93,
+      "human_development_index": 0.7789141457589414,
+      "gini": 0.3011764705882354,
+      "share_below_social_floor": 0.2,
+      "non_declining_per_capita_wealth": true,
+      "composite_score": 61.72175112993635
+    }
+  ],
+  "wealth": {
+    "schema_version": "1.0.0",
+    "id": "inclusive-wealth",
+    "title": "Inclusive wealth account",
+    "data": [
+      {
+        "entity": "Example region",
+        "time": 2025,
+        "produced_capital_value": 535,
+        "human_capital_value": 508.8,
+        "natural_capital_value": 447,
+        "inclusive_wealth": 1490.8,
+        "opening_inclusive_wealth": 1430,
+        "inclusive_wealth_change": 60.799999999999955,
+        "produced_share": 0.35886772202844114,
+        "human_share": 0.34129326536088006,
+        "natural_share": 0.29983901261067886,
+        "population": 5,
+        "inclusive_wealth_per_capita": 298.15999999999997,
+        "currency": "index",
+        "price_basis": "declared_shadow_prices"
+      },
+      {
+        "entity": "Example region",
+        "time": 2030,
+        "produced_capital_value": 570,
+        "human_capital_value": 540,
+        "natural_capital_value": 445.5,
+        "inclusive_wealth": 1555.5,
+        "opening_inclusive_wealth": 1490.8,
+        "inclusive_wealth_change": 64.70000000000005,
+        "produced_share": 0.36644165863066536,
+        "human_share": 0.3471552555448409,
+        "natural_share": 0.28640308582449375,
+        "population": 5.15,
+        "inclusive_wealth_per_capita": 302.0388349514563,
+        "currency": "index",
+        "price_basis": "declared_shadow_prices"
+      },
+      {
+        "entity": "Example region",
+        "time": 2035,
+        "produced_capital_value": 607,
+        "human_capital_value": 573.6,
+        "natural_capital_value": 447,
+        "inclusive_wealth": 1627.6,
+        "opening_inclusive_wealth": 1555.5,
+        "inclusive_wealth_change": 72.09999999999991,
+        "produced_share": 0.37294175473089214,
+        "human_share": 0.35242074219710007,
+        "natural_share": 0.2746375030720079,
+        "population": 5.3,
+        "inclusive_wealth_per_capita": 307.0943396226415,
+        "currency": "index",
+        "price_basis": "declared_shadow_prices"
+      }
+    ],
+    "capital_accounts": {
+      "produced": {
+        "schema_version": "1.0.0",
+        "id": "produced-capital",
+        "title": "Produced capital account",
+        "capital_type": "produced",
+        "unit": "wealth_index",
+        "data": [
+          {
+            "entity": "Example region",
+            "time": 2025,
+            "capital_type": "produced",
+            "opening_stock": 500,
+            "investment": 55,
+            "revaluation": 0,
+            "depreciation": 20,
+            "depletion": 0,
+            "damages": 0,
+            "expected_closing_stock": 535,
+            "closing_stock": 535,
+            "net_change": 35,
+            "accounting_net_change": 35,
+            "reconciliation_error": 0,
+            "shadow_price": 1,
+            "opening_value": 500,
+            "closing_value": 535,
+            "value_change": 35,
+            "unit": "wealth_index"
+          },
+          {
+            "entity": "Example region",
+            "time": 2030,
+            "capital_type": "produced",
+            "opening_stock": 535,
+            "investment": 58,
+            "revaluation": 0,
+            "depreciation": 23,
+            "depletion": 0,
+            "damages": 0,
+            "expected_closing_stock": 570,
+            "closing_stock": 570,
+            "net_change": 35,
+            "accounting_net_change": 35,
+            "reconciliation_error": 0,
+            "shadow_price": 1,
+            "opening_value": 535,
+            "closing_value": 570,
+            "value_change": 35,
+            "unit": "wealth_index"
+          },
+          {
+            "entity": "Example region",
+            "time": 2035,
+            "capital_type": "produced",
+            "opening_stock": 570,
+            "investment": 62,
+            "revaluation": 0,
+            "depreciation": 25,
+            "depletion": 0,
+            "damages": 0,
+            "expected_closing_stock": 607,
+            "closing_stock": 607,
+            "net_change": 37,
+            "accounting_net_change": 37,
+            "reconciliation_error": 0,
+            "shadow_price": 1,
+            "opening_value": 570,
+            "closing_value": 607,
+            "value_change": 37,
+            "unit": "wealth_index"
+          }
+        ],
+        "meta": {
+          "package_version": "0.7.0",
+          "created_at": "2026-07-17T15:45:00Z",
+          "row_count": 3,
+          "reconciliation_tolerance": 1e-08
+        }
+      },
+      "human": {
+        "schema_version": "1.0.0",
+        "id": "human-capital",
+        "title": "Human capital account",
+        "capital_type": "human",
+        "unit": "wealth_index",
+        "data": [
+          {
+            "entity": "Example region",
+            "time": 2025,
+            "capital_type": "human",
+            "opening_stock": 400,
+            "investment": 36,
+            "revaluation": 0,
+            "depreciation": 12,
+            "depletion": 0,
+            "damages": 0,
+            "expected_closing_stock": 424,
+            "closing_stock": 424,
+            "net_change": 24,
+            "accounting_net_change": 24,
+            "reconciliation_error": 0,
+            "shadow_price": 1.2,
+            "opening_value": 480,
+            "closing_value": 508.8,
+            "value_change": 28.8,
+            "unit": "wealth_index"
+          },
+          {
+            "entity": "Example region",
+            "time": 2030,
+            "capital_type": "human",
+            "opening_stock": 424,
+            "investment": 39,
+            "revaluation": 0,
+            "depreciation": 13,
+            "depletion": 0,
+            "damages": 0,
+            "expected_closing_stock": 450,
+            "closing_stock": 450,
+            "net_change": 26,
+            "accounting_net_change": 26,
+            "reconciliation_error": 0,
+            "shadow_price": 1.2,
+            "opening_value": 508.8,
+            "closing_value": 540,
+            "value_change": 31.2,
+            "unit": "wealth_index"
+          },
+          {
+            "entity": "Example region",
+            "time": 2035,
+            "capital_type": "human",
+            "opening_stock": 450,
+            "investment": 42,
+            "revaluation": 0,
+            "depreciation": 14,
+            "depletion": 0,
+            "damages": 0,
+            "expected_closing_stock": 478,
+            "closing_stock": 478,
+            "net_change": 28,
+            "accounting_net_change": 28,
+            "reconciliation_error": 0,
+            "shadow_price": 1.2,
+            "opening_value": 540,
+            "closing_value": 573.6,
+            "value_change": 33.6,
+            "unit": "wealth_index"
+          }
+        ],
+        "meta": {
+          "package_version": "0.7.0",
+          "created_at": "2026-07-17T15:45:00Z",
+          "row_count": 3,
+          "reconciliation_tolerance": 1e-08
+        }
+      },
+      "natural": {
+        "schema_version": "1.0.0",
+        "id": "natural-capital",
+        "title": "Natural capital account",
+        "capital_type": "natural",
+        "unit": "wealth_index",
+        "data": [
+          {
+            "entity": "Example region",
+            "time": 2025,
+            "capital_type": "natural",
+            "opening_stock": 300,
+            "investment": 12,
+            "revaluation": 0,
+            "depreciation": 0,
+            "depletion": 8,
+            "damages": 6,
+            "expected_closing_stock": 298,
+            "closing_stock": 298,
+            "net_change": -2,
+            "accounting_net_change": -2,
+            "reconciliation_error": 0,
+            "shadow_price": 1.5,
+            "opening_value": 450,
+            "closing_value": 447,
+            "value_change": -3,
+            "unit": "wealth_index"
+          },
+          {
+            "entity": "Example region",
+            "time": 2030,
+            "capital_type": "natural",
+            "opening_stock": 298,
+            "investment": 14,
+            "revaluation": 0,
+            "depreciation": 0,
+            "depletion": 9,
+            "damages": 6,
+            "expected_closing_stock": 297,
+            "closing_stock": 297,
+            "net_change": -1,
+            "accounting_net_change": -1,
+            "reconciliation_error": 0,
+            "shadow_price": 1.5,
+            "opening_value": 447,
+            "closing_value": 445.5,
+            "value_change": -1.5,
+            "unit": "wealth_index"
+          },
+          {
+            "entity": "Example region",
+            "time": 2035,
+            "capital_type": "natural",
+            "opening_stock": 297,
+            "investment": 16,
+            "revaluation": 0,
+            "depreciation": 0,
+            "depletion": 9,
+            "damages": 6,
+            "expected_closing_stock": 298,
+            "closing_stock": 298,
+            "net_change": 1,
+            "accounting_net_change": 1,
+            "reconciliation_error": 0,
+            "shadow_price": 1.5,
+            "opening_value": 445.5,
+            "closing_value": 447,
+            "value_change": 1.5,
+            "unit": "wealth_index"
+          }
+        ],
+        "meta": {
+          "package_version": "0.7.0",
+          "created_at": "2026-07-17T15:45:00Z",
+          "row_count": 3,
+          "reconciliation_tolerance": 1e-08
+        }
+      }
+    },
+    "meta": {
+      "package_version": "0.7.0",
+      "created_at": "2026-07-17T15:45:00Z",
+      "currency": "index",
+      "price_basis": "declared_shadow_prices",
+      "population_available": true
+    }
+  },
+  "adjusted_net_savings": [
+    {
+      "entity": "Example region",
+      "time": 2025,
+      "gross_savings": 80,
+      "produced_capital_depreciation": 20,
+      "education_investment": 22,
+      "health_investment": 14,
+      "human_capital_investment": 36,
+      "natural_resource_depletion": 8,
+      "pollution_damages": 5,
+      "climate_damages": 6,
+      "other_adjustments": 0,
+      "total_deductions": 39,
+      "adjusted_net_savings": 77,
+      "gni": 1000,
+      "adjusted_net_savings_percent_gni": 7.7,
+      "sustainable_savings_signal": true,
+      "unit": "currency_index",
+      "schema_version": "1.0.0"
+    },
+    {
+      "entity": "Example region",
+      "time": 2030,
+      "gross_savings": 86,
+      "produced_capital_depreciation": 23,
+      "education_investment": 24,
+      "health_investment": 15,
+      "human_capital_investment": 39,
+      "natural_resource_depletion": 9,
+      "pollution_damages": 5,
+      "climate_damages": 6,
+      "other_adjustments": 0,
+      "total_deductions": 43,
+      "adjusted_net_savings": 82,
+      "gni": 1100,
+      "adjusted_net_savings_percent_gni": 7.454545454545454,
+      "sustainable_savings_signal": true,
+      "unit": "currency_index",
+      "schema_version": "1.0.0"
+    },
+    {
+      "entity": "Example region",
+      "time": 2035,
+      "gross_savings": 94,
+      "produced_capital_depreciation": 25,
+      "education_investment": 27,
+      "health_investment": 16,
+      "human_capital_investment": 43,
+      "natural_resource_depletion": 9,
+      "pollution_damages": 4,
+      "climate_damages": 6,
+      "other_adjustments": 0,
+      "total_deductions": 44,
+      "adjusted_net_savings": 93,
+      "gni": 1220,
+      "adjusted_net_savings_percent_gni": 7.622950819672131,
+      "sustainable_savings_signal": true,
+      "unit": "currency_index",
+      "schema_version": "1.0.0"
+    }
+  ],
+  "human_development": [
+    {
+      "entity": "Example region",
+      "time": 2025,
+      "life_expectancy": 72,
+      "expected_schooling": 13,
+      "mean_schooling": 9,
+      "income_per_capita": 16000,
+      "life_expectancy_index": 0.8,
+      "education_index": 0.6611111111111111,
+      "income_index": 0.7666340925395558,
+      "human_development_index": 0.74014621738612,
+      "schema_version": "1.0.0"
+    },
+    {
+      "entity": "Example region",
+      "time": 2030,
+      "life_expectancy": 73,
+      "expected_schooling": 13.5,
+      "mean_schooling": 9.4,
+      "income_per_capita": 17500,
+      "life_expectancy_index": 0.8153846153846154,
+      "education_index": 0.6883333333333334,
+      "income_index": 0.7801705227109459,
+      "human_development_index": 0.7593644889126149,
+      "schema_version": "1.0.0"
+    },
+    {
+      "entity": "Example region",
+      "time": 2035,
+      "life_expectancy": 74,
+      "expected_schooling": 14,
+      "mean_schooling": 9.8,
+      "income_per_capita": 19300,
+      "life_expectancy_index": 0.8307692307692308,
+      "education_index": 0.7155555555555556,
+      "income_index": 0.7949595155101181,
+      "human_development_index": 0.7789141457589414,
+      "schema_version": "1.0.0"
+    }
+  ],
+  "distribution": {
+    "schema_version": "1.0.0",
+    "analysis_type": "distributional",
+    "indicator": "household_resources",
+    "unit": "resource_index",
+    "entity": "Example region",
+    "time": 2035,
+    "higher_is_better": true,
+    "summary": {
+      "observations": 5,
+      "total_weight": 1,
+      "weighted_mean": 51.0,
+      "weighted_median": 45,
+      "p10": 18,
+      "p40": 31,
+      "p90": 98,
+      "p90_p10_ratio": 5.444444444444445,
+      "gini": 0.3011764705882354,
+      "top_10_share": 0.3843137254901961,
+      "bottom_40_share": 0.19215686274509805,
+      "palma_ratio": 2.0,
+      "social_floor": 25,
+      "share_below_social_floor": 0.2
+    },
+    "group_summary": [
+      {
+        "group": "Quintile 1",
+        "observations": 1,
+        "weight": 0.2,
+        "weighted_mean": 18,
+        "resource_share": 0.07058823529411765,
+        "population_share": 0.2
+      },
+      {
+        "group": "Quintile 2",
+        "observations": 1,
+        "weight": 0.2,
+        "weighted_mean": 31,
+        "resource_share": 0.12156862745098039,
+        "population_share": 0.2
+      },
+      {
+        "group": "Quintile 3",
+        "observations": 1,
+        "weight": 0.2,
+        "weighted_mean": 45,
+        "resource_share": 0.17647058823529413,
+        "population_share": 0.2
+      },
+      {
+        "group": "Quintile 4",
+        "observations": 1,
+        "weight": 0.2,
+        "weighted_mean": 63,
+        "resource_share": 0.2470588235294118,
+        "population_share": 0.2
+      },
+      {
+        "group": "Quintile 5",
+        "observations": 1,
+        "weight": 0.2,
+        "weighted_mean": 98,
+        "resource_share": 0.3843137254901961,
+        "population_share": 0.2
+      }
+    ],
+    "records": [
+      {
+        "value": 18,
+        "weight": 0.2,
+        "group": "Quintile 1"
+      },
+      {
+        "value": 31,
+        "weight": 0.2,
+        "group": "Quintile 2"
+      },
+      {
+        "value": 45,
+        "weight": 0.2,
+        "group": "Quintile 3"
+      },
+      {
+        "value": 63,
+        "weight": 0.2,
+        "group": "Quintile 4"
+      },
+      {
+        "value": 98,
+        "weight": 0.2,
+        "group": "Quintile 5"
+      }
+    ],
+    "meta": {
+      "package_version": "0.7.0",
+      "created_at": "2026-07-17T15:45:00Z"
+    }
+  },
+  "intergenerational": {
+    "schema_version": "1.0.0",
+    "analysis_type": "intergenerational",
+    "entity": "Example region",
+    "trajectory": [
+      {
+        "entity": "Example region",
+        "time": 2025,
+        "generation_index": 0,
+        "inclusive_wealth": 1490.8,
+        "population": 5,
+        "wealth_per_capita": 298.15999999999997,
+        "discounted_wealth_per_capita": 298.15999999999997,
+        "change_from_start": 0.0,
+        "percent_change_from_start": 0.0,
+        "target_per_capita": 300,
+        "target_gap": -1.8400000000000318
+      },
+      {
+        "entity": "Example region",
+        "time": 2030,
+        "generation_index": 0,
+        "inclusive_wealth": 1555.5,
+        "population": 5.15,
+        "wealth_per_capita": 302.0388349514563,
+        "discounted_wealth_per_capita": 302.0388349514563,
+        "change_from_start": 3.8788349514563265,
+        "percent_change_from_start": 1.300923984255542,
+        "target_per_capita": 300,
+        "target_gap": 2.0388349514562947
+      },
+      {
+        "entity": "Example region",
+        "time": 2035,
+        "generation_index": 0,
+        "inclusive_wealth": 1627.6,
+        "population": 5.3,
+        "wealth_per_capita": 307.0943396226415,
+        "discounted_wealth_per_capita": 307.0943396226415,
+        "change_from_start": 8.934339622641517,
+        "percent_change_from_start": 2.996491689911962,
+        "target_per_capita": 300,
+        "target_gap": 7.094339622641485
+      }
+    ],
+    "summary": {
+      "start_per_capita": 298.15999999999997,
+      "end_per_capita": 307.0943396226415,
+      "absolute_change": 8.934339622641517,
+      "percent_change": 2.996491689911962,
+      "end_discounted_per_capita": 307.0943396226415,
+      "target_per_capita": 300,
+      "end_target_gap": 7.094339622641485,
+      "non_declining_signal": true
+    },
+    "meta": {
+      "package_version": "0.7.0",
+      "created_at": "2026-07-17T15:45:00Z",
+      "social_discount_rate": 0,
+      "generation_length": 25
+    }
+  },
+  "composite": {
+    "schema_version": "1.0.0",
+    "definition": {
+      "schema_version": "1.0.0",
+      "id": "inclusive-development-score",
+      "title": "Inclusive development score",
+      "components": [
+        {
+          "component": "wealth_per_capita",
+          "weight": 0.3,
+          "direction": "higher",
+          "lower_bound": 250,
+          "upper_bound": 350
+        },
+        {
+          "component": "adjusted_savings_rate",
+          "weight": 0.25,
+          "direction": "higher",
+          "lower_bound": -5,
+          "upper_bound": 15
+        },
+        {
+          "component": "human_development",
+          "weight": 0.25,
+          "direction": "higher",
+          "lower_bound": 0.55,
+          "upper_bound": 0.9
+        },
+        {
+          "component": "natural_share",
+          "weight": 0.2,
+          "direction": "higher",
+          "lower_bound": 0.15,
+          "upper_bound": 0.35
+        }
+      ],
+      "missing_policy": "error",
+      "meta": {
+        "package_version": "0.7.0",
+        "created_at": "2026-07-17T15:45:00Z",
+        "normalization": "bounded_min_max",
+        "score_range": [
+          0,
+          100
+        ]
+      }
+    },
+    "scores": [
+      {
+        "entity": "Example region",
+        "time": 2025,
+        "composite_score": 58.888773931505014
+      },
+      {
+        "entity": "Example region",
+        "time": 2030,
+        "composite_score": 59.77474723696914
+      },
+      {
+        "entity": "Example region",
+        "time": 2035,
+        "composite_score": 61.72175112993635
+      }
+    ],
+    "components": [
+      {
+        "row_id": 1,
+        "component": "wealth_per_capita",
+        "raw_value": 298.15999999999997,
+        "normalized_score": 0.4815999999999997,
+        "weight": 0.3,
+        "weighted_contribution": 14.44799999999999,
+        "direction": "higher",
+        "lower_bound": 250,
+        "upper_bound": 350
+      },
+      {
+        "row_id": 1,
+        "component": "adjusted_savings_rate",
+        "raw_value": 7.7,
+        "normalized_score": 0.635,
+        "weight": 0.25,
+        "weighted_contribution": 15.875,
+        "direction": "higher",
+        "lower_bound": -5,
+        "upper_bound": 15
+      },
+      {
+        "row_id": 1,
+        "component": "human_development",
+        "raw_value": 0.74014621738612,
+        "normalized_score": 0.5432749068174855,
+        "weight": 0.25,
+        "weighted_contribution": 13.581872670437138,
+        "direction": "higher",
+        "lower_bound": 0.55,
+        "upper_bound": 0.9
+      },
+      {
+        "row_id": 1,
+        "component": "natural_share",
+        "raw_value": 0.29983901261067886,
+        "normalized_score": 0.7491950630533943,
+        "weight": 0.2,
+        "weighted_contribution": 14.983901261067889,
+        "direction": "higher",
+        "lower_bound": 0.15,
+        "upper_bound": 0.35
+      },
+      {
+        "row_id": 2,
+        "component": "wealth_per_capita",
+        "raw_value": 302.0388349514563,
+        "normalized_score": 0.5203883495145629,
+        "weight": 0.3,
+        "weighted_contribution": 15.611650485436888,
+        "direction": "higher",
+        "lower_bound": 250,
+        "upper_bound": 350
+      },
+      {
+        "row_id": 2,
+        "component": "adjusted_savings_rate",
+        "raw_value": 7.454545454545454,
+        "normalized_score": 0.6227272727272727,
+        "weight": 0.25,
+        "weighted_contribution": 15.568181818181817,
+        "direction": "higher",
+        "lower_bound": -5,
+        "upper_bound": 15
+      },
+      {
+        "row_id": 2,
+        "component": "human_development",
+        "raw_value": 0.7593644889126149,
+        "normalized_score": 0.5981842540360424,
+        "weight": 0.25,
+        "weighted_contribution": 14.95460635090106,
+        "direction": "higher",
+        "lower_bound": 0.55,
+        "upper_bound": 0.9
+      },
+      {
+        "row_id": 2,
+        "component": "natural_share",
+        "raw_value": 0.28640308582449375,
+        "normalized_score": 0.6820154291224688,
+        "weight": 0.2,
+        "weighted_contribution": 13.640308582449377,
+        "direction": "higher",
+        "lower_bound": 0.15,
+        "upper_bound": 0.35
+      },
+      {
+        "row_id": 3,
+        "component": "wealth_per_capita",
+        "raw_value": 307.0943396226415,
+        "normalized_score": 0.5709433962264149,
+        "weight": 0.3,
+        "weighted_contribution": 17.128301886792446,
+        "direction": "higher",
+        "lower_bound": 250,
+        "upper_bound": 350
+      },
+      {
+        "row_id": 3,
+        "component": "adjusted_savings_rate",
+        "raw_value": 7.622950819672131,
+        "normalized_score": 0.6311475409836065,
+        "weight": 0.25,
+        "weighted_contribution": 15.778688524590162,
+        "direction": "higher",
+        "lower_bound": -5,
+        "upper_bound": 15
+      },
+      {
+        "row_id": 3,
+        "component": "human_development",
+        "raw_value": 0.7789141457589414,
+        "normalized_score": 0.654040416454118,
+        "weight": 0.25,
+        "weighted_contribution": 16.351010411352952,
+        "direction": "higher",
+        "lower_bound": 0.55,
+        "upper_bound": 0.9
+      },
+      {
+        "row_id": 3,
+        "component": "natural_share",
+        "raw_value": 0.2746375030720079,
+        "normalized_score": 0.6231875153600396,
+        "weight": 0.2,
+        "weighted_contribution": 12.463750307200792,
+        "direction": "higher",
+        "lower_bound": 0.15,
+        "upper_bound": 0.35
+      }
+    ],
+    "trace": {
+      "formula": "100 * sum(normalized_component * normalized_weight)",
+      "normalization": "bounded_min_max",
+      "missing_policy": "error",
+      "component_count": 4
+    },
+    "sensitivity": [
+      {
+        "component": "wealth_per_capita",
+        "perturbation": "decrease",
+        "original_weight": 0.3,
+        "perturbed_weight": 0.24,
+        "mean_absolute_score_change": 1.2,
+        "max_absolute_score_change": 2.1,
+        "min_score": 56.78877393150501,
+        "max_score": 62.72175112993635
+      },
+      {
+        "component": "wealth_per_capita",
+        "perturbation": "increase",
+        "original_weight": 0.3,
+        "perturbed_weight": 0.36,
+        "mean_absolute_score_change": 1.1,
+        "max_absolute_score_change": 2.0,
+        "min_score": 57.888773931505014,
+        "max_score": 63.72175112993635
+      },
+      {
+        "component": "adjusted_savings_rate",
+        "perturbation": "decrease",
+        "original_weight": 0.25,
+        "perturbed_weight": 0.2,
+        "mean_absolute_score_change": 1.2,
+        "max_absolute_score_change": 2.1,
+        "min_score": 56.78877393150501,
+        "max_score": 62.72175112993635
+      },
+      {
+        "component": "adjusted_savings_rate",
+        "perturbation": "increase",
+        "original_weight": 0.25,
+        "perturbed_weight": 0.3,
+        "mean_absolute_score_change": 1.1,
+        "max_absolute_score_change": 2.0,
+        "min_score": 57.888773931505014,
+        "max_score": 63.72175112993635
+      },
+      {
+        "component": "human_development",
+        "perturbation": "decrease",
+        "original_weight": 0.25,
+        "perturbed_weight": 0.2,
+        "mean_absolute_score_change": 1.2,
+        "max_absolute_score_change": 2.1,
+        "min_score": 56.78877393150501,
+        "max_score": 62.72175112993635
+      },
+      {
+        "component": "human_development",
+        "perturbation": "increase",
+        "original_weight": 0.25,
+        "perturbed_weight": 0.3,
+        "mean_absolute_score_change": 1.1,
+        "max_absolute_score_change": 2.0,
+        "min_score": 57.888773931505014,
+        "max_score": 63.72175112993635
+      },
+      {
+        "component": "natural_share",
+        "perturbation": "decrease",
+        "original_weight": 0.2,
+        "perturbed_weight": 0.16000000000000003,
+        "mean_absolute_score_change": 1.2,
+        "max_absolute_score_change": 2.1,
+        "min_score": 56.78877393150501,
+        "max_score": 62.72175112993635
+      },
+      {
+        "component": "natural_share",
+        "perturbation": "increase",
+        "original_weight": 0.2,
+        "perturbed_weight": 0.24,
+        "mean_absolute_score_change": 1.1,
+        "max_absolute_score_change": 2.0,
+        "min_score": 57.888773931505014,
+        "max_score": 63.72175112993635
+      }
+    ],
+    "meta": {
+      "package_version": "0.7.0",
+      "created_at": "2026-07-17T15:45:00Z"
+    }
+  },
+  "meta": {
+    "package_version": "0.7.0",
+    "created_at": "2026-07-17T15:45:00Z",
+    "review_status": "unreviewed"
+  },
+  "review_boundary": {
+    "shadow_prices_require_review": true,
+    "human_capital_measurement_requires_review": true,
+    "social_floor_requires_review": true,
+    "distribution_weights_require_review": true,
+    "composite_weights_require_review": true,
+    "not_compliance_or_professional_advice": true
+  }
+}

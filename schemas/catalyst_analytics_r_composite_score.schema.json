@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_composite_score.schema.json",
+  "title": "Catalyst Analytics R Composite Score Contract",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "definition",
+    "scores",
+    "components",
+    "trace"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "definition": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "components",
+        "missing_policy"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "components": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "component",
+              "weight",
+              "direction",
+              "lower_bound",
+              "upper_bound"
+            ],
+            "properties": {
+              "component": {
+                "type": "string"
+              },
+              "weight": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "direction": {
+                "enum": [
+                  "higher",
+                  "lower"
+                ]
+              },
+              "lower_bound": {
+                "type": "number"
+              },
+              "upper_bound": {
+                "type": "number"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "missing_policy": {
+          "enum": [
+            "error",
+            "renormalize",
+            "zero"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "scores": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "composite_score"
+        ],
+        "properties": {
+          "composite_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "components": {
+      "type": "array"
+    },
+    "trace": {
+      "type": "object",
+      "required": [
+        "formula",
+        "normalization",
+        "missing_policy"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

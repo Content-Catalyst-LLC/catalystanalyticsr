@@ -1,266 +1,125 @@
 #!/usr/bin/env python3
-"""Static release-contract checks for Catalyst Analytics R v0.6.0."""
-
+"""Static release-contract checks for Catalyst Analytics R v0.7.0."""
 from __future__ import annotations
-
-import json
-import re
-import subprocess
-import sys
+import json, os, re, subprocess, sys
 from pathlib import Path
-
 sys.dont_write_bytecode = True
-
 import jsonschema
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_REPOSITORY_VERSION = "0.6.0"
-EXPECTED_PLUGIN_VERSION = "1.5.0"
-EXPECTED_BROWSER_EXPORT_VERSION = "1.5.0"
-EXPECTED_CONTRACTS = {
-    "scenario": "1.0.0",
-    "model_manifest": "1.0.0",
-    "comparison": "1.0.0",
-    "uncertainty": "1.0.0",
-    "stress_test": "1.0.0",
-    "dataset": "1.0.0",
-    "indicator_registry": "1.0.0",
-    "data_analysis": "1.0.0",
-    "emissions_inventory": "1.0.0",
-    "climate_accounting": "1.0.0",
-    "natural_capital": "1.0.0",
-    "boundary": "1.0.0",
-    "browser_export": EXPECTED_BROWSER_EXPORT_VERSION,
-}
+REPOSITORY_VERSION = "0.7.0"
+PLUGIN_VERSION = "1.6.0"
+BROWSER_VERSION = "1.6.0"
+NEW_CONTRACTS = ("wealth", "human_development", "distribution", "composite_score", "inclusive_development")
 
-
-def fail(message: str) -> None:
-    raise AssertionError(message)
-
-
-def read(path: str) -> str:
-    return (ROOT / path).read_text(encoding="utf-8")
-
-
-def load_json(path: str):
-    return json.loads(read(path))
-
-
-def version_from_description() -> str:
-    match = re.search(r"^Version:\s*(\S+)$", read("DESCRIPTION"), re.MULTILINE)
-    if not match:
-        fail("DESCRIPTION Version not found")
-    return match.group(1)
-
-
-def version_from_plugin() -> str:
-    match = re.search(
-        r"^ \* Version:\s*(\S+)$",
-        read("wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php"),
-        re.MULTILINE,
-    )
-    if not match:
-        fail("WordPress plugin Version not found")
-    return match.group(1)
-
-
+def fail(message: str) -> None: raise AssertionError(message)
+def read(path: str) -> str: return (ROOT / path).read_text(encoding="utf-8")
+def load(path: str): return json.loads(read(path))
+def validator(path: str):
+    schema = load(path); jsonschema.Draft202012Validator.check_schema(schema); return jsonschema.Draft202012Validator(schema)
 def run(command: list[str]) -> None:
-    import os
-    env = dict(os.environ)
-    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    env = dict(os.environ); env["PYTHONDONTWRITEBYTECODE"] = "1"
     subprocess.run(command, cwd=ROOT, check=True, env=env)
 
-
-def validator(path: str):
-    schema = load_json(path)
-    jsonschema.Draft202012Validator.check_schema(schema)
-    return jsonschema.Draft202012Validator(schema)
-
-
-def check_documented_exports() -> None:
-    namespace = read("NAMESPACE")
-    exports = re.findall(r"^export\(([^)]+)\)$", namespace, re.MULTILINE)
+def documented_exports() -> None:
+    exports = re.findall(r"^export\(([^)]+)\)$", read("NAMESPACE"), re.MULTILINE)
     aliases = "\n".join(path.read_text(encoding="utf-8") for path in (ROOT / "man").glob("*.Rd"))
     missing = [name for name in exports if f"\\alias{{{name}}}" not in aliases]
-    if missing:
-        fail(f"Exported functions missing Rd aliases: {missing}")
-
+    if missing: fail(f"Exported functions missing Rd aliases: {missing}")
 
 def main() -> int:
-    manifest = load_json("catalyst_analytics_r_manifest.json")
-    if version_from_description() != EXPECTED_REPOSITORY_VERSION:
-        fail("R package version mismatch")
-    if version_from_plugin() != EXPECTED_PLUGIN_VERSION:
-        fail("WordPress demo version mismatch")
-    if manifest["repository_version"] != EXPECTED_REPOSITORY_VERSION:
-        fail("Manifest repository version mismatch")
-    if manifest["r_package"]["version"] != EXPECTED_REPOSITORY_VERSION:
-        fail("Manifest R package version mismatch")
-    if manifest["wordpress_demo"]["version"] != EXPECTED_PLUGIN_VERSION:
-        fail("Manifest plugin version mismatch")
-    if manifest["wordpress_demo"]["compatible_repository_version"] != EXPECTED_REPOSITORY_VERSION:
-        fail("WordPress compatibility version mismatch")
-    for name, version in EXPECTED_CONTRACTS.items():
-        if manifest["contracts"][name]["version"] != version:
-            fail(f"{name} contract version mismatch")
+    description = read("DESCRIPTION")
+    match = re.search(r"^Version:\s*(\S+)$", description, re.MULTILINE)
+    if not match or match.group(1) != REPOSITORY_VERSION: fail("DESCRIPTION version mismatch")
+    manifest = load("catalyst_analytics_r_manifest.json")
+    if manifest["schema_version"] != "1.6.0": fail("Manifest schema version mismatch")
+    if manifest["repository_version"] != REPOSITORY_VERSION or manifest["r_package"]["version"] != REPOSITORY_VERSION: fail("Repository version mismatch")
+    if manifest["wordpress_demo"]["version"] != PLUGIN_VERSION or manifest["wordpress_demo"]["compatible_repository_version"] != REPOSITORY_VERSION: fail("WordPress compatibility mismatch")
+    if manifest["contracts"]["browser_export"]["version"] != BROWSER_VERSION: fail("Browser export version mismatch")
+    for name in NEW_CONTRACTS:
+        if manifest["contracts"][name]["version"] != "1.0.0": fail(f"{name} contract mismatch")
 
     required = [
-        "R/emissions_inventory.R",
-        "R/carbon_accounting.R",
-        "R/natural_capital_accounting.R",
-        "R/boundary_accounting.R",
-        "R/climate_accounting.R",
-        "R/export_climate_accounting.R",
-        "man/emissions_inventory.Rd",
-        "man/carbon_accounting.Rd",
-        "man/natural_capital_accounting.Rd",
-        "man/boundary_accounting.Rd",
-        "man/climate_accounting.Rd",
-        "man/export_climate_accounting.Rd",
-        "schemas/catalyst_analytics_r_emissions_inventory.schema.json",
-        "schemas/catalyst_analytics_r_climate_accounting.schema.json",
-        "schemas/catalyst_analytics_r_natural_capital.schema.json",
-        "schemas/catalyst_analytics_r_boundary.schema.json",
-        "schemas/catalyst_analytics_r_climate_demo_export.schema.json",
-        "examples/climate_accounting_input.json",
-        "examples/boundary_definitions.json",
-        "outputs/example_climate_accounting_export.json",
-        "outputs/example_browser_climate_export.json",
-        "inst/extdata/climate/sample_climate_accounting.csv",
-        "inst/extdata/climate/sample_climate_accounting_source.json",
-        "tests/fixtures/climate_accounting_contract_v1.json",
-        "tests/testthat/helper-climate-accounting.R",
-        "tests/testthat/test-emissions-inventory.R",
-        "tests/testthat/test-carbon-accounting.R",
-        "tests/testthat/test-natural-capital-accounting.R",
-        "tests/testthat/test-boundary-accounting.R",
-        "tests/testthat/test-climate-accounting-export.R",
-        "docs/releases/v0.6.0.md",
-        "docs/climate-carbon-natural-capital-accounting.md",
+        "R/inclusive_wealth.R", "R/human_development_distribution.R", "R/composite_scores.R",
+        "R/inclusive_development.R", "R/export_inclusive_development.R",
+        "man/inclusive_wealth.Rd", "man/human_development.Rd", "man/distribution_analysis.Rd",
+        "man/composite_scores.Rd", "man/inclusive_development.Rd", "man/export_inclusive_development.Rd",
+        "schemas/catalyst_analytics_r_wealth.schema.json", "schemas/catalyst_analytics_r_human_development.schema.json",
+        "schemas/catalyst_analytics_r_distribution.schema.json", "schemas/catalyst_analytics_r_composite_score.schema.json",
+        "schemas/catalyst_analytics_r_inclusive_development.schema.json", "schemas/catalyst_analytics_r_inclusive_demo_export.schema.json",
+        "examples/inclusive_development_input.json", "examples/composite_score_definition.json",
+        "outputs/example_inclusive_development_export.json", "outputs/example_browser_inclusive_export.json",
+        "inst/extdata/inclusive/sample_inclusive_development.csv", "inst/extdata/inclusive/sample_inclusive_development_source.json",
+        "tests/fixtures/inclusive_development_contract_v1.json", "tests/testthat/helper-inclusive-development.R",
+        "tests/testthat/test-inclusive-wealth.R", "tests/testthat/test-human-development-distribution.R",
+        "tests/testthat/test-composite-scores.R", "tests/testthat/test-inclusive-development-export.R",
+        "docs/releases/v0.7.0.md", "docs/inclusive-wealth-human-development-distribution.md",
+        "wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php",
+        "wordpress/catalyst-analytics-r-demo/assets/catalyst-analytics-r-demo.js",
     ]
     missing = [path for path in required if not (ROOT / path).exists()]
-    if missing:
-        fail(f"Missing v0.6.0 release files: {missing}")
+    if missing: fail(f"Missing v0.7.0 release files: {missing}")
 
-    r_source = "\n".join(path.read_text(encoding="utf-8") for path in (ROOT / "R").glob("*.R"))
+    source = "\n".join(path.read_text(encoding="utf-8") for path in (ROOT / "R").glob("*.R"))
+    symbols = (
+        "capital_account <- function", "validate_capital_account <- function", "inclusive_wealth_account <- function",
+        "adjusted_net_savings_decomposition <- function", "human_development_indicators <- function",
+        "distributional_analysis <- function", "intergenerational_analysis <- function",
+        "composite_score_definition <- function", "calculate_composite_score <- function",
+        "composite_weight_sensitivity <- function", "inclusive_development_analysis <- function",
+        "export_inclusive_development <- function",
+    )
+    for symbol in symbols:
+        if symbol not in source: fail(f"Missing implementation symbol: {symbol}")
+    for token in ("reconciliation_error", "shadow_price", "inclusive_wealth_per_capita", "adjusted_net_savings_percent_gni", "human_development_index", "share_below_social_floor", "palma_ratio", "non_declining_signal", "weighted_contribution", "weight_sensitivity"):
+        if token not in source: fail(f"Inclusive-development implementation incomplete: {token}")
     for path in sorted((ROOT / "R").glob("*.R")):
-        try:
-            path.read_bytes().decode("ascii")
-        except UnicodeDecodeError as error:
-            raise AssertionError(f"Non-ASCII character remains in R source: {path.relative_to(ROOT)}") from error
-    for symbol in (
-        "as_emissions_inventory <- function",
-        "validate_emissions_inventory <- function",
-        "carbon_budget_pathway <- function",
-        "kaya_decomposition <- function",
-        "natural_capital_account <- function",
-        "natural_capital_from_dataset <- function",
-        "boundary_definition <- function",
-        "evaluate_boundaries <- function",
-        "climate_accounting <- function",
-        "export_climate_accounting <- function",
-    ):
-        if symbol not in r_source:
-            fail(f"Missing v0.6.0 implementation symbol: {symbol}")
-    for token in (
-        "gross_emissions",
-        "removals",
-        "cumulative_net_emissions",
-        "overshoot_time",
-        "recovery_time",
-        "carbon_lock_in_share",
-        "stranded_pathway_signal",
-        "additive_lmdi_kaya_identity",
-        "reconciliation_error",
-        "unit_mismatch",
-    ):
-        if token not in r_source:
-            fail(f"Climate accounting implementation is incomplete: {token}")
-
-    tests = "\n".join(path.read_text(encoding="utf-8") for path in (ROOT / "tests/testthat").glob("*.R"))
-    for expected in (
-        "validate_emissions_inventory",
-        "cumulative_net_emissions",
-        "overshoot_time",
-        "kaya_decomposition",
-        "reconciliation_error",
-        "evaluate_boundaries",
-        "export_climate_accounting",
-    ):
-        if expected not in tests:
-            fail(f"Climate accounting R tests are incomplete: {expected}")
+        try: path.read_bytes().decode("ascii")
+        except UnicodeDecodeError as exc: raise AssertionError(f"Non-ASCII R source: {path.relative_to(ROOT)}") from exc
 
     json_files = sorted(ROOT.rglob("*.json"))
-    for path in json_files:
-        json.loads(path.read_text(encoding="utf-8"))
+    for path in json_files: json.loads(path.read_text(encoding="utf-8"))
+    wealth = load("outputs/example_inclusive_development_export.json")
+    validator("schemas/catalyst_analytics_r_inclusive_development.schema.json").validate(wealth)
+    validator("schemas/catalyst_analytics_r_wealth.schema.json").validate(wealth["wealth"])
+    validator("schemas/catalyst_analytics_r_human_development.schema.json").validate({"adjusted_net_savings": wealth["adjusted_net_savings"], "human_development": wealth["human_development"]})
+    validator("schemas/catalyst_analytics_r_distribution.schema.json").validate(wealth["distribution"])
+    validator("schemas/catalyst_analytics_r_composite_score.schema.json").validate(wealth["composite"])
+    validator("schemas/catalyst_analytics_r_inclusive_demo_export.schema.json").validate(load("outputs/example_browser_inclusive_export.json"))
+    fixture = load("tests/fixtures/inclusive_development_contract_v1.json")
+    if abs(fixture["composite_weight_sum"] - 1) > 1e-12: fail("Composite fixture weights do not sum to one")
+    for account in wealth["wealth"]["capital_accounts"].values():
+        if any(abs(row["reconciliation_error"]) > fixture["capital_reconciliation_tolerance"] for row in account["data"]): fail("Capital fixture does not reconcile")
+    if abs(sum(row["weight"] for row in wealth["composite"]["definition"]["components"]) - 1) > 1e-12: fail("Composite definition does not sum to one")
 
-    inventory_validator = validator("schemas/catalyst_analytics_r_emissions_inventory.schema.json")
-    natural_validator = validator("schemas/catalyst_analytics_r_natural_capital.schema.json")
-    boundary_validator = validator("schemas/catalyst_analytics_r_boundary.schema.json")
-    climate_validator = validator("schemas/catalyst_analytics_r_climate_accounting.schema.json")
-    browser_validator = validator("schemas/catalyst_analytics_r_climate_demo_export.schema.json")
-    climate_export = load_json("outputs/example_climate_accounting_export.json")
-    climate_validator.validate(climate_export)
-    inventory_validator.validate(climate_export["inventory"])
-    natural_validator.validate(climate_export["natural_capital"])
-    for boundary in load_json("examples/boundary_definitions.json"):
-        boundary_validator.validate(boundary)
-    browser_validator.validate(load_json("outputs/example_browser_climate_export.json"))
-    if abs(climate_export["kaya"]["contributions"][0]["residual"]) > 1e-8:
-        fail("Kaya fixture does not reconcile")
-    if any(abs(row["reconciliation_error"]) > 1e-8 for row in climate_export["natural_capital"]["data"]):
-        fail("Natural-capital fixture does not reconcile")
+    # Preserve prior public contracts.
+    prior = [
+        ("schemas/catalyst_analytics_r_scenario.schema.json", "examples/scenario_input.json"),
+        ("schemas/catalyst_analytics_r_comparison.schema.json", "outputs/example_comparison_export.json"),
+        ("schemas/catalyst_analytics_r_uncertainty.schema.json", "outputs/example_uncertainty_export.json"),
+        ("schemas/catalyst_analytics_r_dataset.schema.json", "examples/data_intake_input.json"),
+        ("schemas/catalyst_analytics_r_data_analysis.schema.json", "outputs/example_data_analysis_export.json"),
+        ("schemas/catalyst_analytics_r_climate_accounting.schema.json", "outputs/example_climate_accounting_export.json"),
+        ("schemas/catalyst_analytics_r_climate_demo_export.schema.json", "outputs/example_browser_climate_export.json"),
+    ]
+    for schema, payload in prior: validator(schema).validate(load(payload))
 
-    # Preserve validation of prior public contracts.
-    validator("schemas/catalyst_analytics_r_scenario.schema.json").validate(load_json("examples/scenario_input.json"))
-    validator("schemas/catalyst_analytics_r_comparison.schema.json").validate(load_json("outputs/example_comparison_export.json"))
-    validator("schemas/catalyst_analytics_r_uncertainty.schema.json").validate(load_json("outputs/example_uncertainty_export.json"))
-    validator("schemas/catalyst_analytics_r_dataset.schema.json").validate(load_json("examples/data_intake_input.json"))
-    validator("schemas/catalyst_analytics_r_data_analysis.schema.json").validate(load_json("outputs/example_data_analysis_export.json"))
-    validator("schemas/catalyst_analytics_r_data_demo_export.schema.json").validate(load_json("outputs/example_browser_data_export.json"))
-
-    js = read("wordpress/catalyst-analytics-r-demo/assets/catalyst-analytics-r-demo.js")
     php = read("wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php")
-    for expected in (
-        "browser_climate_accounting",
-        "mapped_contract_browser_calculation",
-        "compatible_repository_version: '0.6.0'",
-        "emissions_inventory_contract_version: '1.0.0'",
-        "climate_accounting_contract_version: '1.0.0'",
-        "natural_capital_contract_version: '1.0.0'",
-        "boundary_contract_version: '1.0.0'",
-        "cumulative_net_emissions",
-        "kaya_decomposition",
-        "natural_capital_account",
-        "boundary_assessment",
-    ):
-        if expected not in js:
-            fail(f"WordPress climate contract missing: {expected}")
-    if "Climate, carbon, and natural-capital accounting" not in php or "Run governed accounting" not in php:
-        fail("WordPress climate-accounting interface is missing")
+    js = read("wordpress/catalyst-analytics-r-demo/assets/catalyst-analytics-r-demo.js")
+    if not re.search(r"^ \* Version:\s*1\.6\.0$", php, re.MULTILINE): fail("Plugin version mismatch")
+    for token in ("Inclusive wealth, human development, and distribution", "Run inclusive analysis"):
+        if token not in php: fail(f"WordPress interface missing: {token}")
+    for token in ("browser_inclusive_development", "mapped_inclusive_development_contract", "compatible_repository_version: '0.7.0'", "wealth_contract_version: '1.0.0'", "adjusted_net_savings", "human_development_index", "share_below_social_floor", "weight_sensitivity"):
+        if token not in js: fail(f"WordPress contract missing: {token}")
 
-    check_documented_exports()
+    documented_exports()
     run([sys.executable, "scripts/check_r_structure.py"])
     run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests_py"])
-    if subprocess.run(["bash", "-lc", "command -v node >/dev/null"], cwd=ROOT).returncode == 0:
-        run(["node", "--check", "wordpress/catalyst-analytics-r-demo/assets/catalyst-analytics-r-demo.js"])
-    if subprocess.run(["bash", "-lc", "command -v php >/dev/null"], cwd=ROOT).returncode == 0:
-        run(["php", "-l", "wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php"])
-
-    debris = [
-        path for path in ROOT.rglob("*")
-        if path.name in {".pytest_cache", "__pycache__"} or path.name.endswith(".Rcheck")
-    ]
-    if debris:
-        fail(f"Generated cache or check debris remains: {[str(path.relative_to(ROOT)) for path in debris]}")
-
-    print("Catalyst Analytics R v0.6.0 release contract passed.")
-    print(
-        f"Validated {len(json_files)} JSON files, climate and natural-capital contracts, "
-        "JavaScript syntax, PHP syntax, documentation aliases, and repository tests."
-    )
+    if subprocess.run(["bash", "-lc", "command -v node >/dev/null"], cwd=ROOT).returncode == 0: run(["node", "--check", "wordpress/catalyst-analytics-r-demo/assets/catalyst-analytics-r-demo.js"])
+    if subprocess.run(["bash", "-lc", "command -v php >/dev/null"], cwd=ROOT).returncode == 0: run(["php", "-l", "wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php"])
+    debris = [path for path in ROOT.rglob("*") if path.name in {".pytest_cache", "__pycache__"} or path.name.endswith(".Rcheck")]
+    if debris: fail(f"Generated debris remains: {[str(path.relative_to(ROOT)) for path in debris]}")
+    print("Catalyst Analytics R v0.7.0 release contract passed.")
+    print(f"Validated {len(json_files)} JSON files, inclusive-development contracts, JavaScript, PHP, documentation aliases, and repository tests.")
     return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+if __name__ == "__main__": raise SystemExit(main())

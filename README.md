@@ -1,212 +1,66 @@
 # Catalyst Analytics R
 
-Catalyst Analytics R is the reproducible sustainability-analysis layer of the Sustainable Catalyst platform. It combines governed data intake, versioned indicators, scenario modeling, comparative analysis, uncertainty, climate and carbon accounting, natural-capital accounting, visualization, and portable evidence bundles.
+Catalyst Analytics R is the reproducible statistical, scenario-modeling, uncertainty-analysis, and sustainability-accounting engine for the Sustainable Catalyst platform.
 
-The repository includes a WordPress companion. The browser tool does not execute R, but its inventory, carbon-pathway, Kaya, natural-capital, boundary, and review records map to the public R contracts.
+**Current release:** `0.7.0`  
+**WordPress companion:** `1.6.0`  
+**Shortcode:** `[catalyst_analytics_r_demo]`
 
-## v0.6.0 - Climate, Carbon, and Natural-Capital Accounting
+## v0.7.0 capabilities
 
-Version 0.6.0 turns the earlier carbon-budget and natural-capital concepts into governed accounting modules:
+- Produced-, human-, and natural-capital stock-and-flow accounts
+- Declared shadow prices and reconciliation errors
+- Inclusive wealth and per-capita wealth
+- Adjusted Net Savings decomposition
+- Human-development dimension indices
+- Weighted distribution and social-floor diagnostics
+- Intergenerational wealth comparison
+- Transparent composite scores and weight sensitivity
+- Reproducible JSON, CSV, Markdown, manifest, and ZIP exports
 
-- Normalized greenhouse-gas inventories
-- Gross emissions, removals, and net emissions
-- Period-total and rate-based accounting
-- Declared GWP and CO2-equivalent basis
-- Carbon-budget pathways and remaining-budget trajectories
-- Overshoot and recovery timing
-- Target-year, lock-in, and stranded-pathway diagnostics
-- Additive LMDI Kaya decomposition
-- Natural-capital opening and closing stocks
-- Regeneration, restoration, additions, extraction, degradation, and damages
-- Reconciliation errors and stock-and-flow summaries
-- At-or-below, at-or-above, and inside-range sustainability boundaries
-- Warning margins and unit-mismatch detection
-- Auditable climate-accounting export bundles
-- WordPress climate-accounting companion
+## Existing analytical foundation
 
-## Versions
+- Canonical scenarios and model registry
+- Comparative scenario engine
+- Monte Carlo, Latin hypercube, sensitivity, and stress testing
+- Governed CSV/JSON intake and indicator registry
+- Emissions inventories, carbon budgets, Kaya decomposition, natural-capital accounts, and sustainability boundaries
 
-- Repository and R package: **0.6.0**
-- Emissions-inventory contract: **1.0.0**
-- Climate-accounting contract: **1.0.0**
-- Natural-capital contract: **1.0.0**
-- Sustainability-boundary contract: **1.0.0**
-- Dataset contract: **1.0.0**
-- Indicator registry contract: **1.0.0**
-- Canonical scenario schema: **1.0.0**
-- Comparative scenario schema: **1.0.0**
-- Uncertainty schema: **1.0.0**
-- KH-NC-PA model: **1.0.0**
-- WordPress demo plugin: **1.5.0**
-- Browser climate export: **1.5.0**
-
-## Climate-accounting quickstart
+## Example
 
 ```r
-path <- system.file(
-  "extdata", "climate", "sample_climate_accounting.csv",
-  package = "catalystanalyticsr"
-)
+produced <- capital_account("produced", 500, investment = 55, depreciation = 20, closing_stock = 535)
+human <- capital_account("human", 400, investment = 36, depreciation = 12, closing_stock = 424, shadow_price = 1.2)
+natural <- capital_account("natural", 300, investment = 12, depletion = 8, damages = 6, closing_stock = 298, shadow_price = 1.5)
 
-dataset <- read_catalyst_data(
-  path,
-  id = "sample-climate-accounting-data",
-  title = "Synthetic climate-accounting data",
-  time_field = "year",
-  entity_fields = "region",
-  required_fields = c(
-    "year", "region", "emissions", "removals",
-    "energy", "gdp", "population"
-  ),
-  units = list(
-    emissions = "MtCO2e",
-    removals = "MtCO2e",
-    energy = "PJ",
-    gdp = "currency_index",
-    population = "million_persons"
-  )
-)
-
-inventory <- as_emissions_inventory(
-  dataset,
-  emissions_field = "emissions",
-  removals_field = "removals",
-  energy_field = "energy",
-  gdp_field = "gdp",
-  population_field = "population",
-  gwp_basis = "AR6 GWP100 synthetic CO2e fixture"
-)
-
-carbon <- carbon_budget_pathway(
-  inventory,
-  budget = 300,
-  target_year = 2030,
-  target_net_emissions = 0
-)
-
-carbon_pathway_summary(carbon)
-kaya_decomposition(inventory)
+wealth <- inclusive_wealth_account(produced, human, natural, population = 5)
+ans <- adjusted_net_savings_decomposition(80, 20, 22, 14, 8, 5, 6, gni = 1000)
+hdi <- human_development_indicators(72, 13, 9, 16000)
 ```
 
-## Natural-capital account
-
-```r
-natural <- natural_capital_from_dataset(
-  dataset,
-  opening_field = "opening_stock",
-  regeneration_field = "regeneration",
-  restoration_field = "restoration",
-  additions_field = "additions",
-  extraction_field = "extraction",
-  degradation_field = "degradation",
-  damages_field = "damages",
-  closing_field = "closing_stock",
-  unit = "natural_capital_index"
-)
-
-validate_natural_capital_account(natural)
-natural_capital_summary(natural)
-```
-
-## Boundary assessment
-
-```r
-boundaries <- list(
-  boundary_definition(
-    id = "cumulative-carbon-budget",
-    title = "Cumulative net-emissions budget",
-    indicator = "cumulative_net_emissions",
-    unit = "MtCO2e",
-    upper = 300
-  ),
-  boundary_definition(
-    id = "natural-capital-floor",
-    title = "Natural-capital closing-stock floor",
-    indicator = "natural_capital_closing_stock",
-    unit = "natural_capital_index",
-    direction = "at_or_above",
-    lower = 1000
-  )
-)
-
-analysis <- climate_accounting(
-  inventory,
-  budget = 300,
-  natural_capital = natural,
-  boundaries = boundaries,
-  target_year = 2030,
-  target_net_emissions = 0,
-  analysis_id = "sample-climate-accounting"
-)
-
-climate_accounting_summary(analysis)
-```
-
-## Reproducible export
-
-```r
-export_climate_accounting(
-  analysis,
-  dir = "outputs",
-  prefix = "sample-climate-accounting"
-)
-```
-
-The bundle contains normalized inventory records, emissions summaries, carbon pathways, budget diagnostics, Kaya levels and contributions, natural-capital accounts, boundary definitions and results, terminal indicators, methodology metadata, checksums, and a review brief.
-
-## Data, indicator, scenario, and uncertainty layers
-
-The earlier governed analytical contracts remain available:
-
-```r
-quality <- data_quality_report(dataset)
-registered <- list_catalyst_indicators()
-net <- calculate_indicator(dataset, "net_emissions")
-
-baseline <- scenario_from_json("examples/scenario_input.json")
-policy <- scenario_from_json("examples/uncertainty_input.json")
-comparison <- compare_scenarios(run_scenarios(list(baseline, policy)))
-ensemble <- run_uncertainty(policy, n = 500, sampling = "latin_hypercube", seed = 42)
-```
-
-## WordPress demo
-
-Install `dist/catalyst-analytics-r-demo-v1.5.0.zip` and use:
+## Repository layout
 
 ```text
-[catalyst_analytics_r_demo]
-```
-
-The public interface creates a deterministic educational emissions pathway, tracks a declared budget, computes a Kaya decomposition, reconciles a natural-capital account, evaluates declared boundaries, and exports a governed JSON record. It does not verify source inventories, select or allocate a scientifically defensible carbon budget, determine a GWP basis, value natural capital, establish compliance, or execute R.
-
-## Repository structure
-
-```text
-R/                                  R package functions and contracts
-man/                                R package documentation
-tests/testthat/                     R behavioral and numerical tests
-tests_py/                           Static repository contract tests
-inst/extdata/climate/               Climate-accounting CSV and source fixtures
-inst/extdata/data/                  General data fixtures
-inst/extdata/scenarios/             Canonical scenario fixtures
-wordpress/catalyst-analytics-r-demo WordPress browser companion
-schemas/                            Dataset, scenario, climate, and export schemas
+R/                                  Analytical implementation
+man/                                R documentation
+inst/extdata/                       Governed fixtures
+schemas/                            Machine-readable contracts
 examples/                           Example inputs
 outputs/                            Example exports
-docs/                               Methodology and release documentation
+wordpress/catalyst-analytics-r-demo WordPress browser companion
+tests/ and tests_py/                R and repository contracts
 scripts/                            Release validation
 ```
 
 ## Validation
 
 ```bash
-python3 -m pip install pytest jsonschema
 python3 scripts/check_release.py
 Rscript scripts/check_r_sources.R
 R CMD build .
-R CMD check --no-manual catalystanalyticsr_0.6.0.tar.gz
+R CMD check --no-manual catalystanalyticsr_0.7.0.tar.gz
 ```
 
-## Boundaries
+## Boundary
 
-Catalyst Analytics R provides transparent exploratory and decision-support analysis. Source and organizational boundaries, gas coverage, GWP basis, carbon-budget allocation, temporal interpretation, natural-capital measurement and valuation, and indicator suitability require human review. Outputs are not forecasts, compliance determinations, autonomous decisions, or professional advice.
+Capital stocks, shadow prices, human-capital measurement, goalposts, social floors, distribution weights, intergenerational discount rates, and composite weights require explicit human review. Outputs are exploratory decision support, not forecasts, compliance determinations, autonomous decisions, or professional advice.

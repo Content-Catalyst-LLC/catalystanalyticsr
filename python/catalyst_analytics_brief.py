@@ -273,8 +273,74 @@ def climate_accounting_brief(payload: dict) -> str:
     ])
     return "\n".join(lines)
 
+
+def inclusive_development_brief(payload: dict) -> str:
+    is_browser = payload.get("export_type") == "browser_inclusive_development"
+    if is_browser:
+        title = payload.get("inputs", {}).get("entity", "Browser inclusive development analysis")
+        wealth = payload.get("inclusive_wealth", {})
+        ans = payload.get("adjusted_net_savings", {})
+        hdi = payload.get("human_development", {})
+        distribution = payload.get("distribution", {}).get("summary", {})
+        composite = payload.get("composite", {})
+        contract = payload.get("contract", {})
+        compatibility = contract.get("compatible_repository_version", "n/a")
+    else:
+        title = payload.get("title", payload.get("id", "Inclusive development analysis"))
+        summary_rows = payload.get("summary", [])
+        summary = summary_rows[-1] if isinstance(summary_rows, list) and summary_rows else summary_rows if isinstance(summary_rows, dict) else {}
+        wealth_rows = payload.get("wealth", {}).get("data", [])
+        final_wealth = wealth_rows[-1] if wealth_rows else {}
+        wealth = {
+            "closing": summary.get("closing_inclusive_wealth", final_wealth.get("inclusive_wealth")),
+            "change": summary.get("inclusive_wealth_change", final_wealth.get("inclusive_wealth_change")),
+            "per_capita_closing": summary.get("closing_per_capita_wealth", final_wealth.get("inclusive_wealth_per_capita")),
+            "produced_share": final_wealth.get("produced_share"),
+            "human_share": final_wealth.get("human_share"),
+            "natural_share": final_wealth.get("natural_share"),
+        }
+        ans_rows = payload.get("adjusted_net_savings", [])
+        ans = ans_rows[-1] if ans_rows else {}
+        hdi_rows = payload.get("human_development", [])
+        hdi = hdi_rows[-1] if hdi_rows else {}
+        distribution = payload.get("distribution", {}).get("summary", {})
+        scores = payload.get("composite", {}).get("scores", [])
+        composite = {"score": scores[-1].get("composite_score") if scores else None}
+        compatibility = payload.get("meta", {}).get("package_version", "n/a")
+    lines = [
+        "# Catalyst Analytics R Inclusive Development Brief", "",
+        f"**Analysis:** {title}",
+        f"**Package compatibility:** {compatibility}",
+        f"**Schema version:** {payload.get('schema_version', 'n/a')}", "",
+        "## Inclusive wealth", "",
+        f"- Closing wealth: {wealth.get('closing', 'n/a')}",
+        f"- Wealth change: {wealth.get('change', 'n/a')}",
+        f"- Closing wealth per capita: {wealth.get('per_capita_closing', 'n/a')}",
+        f"- Produced-capital share: {wealth.get('produced_share', 'n/a')}",
+        f"- Human-capital share: {wealth.get('human_share', 'n/a')}",
+        f"- Natural-capital share: {wealth.get('natural_share', 'n/a')}", "",
+        "## Savings and human development", "",
+        f"- Adjusted Net Savings: {ans.get('adjusted_net_savings', 'n/a')}",
+        f"- Adjusted Net Savings as percent of GNI: {ans.get('adjusted_net_savings_percent_gni', 'n/a')}",
+        f"- Life-expectancy index: {hdi.get('life_expectancy_index', 'n/a')}",
+        f"- Education index: {hdi.get('education_index', 'n/a')}",
+        f"- Income index: {hdi.get('income_index', 'n/a')}",
+        f"- Human Development Index: {hdi.get('human_development_index', 'n/a')}", "",
+        "## Distribution and composite score", "",
+        f"- Gini: {distribution.get('gini', 'n/a')}",
+        f"- Share below social floor: {distribution.get('share_below_social_floor', 'n/a')}",
+        f"- Palma ratio: {distribution.get('palma_ratio', 'n/a')}",
+        f"- Composite score: {composite.get('score', 'n/a')}", "",
+        "## Review boundary", "",
+        "Shadow prices, human-capital measurement, social floors, distribution weights, intergenerational discounting, and composite weights require explicit human review. This output is not a forecast, compliance determination, autonomous decision, or professional advice.", ""
+    ]
+    return "\n".join(lines)
+
+
 def brief(payload: dict) -> str:
     engine = payload.get("engine", {})
+    if payload.get("export_type") == "browser_inclusive_development" or payload.get("analysis_type") == "inclusive_wealth_human_development_distribution":
+        return inclusive_development_brief(payload)
     if payload.get("export_type") == "browser_climate_accounting" or ("inventory" in payload and "carbon" in payload and "natural_capital" in payload):
         return climate_accounting_brief(payload)
     if "dataset" in payload and ("indicators" in payload or "indicator_registry" in payload or engine.get("type") == "browser_data_intake"):

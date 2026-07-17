@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_wealth.schema.json",
+  "title": "Catalyst Analytics R Wealth Contract",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "data",
+    "capital_accounts",
+    "meta"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "data": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "entity",
+          "time",
+          "produced_capital_value",
+          "human_capital_value",
+          "natural_capital_value",
+          "inclusive_wealth",
+          "inclusive_wealth_per_capita"
+        ],
+        "properties": {
+          "entity": {
+            "type": "string"
+          },
+          "time": {},
+          "produced_capital_value": {
+            "type": "number"
+          },
+          "human_capital_value": {
+            "type": "number"
+          },
+          "natural_capital_value": {
+            "type": "number"
+          },
+          "inclusive_wealth": {
+            "type": "number"
+          },
+          "inclusive_wealth_per_capita": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "capital_accounts": {
+      "type": "object",
+      "required": [
+        "produced",
+        "human",
+        "natural"
+      ],
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "schema_version",
+          "capital_type",
+          "data"
+        ],
+        "properties": {
+          "schema_version": {
+            "const": "1.0.0"
+          },
+          "capital_type": {
+            "enum": [
+              "produced",
+              "human",
+              "natural"
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "entity",
+                "time",
+                "capital_type",
+                "opening_stock",
+                "closing_stock",
+                "reconciliation_error",
+                "shadow_price",
+                "opening_value",
+                "closing_value"
+              ],
+              "properties": {
+                "entity": {
+                  "type": "string"
+                },
+                "time": {},
+                "capital_type": {
+                  "enum": [
+                    "produced",
+                    "human",
+                    "natural"
+                  ]
+                },
+                "opening_stock": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "closing_stock": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "reconciliation_error": {
+                  "type": "number"
+                },
+                "shadow_price": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "opening_value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "closing_value": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "meta": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

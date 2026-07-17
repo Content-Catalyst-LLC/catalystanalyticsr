@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_distribution.schema.json",
+  "title": "Catalyst Analytics R Distribution Contract",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_type",
+    "indicator",
+    "summary",
+    "group_summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_type": {
+      "const": "distributional"
+    },
+    "indicator": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "weighted_mean",
+        "gini",
+        "top_10_share",
+        "bottom_40_share",
+        "share_below_social_floor"
+      ],
+      "properties": {
+        "weighted_mean": {
+          "type": "number"
+        },
+        "gini": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "top_10_share": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "bottom_40_share": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "share_below_social_floor": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "group_summary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "group",
+          "resource_share",
+          "population_share"
+        ],
+        "properties": {
+          "group": {
+            "type": "string"
+          },
+          "resource_share": {
+            "type": "number"
+          },
+          "population_share": {
+            "type": "number"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

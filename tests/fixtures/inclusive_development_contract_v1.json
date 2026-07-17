@@ -1,0 +1,18 @@
+{
+  "contract_version": "1.0.0",
+  "expected_summary": {
+    "analysis_id": "example-inclusive-development",
+    "closing_inclusive_wealth": 1627.6,
+    "inclusive_wealth_change": 197.5999999999999,
+    "closing_per_capita_wealth": 307.0943396226415,
+    "adjusted_net_savings": 93,
+    "human_development_index": 0.7789141457589414,
+    "gini": 0.3011764705882354,
+    "share_below_social_floor": 0.2,
+    "non_declining_per_capita_wealth": true,
+    "composite_score": 61.72175112993635
+  },
+  "capital_reconciliation_tolerance": 1e-08,
+  "composite_weight_sum": 1,
+  "fixture": "outputs/example_inclusive_development_export.json"
+}

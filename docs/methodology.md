@@ -35,3 +35,11 @@ Natural-capital accounting uses:
 `closing = opening + regeneration + restoration + additions - extraction - degradation - damages`
 
 When an observed closing stock is provided, the difference from the accounting identity is retained as a reconciliation error.
+
+## Inclusive wealth and distribution - v0.7.0
+
+Produced, human, and natural capital use a common stock-and-flow identity. Declared shadow prices convert stocks into a common analytical value basis. Inclusive wealth is reported in total and per-capita terms.
+
+Adjusted Net Savings adds education and health investment to gross savings and deducts produced-capital depreciation, resource depletion, pollution damages, and climate damages.
+
+Distributional analysis reports weighted quantiles, Gini, Palma, top-10 and bottom-40 shares, group summaries, and social-floor exposure. Composite scores expose their weights, directions, bounds, normalized components, and sensitivity to alternative weights.

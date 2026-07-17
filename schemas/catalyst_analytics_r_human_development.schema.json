@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_human_development.schema.json",
+  "title": "Catalyst Analytics R Human Development Contract",
+  "type": "object",
+  "required": [
+    "adjusted_net_savings",
+    "human_development"
+  ],
+  "properties": {
+    "adjusted_net_savings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "gross_savings",
+          "adjusted_net_savings",
+          "adjusted_net_savings_percent_gni",
+          "sustainable_savings_signal"
+        ],
+        "properties": {
+          "gross_savings": {
+            "type": "number"
+          },
+          "adjusted_net_savings": {
+            "type": "number"
+          },
+          "adjusted_net_savings_percent_gni": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "sustainable_savings_signal": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "human_development": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "life_expectancy_index",
+          "education_index",
+          "income_index",
+          "human_development_index"
+        ],
+        "properties": {
+          "life_expectancy_index": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "education_index": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "income_index": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "human_development_index": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

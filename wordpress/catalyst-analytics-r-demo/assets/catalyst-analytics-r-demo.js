@@ -2,344 +2,184 @@
   'use strict';
 
   var CONTRACT = {
-    compatible_repository_version: '0.6.0',
-    browser_demo_version: '1.5.0',
-    emissions_inventory_contract_version: '1.0.0',
-    climate_accounting_contract_version: '1.0.0',
-    natural_capital_contract_version: '1.0.0',
-    boundary_contract_version: '1.0.0',
-    parity_status: 'mapped_contract_browser_calculation'
+    parity_status: 'mapped_inclusive_development_contract',
+    compatible_repository_version: '0.7.0',
+    wealth_contract_version: '1.0.0',
+    human_development_contract_version: '1.0.0',
+    distribution_contract_version: '1.0.0',
+    composite_score_contract_version: '1.0.0',
+    inclusive_development_contract_version: '1.0.0'
   };
 
   function number(form, name) {
-    var input = form.elements[name];
-    var value = Number(input.value);
+    var value = Number(form.elements[name].value);
     if (!Number.isFinite(value)) throw new Error('Enter a valid value for ' + name + '.');
     return value;
   }
-
-  function percent(form, name) {
-    return number(form, name) / 100;
+  function clamp(value) { return Math.max(0, Math.min(1, value)); }
+  function format(value, digits) { return Number(value).toLocaleString(undefined, { maximumFractionDigits: digits == null ? 2 : digits }); }
+  function parseQuintiles(value) {
+    var values = String(value).split(',').map(function (entry) { return Number(entry.trim()); });
+    if (values.length !== 5 || values.some(function (entry) { return !Number.isFinite(entry) || entry < 0; })) throw new Error('Enter five non-negative quintile values separated by commas.');
+    return values;
   }
-
-  function format(value, digits) {
-    if (!Number.isFinite(value)) return 'n/a';
-    return value.toLocaleString(undefined, { maximumFractionDigits: digits == null ? 1 : digits });
+  function weightedGini(values) {
+    var ordered = values.slice().sort(function (a, b) { return a - b; });
+    var total = ordered.reduce(function (sum, value) { return sum + value; }, 0);
+    if (total === 0) return 0;
+    var weighted = ordered.reduce(function (sum, value, index) { return sum + (index + 1) * value; }, 0);
+    return (2 * weighted) / (ordered.length * total) - (ordered.length + 1) / ordered.length;
   }
-
-  function logarithmicMean(x, y) {
-    if (!(x > 0) || !(y > 0)) return null;
-    if (Math.abs(x - y) < 1e-12) return x;
-    return (x - y) / (Math.log(x) - Math.log(y));
+  function normalized(value, lower, upper, direction) {
+    var score = clamp((value - lower) / (upper - lower));
+    return direction === 'lower' ? 1 - score : score;
   }
-
-  function statusAtOrBelow(value, upper, warningMargin) {
-    var scale = Math.max(Math.abs(upper), 1);
-    var distance = upper - value;
-    var status = value > upper ? 'breached' : distance <= scale * warningMargin ? 'warning' : 'within';
-    return { status: status, distance: distance, normalized_distance: distance / scale };
+  function normalizeWeights(raw) {
+    var total = Object.keys(raw).reduce(function (sum, key) { return sum + raw[key]; }, 0);
+    if (total <= 0) throw new Error('At least one composite weight must be positive.');
+    var result = {};
+    Object.keys(raw).forEach(function (key) { result[key] = raw[key] / total; });
+    return result;
   }
-
-  function statusAtOrAbove(value, lower, warningMargin) {
-    var scale = Math.max(Math.abs(lower), 1);
-    var distance = value - lower;
-    var status = value < lower ? 'breached' : distance <= scale * warningMargin ? 'warning' : 'within';
-    return { status: status, distance: distance, normalized_distance: distance / scale };
+  function scoreWithWeights(componentScores, weights) {
+    return 100 * Object.keys(componentScores).reduce(function (sum, key) { return sum + componentScores[key] * weights[key]; }, 0);
+  }
+  function weightSensitivity(componentScores, weights) {
+    var rows = [];
+    Object.keys(weights).forEach(function (target) {
+      [-0.2, 0.2].forEach(function (shift) {
+        var changed = Object.assign({}, weights);
+        var newTarget = Math.max(0, Math.min(1, weights[target] * (1 + shift)));
+        var remainingOld = 1 - weights[target];
+        changed[target] = newTarget;
+        Object.keys(changed).forEach(function (key) {
+          if (key !== target) changed[key] = remainingOld > 0 ? weights[key] * (1 - newTarget) / remainingOld : 0;
+        });
+        rows.push({ component: target, perturbation: shift < 0 ? 'decrease' : 'increase', original_weight: weights[target], perturbed_weight: newTarget, score: scoreWithWeights(componentScores, changed) });
+      });
+    });
+    return rows;
   }
 
   function buildAnalysis(form) {
-    var startYear = Math.trunc(number(form, 'startYear'));
-    var endYear = Math.trunc(number(form, 'endYear'));
-    if (endYear <= startYear) throw new Error('End year must be after start year.');
-    if (endYear - startYear > 100) throw new Error('The browser demonstration is limited to 100 annual periods.');
-
     var inputs = {
-      start_year: startYear,
-      end_year: endYear,
-      carbon_budget: number(form, 'carbonBudget'),
-      starting_emissions: number(form, 'startingEmissions'),
-      annual_decarbonization_rate: percent(form, 'decarbonization'),
-      starting_removals: number(form, 'startingRemovals'),
-      annual_removals_growth_rate: percent(form, 'removalsGrowth'),
-      target_net_emissions: number(form, 'targetNet'),
-      gdp_growth_rate: percent(form, 'gdpGrowth'),
-      population_growth_rate: percent(form, 'populationGrowth'),
-      energy_intensity_improvement_rate: percent(form, 'energyIntensityImprovement'),
-      natural_capital_opening: number(form, 'naturalOpening'),
-      natural_capital_floor: number(form, 'naturalFloor'),
-      annual_regeneration: number(form, 'regeneration'),
-      annual_restoration: number(form, 'restoration'),
-      annual_extraction: number(form, 'extraction'),
-      annual_degradation: number(form, 'degradation'),
-      annual_damages: number(form, 'damages')
+      entity: form.elements.entity.value.trim() || 'Untitled entity',
+      start_year: number(form, 'startYear'), end_year: number(form, 'endYear'),
+      population_start: number(form, 'populationStart'), population_end: number(form, 'populationEnd'),
+      produced_opening: number(form, 'producedOpening'), produced_closing: number(form, 'producedClosing'), produced_shadow_price: number(form, 'producedPrice'),
+      human_opening: number(form, 'humanOpening'), human_closing: number(form, 'humanClosing'), human_shadow_price: number(form, 'humanPrice'),
+      natural_opening: number(form, 'naturalOpening'), natural_closing: number(form, 'naturalClosing'), natural_shadow_price: number(form, 'naturalPrice'),
+      gross_savings: number(form, 'grossSavings'), gni: number(form, 'gni'), depreciation: number(form, 'depreciation'), education_investment: number(form, 'education'), health_investment: number(form, 'health'), resource_depletion: number(form, 'depletion'), pollution_damages: number(form, 'pollution'), climate_damages: number(form, 'climate'),
+      life_expectancy: number(form, 'life'), income_per_capita: number(form, 'income'), expected_schooling: number(form, 'expectedSchool'), mean_schooling: number(form, 'meanSchool'),
+      social_floor: number(form, 'socialFloor'), quintile_values: parseQuintiles(form.elements.quintiles.value),
+      component_weights: normalizeWeights({ wealth_per_capita: number(form, 'wealthWeight'), adjusted_savings_rate: number(form, 'savingsWeight'), human_development: number(form, 'humanWeight'), natural_share: number(form, 'naturalWeight') })
+    };
+    if (inputs.end_year <= inputs.start_year) throw new Error('End year must be later than start year.');
+    if (inputs.population_start <= 0 || inputs.population_end <= 0 || inputs.gni <= 0) throw new Error('Population and GNI must be positive.');
+    ['produced_opening','produced_closing','human_opening','human_closing','natural_opening','natural_closing'].forEach(function (key) { if (inputs[key] < 0) throw new Error('Capital stocks cannot be negative.'); });
+    ['produced_shadow_price','human_shadow_price','natural_shadow_price'].forEach(function (key) { if (inputs[key] <= 0) throw new Error('Shadow prices must be positive.'); });
+
+    var capitalAccounts = {
+      produced: { opening_value: inputs.produced_opening * inputs.produced_shadow_price, closing_value: inputs.produced_closing * inputs.produced_shadow_price },
+      human: { opening_value: inputs.human_opening * inputs.human_shadow_price, closing_value: inputs.human_closing * inputs.human_shadow_price },
+      natural: { opening_value: inputs.natural_opening * inputs.natural_shadow_price, closing_value: inputs.natural_closing * inputs.natural_shadow_price }
+    };
+    Object.keys(capitalAccounts).forEach(function (key) { capitalAccounts[key].change = capitalAccounts[key].closing_value - capitalAccounts[key].opening_value; });
+    var openingWealth = Object.keys(capitalAccounts).reduce(function (sum, key) { return sum + capitalAccounts[key].opening_value; }, 0);
+    var closingWealth = Object.keys(capitalAccounts).reduce(function (sum, key) { return sum + capitalAccounts[key].closing_value; }, 0);
+    var inclusiveWealth = {
+      opening: openingWealth, closing: closingWealth, change: closingWealth - openingWealth,
+      per_capita_opening: openingWealth / inputs.population_start,
+      per_capita_closing: closingWealth / inputs.population_end,
+      produced_share: capitalAccounts.produced.closing_value / closingWealth,
+      human_share: capitalAccounts.human.closing_value / closingWealth,
+      natural_share: capitalAccounts.natural.closing_value / closingWealth
     };
 
-    if (inputs.carbon_budget < 0 || inputs.starting_emissions < 0 || inputs.starting_removals < 0 || inputs.natural_capital_opening < 0 || inputs.natural_capital_floor < 0) {
-      throw new Error('Budgets, emissions, removals, and natural-capital stocks cannot be negative.');
-    }
-    if (inputs.annual_decarbonization_rate < 0 || inputs.annual_decarbonization_rate > 1) {
-      throw new Error('Annual decarbonization must be between 0 and 100 percent.');
-    }
+    var humanInvestment = inputs.education_investment + inputs.health_investment;
+    var totalDeductions = inputs.depreciation + inputs.resource_depletion + inputs.pollution_damages + inputs.climate_damages;
+    var adjusted = inputs.gross_savings + humanInvestment - totalDeductions;
+    var ans = { gross_savings: inputs.gross_savings, produced_capital_depreciation: inputs.depreciation, education_investment: inputs.education_investment, health_investment: inputs.health_investment, human_capital_investment: humanInvestment, natural_resource_depletion: inputs.resource_depletion, pollution_damages: inputs.pollution_damages, climate_damages: inputs.climate_damages, total_deductions: totalDeductions, adjusted_net_savings: adjusted, gni: inputs.gni, adjusted_net_savings_percent_gni: 100 * adjusted / inputs.gni, sustainable_savings_signal: adjusted >= 0 };
 
-    var inventory = [];
-    var pathway = [];
-    var natural = [];
-    var cumulativeGross = 0;
-    var cumulativeRemovals = 0;
-    var opening = inputs.natural_capital_opening;
+    var lifeIndex = clamp((inputs.life_expectancy - 20) / 65);
+    var educationIndex = (clamp(inputs.expected_schooling / 18) + clamp(inputs.mean_schooling / 15)) / 2;
+    var incomeIndex = clamp((Math.log(Math.max(inputs.income_per_capita, 100)) - Math.log(100)) / (Math.log(75000) - Math.log(100)));
+    var hdi = { life_expectancy_index: lifeIndex, education_index: educationIndex, income_index: incomeIndex, human_development_index: Math.pow(lifeIndex * educationIndex * incomeIndex, 1 / 3) };
 
-    for (var year = startYear; year <= endYear; year += 1) {
-      var index = year - startYear;
-      var gross = inputs.starting_emissions * Math.pow(1 - inputs.annual_decarbonization_rate, index);
-      var removals = inputs.starting_removals * Math.pow(1 + inputs.annual_removals_growth_rate, index);
-      var net = gross - removals;
-      var population = 100 * Math.pow(1 + inputs.population_growth_rate, index);
-      var gdp = 100 * Math.pow(1 + inputs.gdp_growth_rate, index);
-      var energyIntensity = Math.pow(1 - inputs.energy_intensity_improvement_rate, index);
-      var energy = gdp * energyIntensity;
-      cumulativeGross += gross;
-      cumulativeRemovals += removals;
-      var cumulativeNet = cumulativeGross - cumulativeRemovals;
-      var remaining = inputs.carbon_budget - cumulativeNet;
+    var ordered = inputs.quintile_values.slice().sort(function (a, b) { return a - b; });
+    var total = ordered.reduce(function (sum, value) { return sum + value; }, 0);
+    var groupSummary = ordered.map(function (value, index) { return { group: 'Quintile ' + (index + 1), observations: 1, weight: 0.2, weighted_mean: value, resource_share: total === 0 ? 0 : value / total, population_share: 0.2 }; });
+    var distribution = { schema_version: '1.0.0', analysis_type: 'distributional', indicator: 'household_resources', unit: 'resource_index', entity: inputs.entity, time: inputs.end_year, higher_is_better: true, summary: { observations: 5, total_weight: 1, weighted_mean: total / 5, weighted_median: ordered[2], p10: ordered[0], p40: ordered[1], p90: ordered[4], p90_p10_ratio: ordered[0] === 0 ? null : ordered[4] / ordered[0], gini: weightedGini(ordered), top_10_share: total === 0 ? 0 : ordered[4] / total, bottom_40_share: total === 0 ? 0 : (ordered[0] + ordered[1]) / total, palma_ratio: ordered[0] + ordered[1] === 0 ? null : ordered[4] / (ordered[0] + ordered[1]), social_floor: inputs.social_floor, share_below_social_floor: ordered.filter(function (value) { return value < inputs.social_floor; }).length / 5 }, group_summary: groupSummary, records: groupSummary.map(function (row) { return { value: row.weighted_mean, weight: row.weight, group: row.group }; }), meta: { created_at: new Date().toISOString(), interpretation: 'lower-tail shortfalls require review' } };
 
-      inventory.push({
-        region: 'Browser example', year: year, gross_emissions: gross, removals: removals,
-        net_emissions: net, gas: 'CO2e', source_category: 'total', energy: energy,
-        gdp: gdp, population: population
-      });
-      pathway.push({
-        region: 'Browser example', year: year, gross_emissions: gross, removals: removals,
-        net_emissions: net, cumulative_gross_emissions: cumulativeGross,
-        cumulative_removals: cumulativeRemovals, cumulative_net_emissions: cumulativeNet,
-        carbon_budget: inputs.carbon_budget, remaining_budget: remaining,
-        budget_share_used: inputs.carbon_budget === 0 ? (cumulativeNet <= 0 ? 0 : null) : cumulativeNet / inputs.carbon_budget,
-        within_budget: remaining >= 0, budget_status: remaining >= 0 ? 'within_budget' : 'overshoot'
-      });
-
-      var additions = inputs.annual_regeneration + inputs.annual_restoration;
-      var losses = inputs.annual_extraction + inputs.annual_degradation + inputs.annual_damages;
-      var closing = Math.max(0, opening + additions - losses);
-      natural.push({
-        entity: 'Browser example', time: year, opening_stock: opening,
-        regeneration: inputs.annual_regeneration, restoration: inputs.annual_restoration,
-        additions: 0, extraction: inputs.annual_extraction, degradation: inputs.annual_degradation,
-        damages: inputs.annual_damages, expected_closing_stock: closing, closing_stock: closing,
-        net_change: closing - opening, accounting_net_change: additions - losses,
-        reconciliation_error: 0, unit: 'natural_capital_index'
-      });
-      opening = closing;
-    }
-
-    var first = inventory[0];
-    var last = inventory[inventory.length - 1];
-    var factors0 = {
-      population: first.population,
-      affluence: first.gdp / first.population,
-      energy_intensity: first.energy / first.gdp,
-      carbon_intensity: first.gross_emissions / first.energy
-    };
-    var factors1 = {
-      population: last.population,
-      affluence: last.gdp / last.population,
-      energy_intensity: last.energy / last.gdp,
-      carbon_intensity: last.gross_emissions / last.energy
-    };
-    var weight = logarithmicMean(last.gross_emissions, first.gross_emissions);
-    var effects = {};
-    Object.keys(factors0).forEach(function (key) {
-      effects[key + '_effect'] = weight == null ? null : weight * Math.log(factors1[key] / factors0[key]);
-    });
-    var explained = Object.keys(effects).reduce(function (sum, key) { return sum + (effects[key] || 0); }, 0);
-    var change = last.gross_emissions - first.gross_emissions;
-    var kaya = {
-      method: 'additive_lmdi_kaya_identity',
-      contributions: [Object.assign({
-        region: 'Browser example', baseline_time: startYear, comparison_time: endYear,
-        baseline_emissions: first.gross_emissions, comparison_emissions: last.gross_emissions,
-        emissions_change: change
-      }, effects, { explained_change: explained, residual: change - explained, unit: 'emissions_index' })]
-    };
-
-    var cumulativeStatus = statusAtOrBelow(pathway[pathway.length - 1].cumulative_net_emissions, inputs.carbon_budget, 0.1);
-    var terminalStatus = statusAtOrBelow(last.net_emissions, inputs.target_net_emissions, 0.1);
-    var naturalStatus = statusAtOrAbove(natural[natural.length - 1].closing_stock, inputs.natural_capital_floor, 0.05);
-    var assessments = [
-      {
-        indicator: 'cumulative_net_emissions', value: pathway[pathway.length - 1].cumulative_net_emissions,
-        unit: 'emissions_index', boundary_id: 'declared-carbon-budget', boundary_title: 'Declared cumulative carbon budget',
-        direction: 'at_or_below', lower: null, upper: inputs.carbon_budget, status: cumulativeStatus.status,
-        distance: cumulativeStatus.distance, normalized_distance: cumulativeStatus.normalized_distance
-      },
-      {
-        indicator: 'terminal_net_emissions', value: last.net_emissions,
-        unit: 'emissions_index', boundary_id: 'target-net-emissions', boundary_title: 'Target net emissions',
-        direction: 'at_or_below', lower: null, upper: inputs.target_net_emissions, status: terminalStatus.status,
-        distance: terminalStatus.distance, normalized_distance: terminalStatus.normalized_distance
-      },
-      {
-        indicator: 'natural_capital_closing_stock', value: natural[natural.length - 1].closing_stock,
-        unit: 'natural_capital_index', boundary_id: 'natural-capital-floor', boundary_title: 'Natural-capital floor',
-        direction: 'at_or_above', lower: inputs.natural_capital_floor, upper: null, status: naturalStatus.status,
-        distance: naturalStatus.distance, normalized_distance: naturalStatus.normalized_distance
-      }
+    var componentScores = { wealth_per_capita: normalized(inclusiveWealth.per_capita_closing, 250, 350, 'higher'), adjusted_savings_rate: normalized(ans.adjusted_net_savings_percent_gni, -5, 15, 'higher'), human_development: normalized(hdi.human_development_index, 0.55, 0.9, 'higher'), natural_share: normalized(inclusiveWealth.natural_share, 0.15, 0.35, 'higher') };
+    var definitionComponents = [
+      { component: 'wealth_per_capita', weight: inputs.component_weights.wealth_per_capita, direction: 'higher', lower_bound: 250, upper_bound: 350 },
+      { component: 'adjusted_savings_rate', weight: inputs.component_weights.adjusted_savings_rate, direction: 'higher', lower_bound: -5, upper_bound: 15 },
+      { component: 'human_development', weight: inputs.component_weights.human_development, direction: 'higher', lower_bound: 0.55, upper_bound: 0.9 },
+      { component: 'natural_share', weight: inputs.component_weights.natural_share, direction: 'higher', lower_bound: 0.15, upper_bound: 0.35 }
     ];
+    var componentRows = definitionComponents.map(function (spec) { return Object.assign({}, spec, { raw_value: spec.component === 'wealth_per_capita' ? inclusiveWealth.per_capita_closing : spec.component === 'adjusted_savings_rate' ? ans.adjusted_net_savings_percent_gni : spec.component === 'human_development' ? hdi.human_development_index : inclusiveWealth.natural_share, normalized_score: componentScores[spec.component], weighted_contribution: 100 * componentScores[spec.component] * spec.weight }); });
+    var composite = { definition: { schema_version: '1.0.0', id: 'browser-inclusive-development-score', title: 'Browser inclusive development score', components: definitionComponents, missing_policy: 'error', meta: { normalization: 'bounded_min_max', score_range: [0, 100] } }, score: scoreWithWeights(componentScores, inputs.component_weights), component_scores: componentRows, weight_sensitivity: weightSensitivity(componentScores, inputs.component_weights) };
+    var intergenerational = { start_per_capita: inclusiveWealth.per_capita_opening, end_per_capita: inclusiveWealth.per_capita_closing, change: inclusiveWealth.per_capita_closing - inclusiveWealth.per_capita_opening, non_declining_signal: inclusiveWealth.per_capita_closing >= inclusiveWealth.per_capita_opening };
 
-    var overshoot = pathway.find(function (row) { return !row.within_budget; });
-    return {
-      schema_version: '1.5.0',
-      export_type: 'browser_climate_accounting',
-      demo_version: '1.5.0',
-      generated_at: new Date().toISOString(),
-      contract: CONTRACT,
-      inputs: inputs,
-      inventory: inventory,
-      carbon_pathway: pathway,
-      kaya_decomposition: kaya,
-      natural_capital_account: natural,
-      boundary_assessment: assessments,
-      diagnostics: {
-        cumulative_net_emissions: pathway[pathway.length - 1].cumulative_net_emissions,
-        remaining_budget: pathway[pathway.length - 1].remaining_budget,
-        overshoot_year: overshoot ? overshoot.year : null,
-        terminal_net_emissions: last.net_emissions,
-        natural_capital_closing_stock: natural[natural.length - 1].closing_stock,
-        stranded_pathway_signal: Boolean(overshoot || last.net_emissions > inputs.target_net_emissions)
-      },
-      review_boundary: {
-        educational_companion: true,
-        source_review_required: true,
-        budget_allocation_review_required: true,
-        natural_capital_valuation_review_required: true,
-        not_compliance_advice: true
-      }
-    };
+    return { schema_version: '1.6.0', export_type: 'browser_inclusive_development', demo_version: '1.6.0', generated_at: new Date().toISOString(), contract: CONTRACT, inputs: inputs, capital_accounts: capitalAccounts, inclusive_wealth: inclusiveWealth, adjusted_net_savings: ans, human_development: hdi, distribution: distribution, intergenerational: intergenerational, composite: composite, review_boundary: { shadow_prices_require_review: true, human_capital_measurement_requires_review: true, social_floor_requires_review: true, distribution_weights_require_review: true, composite_weights_require_review: true, not_compliance_or_professional_advice: true } };
   }
 
-  function drawChart(canvas, pathway) {
-    var rect = canvas.getBoundingClientRect();
-    var ratio = window.devicePixelRatio || 1;
-    var width = Math.max(520, Math.round(rect.width || 760));
-    var height = 280;
-    canvas.width = width * ratio;
-    canvas.height = height * ratio;
-    var ctx = canvas.getContext('2d');
-    ctx.scale(ratio, ratio);
-    ctx.clearRect(0, 0, width, height);
-    var pad = { left: 58, right: 20, top: 20, bottom: 42 };
-    var values = pathway.reduce(function (all, row) {
-      all.push(row.cumulative_net_emissions, row.carbon_budget);
-      return all;
-    }, [0]);
-    var min = Math.min.apply(null, values);
-    var max = Math.max.apply(null, values);
-    if (max === min) max = min + 1;
-    var x = function (i) { return pad.left + i * (width - pad.left - pad.right) / Math.max(1, pathway.length - 1); };
-    var y = function (v) { return pad.top + (max - v) * (height - pad.top - pad.bottom) / (max - min); };
-
-    ctx.strokeStyle = '#d9d5cf'; ctx.lineWidth = 1;
-    for (var g = 0; g <= 4; g += 1) {
-      var gy = pad.top + g * (height - pad.top - pad.bottom) / 4;
-      ctx.beginPath(); ctx.moveTo(pad.left, gy); ctx.lineTo(width - pad.right, gy); ctx.stroke();
-    }
-    ctx.fillStyle = '#5f5b56'; ctx.font = '11px Montserrat, Arial';
-    ctx.textAlign = 'right';
-    for (var t = 0; t <= 4; t += 1) {
-      var val = max - t * (max - min) / 4;
-      ctx.fillText(format(val, 0), pad.left - 8, pad.top + t * (height - pad.top - pad.bottom) / 4 + 4);
-    }
-    ctx.textAlign = 'center';
-    var labelStep = Math.max(1, Math.ceil(pathway.length / 6));
-    pathway.forEach(function (row, i) {
-      if (i % labelStep === 0 || i === pathway.length - 1) ctx.fillText(String(row.year), x(i), height - 17);
+  function drawChart(canvas, analysis) {
+    var ratio = window.devicePixelRatio || 1, width = Math.max(520, Math.round(canvas.getBoundingClientRect().width || 760)), height = 280;
+    canvas.width = width * ratio; canvas.height = height * ratio;
+    var ctx = canvas.getContext('2d'); ctx.scale(ratio, ratio); ctx.clearRect(0, 0, width, height);
+    var types = ['produced','human','natural'], labels = ['Produced','Human','Natural'];
+    var values = types.reduce(function (all, key) { all.push(analysis.capital_accounts[key].opening_value, analysis.capital_accounts[key].closing_value); return all; }, [0]);
+    var max = Math.max.apply(null, values) * 1.12, base = height - 42, chartHeight = height - 72, groupWidth = (width - 80) / types.length;
+    ctx.strokeStyle = '#d9d5cf'; ctx.beginPath(); ctx.moveTo(52, base); ctx.lineTo(width - 20, base); ctx.stroke();
+    types.forEach(function (key, i) {
+      var x = 60 + i * groupWidth, opening = analysis.capital_accounts[key].opening_value, closing = analysis.capital_accounts[key].closing_value;
+      var openHeight = chartHeight * opening / max, closeHeight = chartHeight * closing / max;
+      ctx.fillStyle = '#d7d3cd'; ctx.fillRect(x, base - openHeight, groupWidth * 0.28, openHeight);
+      ctx.fillStyle = '#701f2b'; ctx.fillRect(x + groupWidth * 0.34, base - closeHeight, groupWidth * 0.28, closeHeight);
+      ctx.fillStyle = '#111'; ctx.font = '11px Montserrat, Arial'; ctx.textAlign = 'center'; ctx.fillText(labels[i], x + groupWidth * 0.31, base + 18);
+      ctx.fillText(format(closing, 0), x + groupWidth * 0.48, base - closeHeight - 7);
     });
-
-    ctx.strokeStyle = '#701f2b'; ctx.lineWidth = 2.5; ctx.beginPath();
-    pathway.forEach(function (row, i) { if (i === 0) ctx.moveTo(x(i), y(row.cumulative_net_emissions)); else ctx.lineTo(x(i), y(row.cumulative_net_emissions)); });
-    ctx.stroke();
-    ctx.strokeStyle = '#111111'; ctx.lineWidth = 1.5; ctx.setLineDash([7, 5]); ctx.beginPath();
-    pathway.forEach(function (row, i) { if (i === 0) ctx.moveTo(x(i), y(row.carbon_budget)); else ctx.lineTo(x(i), y(row.carbon_budget)); });
-    ctx.stroke(); ctx.setLineDash([]);
-    ctx.textAlign = 'left'; ctx.fillStyle = '#701f2b'; ctx.fillText('Cumulative net emissions', pad.left, 13);
-    ctx.fillStyle = '#111111'; ctx.fillText('Declared budget', pad.left + 170, 13);
+    ctx.textAlign = 'left'; ctx.fillStyle = '#5f5b56'; ctx.fillText('Opening', 52, 16); ctx.fillStyle = '#701f2b'; ctx.fillText('Closing', 115, 16);
   }
 
   function render(root, analysis) {
-    root.querySelector('[data-scar-cumulative]').textContent = format(analysis.diagnostics.cumulative_net_emissions, 1);
-    root.querySelector('[data-scar-remaining]').textContent = format(analysis.diagnostics.remaining_budget, 1);
-    root.querySelector('[data-scar-overshoot]').textContent = analysis.diagnostics.overshoot_year == null ? 'None' : String(analysis.diagnostics.overshoot_year);
-    root.querySelector('[data-scar-natural]').textContent = format(analysis.diagnostics.natural_capital_closing_stock, 1);
-
-    var budgetStatus = root.querySelector('[data-scar-budget-status]');
-    var budgetBoundary = analysis.boundary_assessment[0];
-    budgetStatus.textContent = budgetBoundary.status.replace('_', ' ');
-    budgetStatus.dataset.state = budgetBoundary.status;
-    var reconciliation = root.querySelector('[data-scar-reconciliation]');
-    reconciliation.textContent = 'Reconciled';
-    reconciliation.dataset.state = 'within';
-
-    drawChart(root.querySelector('[data-scar-chart]'), analysis.carbon_pathway);
-
-    var contribution = analysis.kaya_decomposition.contributions[0];
-    var kayaFields = [
-      ['Population', contribution.population_effect],
-      ['Affluence', contribution.affluence_effect],
-      ['Energy intensity', contribution.energy_intensity_effect],
-      ['Carbon intensity', contribution.carbon_intensity_effect]
-    ];
-    root.querySelector('[data-scar-kaya]').innerHTML = kayaFields.map(function (entry) {
-      return '<article><span>' + entry[0] + '</span><strong>' + (entry[1] >= 0 ? '+' : '') + format(entry[1], 2) + '</strong></article>';
-    }).join('');
-
-    root.querySelector('[data-scar-natural-table]').innerHTML = analysis.natural_capital_account.map(function (row) {
-      var additions = row.regeneration + row.restoration + row.additions;
-      var losses = row.extraction + row.degradation + row.damages;
-      return '<tr><td>' + row.time + '</td><td>' + format(row.opening_stock, 1) + '</td><td>' + format(additions, 1) + '</td><td>' + format(losses, 1) + '</td><td>' + format(row.closing_stock, 1) + '</td><td>' + (row.net_change >= 0 ? '+' : '') + format(row.net_change, 1) + '</td></tr>';
-    }).join('');
-
-    root.querySelector('[data-scar-boundaries]').innerHTML = analysis.boundary_assessment.map(function (row) {
-      var detail = row.direction === 'at_or_below' ? 'Limit ' + format(row.upper, 1) : 'Floor ' + format(row.lower, 1);
-      return '<article class="scar-demo__boundary" data-state="' + row.status + '"><strong>' + row.boundary_title + '</strong><span>' + row.status.toUpperCase() + ' · Value ' + format(row.value, 1) + ' · ' + detail + '</span></article>';
-    }).join('');
+    root.querySelector('[data-scar-wealth]').textContent = format(analysis.inclusive_wealth.closing, 1);
+    root.querySelector('[data-scar-per-capita]').textContent = format(analysis.inclusive_wealth.per_capita_closing, 1);
+    root.querySelector('[data-scar-ans]').textContent = format(analysis.adjusted_net_savings.adjusted_net_savings_percent_gni, 2) + '%';
+    root.querySelector('[data-scar-score]').textContent = format(analysis.composite.score, 1);
+    var generation = root.querySelector('[data-scar-generation]'); generation.textContent = analysis.intergenerational.non_declining_signal ? 'Non-declining' : 'Declining'; generation.dataset.state = analysis.intergenerational.non_declining_signal ? 'within' : 'breached';
+    drawChart(root.querySelector('[data-scar-chart]'), analysis);
+    root.querySelector('[data-scar-composition]').innerHTML = ['produced','human','natural'].map(function (key) { return '<article><span>' + key + '</span><strong>' + format(100 * analysis.inclusive_wealth[key + '_share'], 1) + '%</strong></article>'; }).join('');
+    var ans = analysis.adjusted_net_savings;
+    root.querySelector('[data-scar-ans-ledger]').innerHTML = [
+      ['Gross savings', ans.gross_savings, 'add'], ['Education + health', ans.human_capital_investment, 'add'], ['Depreciation', -ans.produced_capital_depreciation, 'subtract'], ['Resource depletion', -ans.natural_resource_depletion, 'subtract'], ['Pollution + climate', -(ans.pollution_damages + ans.climate_damages), 'subtract'], ['Adjusted Net Savings', ans.adjusted_net_savings, 'total']
+    ].map(function (row) { return '<div data-kind="' + row[2] + '"><span>' + row[0] + '</span><strong>' + (row[1] > 0 && row[2] !== 'total' ? '+' : '') + format(row[1], 1) + '</strong></div>'; }).join('');
+    var hdi = analysis.human_development;
+    root.querySelector('[data-scar-hdi]').innerHTML = [['Life expectancy',hdi.life_expectancy_index],['Education',hdi.education_index],['Income',hdi.income_index],['Combined HDI',hdi.human_development_index]].map(function (row) { return '<article><span>' + row[0] + '</span><div><i style="width:' + (100 * row[1]) + '%"></i></div><strong>' + format(row[1], 3) + '</strong></article>'; }).join('');
+    var floor = root.querySelector('[data-scar-floor]'); floor.textContent = format(100 * analysis.distribution.summary.share_below_social_floor, 0) + '% below floor'; floor.dataset.state = analysis.distribution.summary.share_below_social_floor > 0.2 ? 'breached' : analysis.distribution.summary.share_below_social_floor > 0 ? 'warning' : 'within';
+    var maxValue = Math.max.apply(null, analysis.inputs.quintile_values.concat([1]));
+    root.querySelector('[data-scar-distribution]').innerHTML = analysis.distribution.group_summary.map(function (row) { var below = row.weighted_mean < analysis.inputs.social_floor; return '<article data-state="' + (below ? 'below' : 'above') + '"><span>' + row.group + '</span><div><i style="width:' + (100 * row.weighted_mean / maxValue) + '%"></i></div><strong>' + format(row.weighted_mean, 1) + '</strong></article>'; }).join('');
+    root.querySelector('[data-scar-distribution-metrics]').innerHTML = '<span>Gini <strong>' + format(analysis.distribution.summary.gini, 3) + '</strong></span><span>Palma <strong>' + format(analysis.distribution.summary.palma_ratio, 2) + '</strong></span><span>P90/P10 <strong>' + format(analysis.distribution.summary.p90_p10_ratio, 2) + '</strong></span>';
+    var sensitivitySpread = Math.max.apply(null, analysis.composite.weight_sensitivity.map(function (row) { return Math.abs(row.score - analysis.composite.score); }));
+    var sensitivity = root.querySelector('[data-scar-sensitivity]'); sensitivity.textContent = 'Max shift ' + format(sensitivitySpread, 1); sensitivity.dataset.state = sensitivitySpread > 8 ? 'breached' : sensitivitySpread > 4 ? 'warning' : 'within';
+    root.querySelector('[data-scar-components]').innerHTML = analysis.composite.component_scores.map(function (row) { return '<article><div><span>' + row.component.replaceAll('_',' ') + '</span><small>Weight ' + format(100 * row.weight, 0) + '%</small></div><strong>' + format(row.weighted_contribution, 1) + '</strong><div class="scar-demo__component-bar"><i style="width:' + (100 * row.normalized_score) + '%"></i></div></article>'; }).join('');
   }
 
   function downloadJSON(data) {
     var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    var url = URL.createObjectURL(blob);
-    var link = document.createElement('a');
-    link.href = url;
-    link.download = 'catalyst-analytics-r-climate-accounting.json';
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
+    var url = URL.createObjectURL(blob), link = document.createElement('a');
+    link.href = url; link.download = 'catalyst-analytics-r-inclusive-development.json'; document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url);
   }
-
   function init(root) {
-    var form = root.querySelector('[data-scar-form]');
-    var latest = null;
-    function run(event) {
-      if (event) event.preventDefault();
-      try {
-        latest = buildAnalysis(form);
-        render(root, latest);
-      } catch (error) {
-        window.alert(error.message);
-      }
-    }
+    var form = root.querySelector('[data-scar-form]'), latest = null;
+    function run(event) { if (event) event.preventDefault(); try { latest = buildAnalysis(form); render(root, latest); } catch (error) { window.alert(error.message); } }
     form.addEventListener('submit', run);
-    root.querySelector('[data-scar-download]').addEventListener('click', function () {
-      if (!latest) run();
-      if (latest) downloadJSON(latest);
-    });
-    root.querySelector('[data-scar-reset]').addEventListener('click', function () {
-      form.reset();
-      run();
-    });
-    window.addEventListener('resize', function () { if (latest) drawChart(root.querySelector('[data-scar-chart]'), latest.carbon_pathway); });
+    root.querySelector('[data-scar-download]').addEventListener('click', function () { if (!latest) run(); if (latest) downloadJSON(latest); });
+    root.querySelector('[data-scar-reset]').addEventListener('click', function () { form.reset(); run(); });
+    window.addEventListener('resize', function () { if (latest) drawChart(root.querySelector('[data-scar-chart]'), latest); });
     run();
   }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('[data-scar-demo]').forEach(init);
-  });
+  document.addEventListener('DOMContentLoaded', function () { document.querySelectorAll('[data-scar-demo]').forEach(init); });
 }());

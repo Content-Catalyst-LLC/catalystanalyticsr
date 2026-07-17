@@ -1,21 +1,15 @@
 # WordPress Browser Companion
 
-## Plugin v1.5.0
+Plugin version `1.6.0` is compatible with Catalyst Analytics R `0.7.0`.
 
-The public companion demonstrates the Catalyst Analytics R v0.6.0 climate-accounting contracts.
+The shortcode `[catalyst_analytics_r_demo]` renders a deterministic inclusive-development interface with:
 
-Users can declare a synthetic time horizon, starting emissions, decarbonization rate, removals pathway, carbon budget, target net emissions, Kaya drivers, and natural-capital flows. The interface calculates:
+- produced, human, and natural capital values
+- inclusive wealth and per-capita change
+- Adjusted Net Savings decomposition
+- human-development dimensions
+- quintile distribution and social-floor diagnostics
+- composite-score component trace and weight sensitivity
+- canonical JSON export
 
-- Annual gross, removal, and net emissions
-- Cumulative net emissions and remaining budget
-- First overshoot year
-- Kaya population, affluence, energy-intensity, and carbon-intensity effects
-- Natural-capital opening and closing stocks
-- Carbon-budget, target-net, and natural-capital boundary status
-- A governed JSON export
-
-The browser export schema is 1.5.0 and declares compatibility with repository version 0.6.0.
-
-## Interpretation boundary
-
-The companion does not execute R. It does not verify source inventories, determine gas coverage or GWP basis, allocate a global carbon budget, value natural capital, establish compliance, or provide professional advice.
+The browser does not execute R and does not claim numerical parity with arbitrary package analyses.

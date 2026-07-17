@@ -1,0 +1,423 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_inclusive_development.schema.json",
+  "title": "Catalyst Analytics R Inclusive Development Contract",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_type",
+    "id",
+    "title",
+    "summary",
+    "wealth",
+    "adjusted_net_savings",
+    "human_development",
+    "distribution",
+    "intergenerational",
+    "composite",
+    "meta",
+    "review_boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_type": {
+      "const": "inclusive_wealth_human_development_distribution"
+    },
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "array",
+      "minItems": 1
+    },
+    "wealth": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_wealth.schema.json",
+      "title": "Catalyst Analytics R Wealth Contract",
+      "type": "object",
+      "required": [
+        "schema_version",
+        "id",
+        "title",
+        "data",
+        "capital_accounts",
+        "meta"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "data": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "entity",
+              "time",
+              "produced_capital_value",
+              "human_capital_value",
+              "natural_capital_value",
+              "inclusive_wealth",
+              "inclusive_wealth_per_capita"
+            ],
+            "properties": {
+              "entity": {
+                "type": "string"
+              },
+              "time": {},
+              "produced_capital_value": {
+                "type": "number"
+              },
+              "human_capital_value": {
+                "type": "number"
+              },
+              "natural_capital_value": {
+                "type": "number"
+              },
+              "inclusive_wealth": {
+                "type": "number"
+              },
+              "inclusive_wealth_per_capita": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "capital_accounts": {
+          "type": "object",
+          "required": [
+            "produced",
+            "human",
+            "natural"
+          ],
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "schema_version",
+              "capital_type",
+              "data"
+            ],
+            "properties": {
+              "schema_version": {
+                "const": "1.0.0"
+              },
+              "capital_type": {
+                "enum": [
+                  "produced",
+                  "human",
+                  "natural"
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "entity",
+                    "time",
+                    "capital_type",
+                    "opening_stock",
+                    "closing_stock",
+                    "reconciliation_error",
+                    "shadow_price",
+                    "opening_value",
+                    "closing_value"
+                  ],
+                  "properties": {
+                    "entity": {
+                      "type": "string"
+                    },
+                    "time": {},
+                    "capital_type": {
+                      "enum": [
+                        "produced",
+                        "human",
+                        "natural"
+                      ]
+                    },
+                    "opening_stock": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "closing_stock": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "reconciliation_error": {
+                      "type": "number"
+                    },
+                    "shadow_price": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    },
+                    "opening_value": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "closing_value": {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "meta": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": true
+    },
+    "adjusted_net_savings": {
+      "type": "array"
+    },
+    "human_development": {
+      "type": "array"
+    },
+    "distribution": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_distribution.schema.json",
+      "title": "Catalyst Analytics R Distribution Contract",
+      "type": "object",
+      "required": [
+        "schema_version",
+        "analysis_type",
+        "indicator",
+        "summary",
+        "group_summary"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "analysis_type": {
+          "const": "distributional"
+        },
+        "indicator": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "object",
+          "required": [
+            "weighted_mean",
+            "gini",
+            "top_10_share",
+            "bottom_40_share",
+            "share_below_social_floor"
+          ],
+          "properties": {
+            "weighted_mean": {
+              "type": "number"
+            },
+            "gini": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "top_10_share": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "bottom_40_share": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "share_below_social_floor": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "group_summary": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "group",
+              "resource_share",
+              "population_share"
+            ],
+            "properties": {
+              "group": {
+                "type": "string"
+              },
+              "resource_share": {
+                "type": "number"
+              },
+              "population_share": {
+                "type": "number"
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "intergenerational": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "analysis_type",
+        "trajectory",
+        "summary"
+      ]
+    },
+    "composite": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_composite_score.schema.json",
+      "title": "Catalyst Analytics R Composite Score Contract",
+      "type": "object",
+      "required": [
+        "schema_version",
+        "definition",
+        "scores",
+        "components",
+        "trace"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "definition": {
+          "type": "object",
+          "required": [
+            "id",
+            "title",
+            "components",
+            "missing_policy"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "components": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": [
+                  "component",
+                  "weight",
+                  "direction",
+                  "lower_bound",
+                  "upper_bound"
+                ],
+                "properties": {
+                  "component": {
+                    "type": "string"
+                  },
+                  "weight": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "direction": {
+                    "enum": [
+                      "higher",
+                      "lower"
+                    ]
+                  },
+                  "lower_bound": {
+                    "type": "number"
+                  },
+                  "upper_bound": {
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "missing_policy": {
+              "enum": [
+                "error",
+                "renormalize",
+                "zero"
+              ]
+            }
+          },
+          "additionalProperties": true
+        },
+        "scores": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "composite_score"
+            ],
+            "properties": {
+              "composite_score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "components": {
+          "type": "array"
+        },
+        "trace": {
+          "type": "object",
+          "required": [
+            "formula",
+            "normalization",
+            "missing_policy"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "meta": {
+      "type": "object"
+    },
+    "review_boundary": {
+      "type": "object",
+      "required": [
+        "shadow_prices_require_review",
+        "human_capital_measurement_requires_review",
+        "social_floor_requires_review",
+        "distribution_weights_require_review",
+        "composite_weights_require_review",
+        "not_compliance_or_professional_advice"
+      ],
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    }
+  },
+  "additionalProperties": true
+}

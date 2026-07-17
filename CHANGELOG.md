@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.0 - Inclusive Wealth, Human Development, and Distribution
+
+- Added produced-, human-, and natural-capital stock-and-flow accounts with reconciliation and declared shadow prices.
+- Added inclusive-wealth totals, capital composition, per-capita wealth, and intergenerational trajectories.
+- Added Adjusted Net Savings decomposition and human-development dimension indices.
+- Added weighted distribution, social-floor, Gini, Palma, and group-share diagnostics.
+- Added transparent composite-score definitions, normalization trace, and weight sensitivity.
+- Added integrated inclusive-development exports, schemas, fixtures, documentation, and WordPress demo v1.6.0.
+
 ## 0.6.0 - Climate, Carbon, and Natural-Capital Accounting
 
 - Added governed greenhouse-gas inventories with gross emissions, removals, net emissions, source, unit, GWP basis, and scope records.

@@ -101,3 +101,30 @@ The layer preserves the source-to-formula-to-output chain and keeps causal or au
 - `R/climate_accounting.R` assembles the governed analysis object.
 - `R/export_climate_accounting.R` produces portable accounting bundles.
 - `schemas/catalyst_analytics_r_*climate*.schema.json` governs machine-readable exchange.
+
+## Inclusive-development layer - v0.7.0
+
+```text
+capital stock-and-flow accounts
+        |
+        +--> produced capital
+        +--> human capital
+        +--> natural capital
+        |
+        v
+inclusive wealth and per-capita wealth
+        |
+        +--> Adjusted Net Savings
+        +--> human-development dimensions
+        +--> distribution and social floor
+        +--> intergenerational trajectory
+        +--> composite score and weight sensitivity
+        |
+        v
+inclusive_development_analysis()
+        |
+        v
+export_inclusive_development()
+```
+
+The layer preserves valuation, weighting, normalization, and interpretation choices rather than presenting them as objective facts.

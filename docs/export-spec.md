@@ -87,3 +87,25 @@ The manifest records the package version, dataset fingerprint, source id, dimens
 - `brief.md`
 
 The manifest declares contract versions, source fingerprints, accounting basis, included modules, overshoot and stranded-pathway counts, human-review boundaries, and file checksums.
+
+## Inclusive-development bundles - v0.7.0
+
+`export_inclusive_development()` writes:
+
+- `inclusive-development.json`
+- `inclusive-wealth.csv`
+- `capital-account-summary.csv`
+- `adjusted-net-savings.csv`
+- `human-development.csv`
+- `distribution-analysis.json`
+- `distribution-groups.csv`
+- `intergenerational-analysis.json`
+- `intergenerational-trajectory.csv`
+- `composite-score.json`
+- `composite-scores.csv`
+- `composite-components.csv`
+- `inclusive-development-brief.md`
+- `manifest.json`
+- optional ZIP bundle
+
+The export retains capital reconciliation, shadow prices, population, savings additions and deductions, development goalposts, distribution weights, social floors, composite definitions, contribution trace, and weight sensitivity.
