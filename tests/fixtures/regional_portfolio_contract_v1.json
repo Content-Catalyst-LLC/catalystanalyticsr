@@ -1,0 +1,18 @@
+{
+  "contract": "regional_sector_portfolio_v1",
+  "repository_version": "1.2.0",
+  "plugin_version": "2.2.0",
+  "portfolio_id": "transition-portfolio",
+  "expected": {
+    "members": 2,
+    "weighted_gdp": 108,
+    "weighted_emissions": 36.4,
+    "north_overshoot": true,
+    "sector_status": "absolute_decoupling"
+  },
+  "boundaries": [
+    "regional comparability requires unit review",
+    "portfolio weights do not authorize allocation",
+    "human review is required"
+  ]
+}

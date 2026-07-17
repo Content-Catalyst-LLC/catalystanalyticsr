@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Regional portfolio export manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "export_type",
+    "analysis_id",
+    "package",
+    "file_count",
+    "files",
+    "integrity",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "export_type": {
+      "const": "regional_sector_portfolio_analytics_bundle"
+    },
+    "analysis_id": {
+      "type": "string"
+    },
+    "package": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "file_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "files": {
+      "type": "array"
+    },
+    "integrity": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object"
+    }
+  }
+}

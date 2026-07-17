@@ -74,6 +74,14 @@
       workspace$libraries$parameter_sets[[id]] <- entry
     }
   }
+  if (is.null(workspace$libraries$regional_portfolios)) workspace$libraries$regional_portfolios <- list()
+  if (length(workspace$libraries$regional_portfolios)) {
+    workspace$libraries$regional_portfolios <- lapply(workspace$libraries$regional_portfolios, function(portfolio) {
+      if (inherits(portfolio, "catalyst_regional_portfolio")) return(portfolio)
+      portfolio$members <- lapply(portfolio$members, .as_portfolio_member)
+      structure(portfolio, class = c("catalyst_regional_portfolio", "list"))
+    })
+  }
   if (length(workspace$libraries$policy_packages)) {
     for (id in names(workspace$libraries$policy_packages)) {
       entry <- workspace$libraries$policy_packages[[id]]
@@ -114,7 +122,7 @@ catalyst_workspace <- function(workspace_id, title, description = "", owner = ""
     tags = unique(tags[nzchar(trimws(tags))]),
     active_project_id = NULL,
     projects = list(),
-    libraries = list(scenarios = list(), parameter_sets = list(), policy_packages = list()),
+    libraries = list(scenarios = list(), parameter_sets = list(), policy_packages = list(), regional_portfolios = list()),
     snapshots = list(),
     activity = list(),
     metadata = utils::modifyList(list(
@@ -166,6 +174,10 @@ validate_catalyst_workspace <- function(workspace) {
     if (!is.list(entry) || is.null(entry$id) || is.null(entry$scenario_ids) || is.null(entry$parameter_set_ids)) stop("Policy package entry is incomplete.", call. = FALSE)
     if (length(setdiff(entry$scenario_ids, names(workspace$libraries$scenarios)))) stop("Policy package references an unknown scenario.", call. = FALSE)
     if (length(setdiff(entry$parameter_set_ids, names(workspace$libraries$parameter_sets)))) stop("Policy package references an unknown parameter set.", call. = FALSE)
+  }
+  if (!is.null(workspace$libraries$regional_portfolios)) {
+    .workspace_named_list(workspace$libraries$regional_portfolios, "workspace$libraries$regional_portfolios")
+    invisible(lapply(workspace$libraries$regional_portfolios, validate_regional_portfolio))
   }
   if (!is.list(workspace$snapshots) || !is.list(workspace$activity) || !is.list(workspace$metadata)) stop("Workspace snapshots, activity, and metadata must be lists.", call. = FALSE)
   restored_fingerprint <- workspace[[".restored_workspace_fingerprint", exact = TRUE]]
@@ -486,7 +498,8 @@ workspace_compare_projects <- function(workspace, project_ids = names(workspace$
     projects = lapply(workspace$projects, function(project) list(id = project$id, fingerprint = project_fingerprint(project))),
     scenario_library = lapply(workspace$libraries$scenarios, function(entry) list(id = entry$id, fingerprint = entry$fingerprint)),
     parameter_library = lapply(workspace$libraries$parameter_sets, function(entry) list(id = entry$id, hash = entry$hash)),
-    policy_packages = lapply(workspace$libraries$policy_packages, function(entry) list(id = entry$id, hash = entry$hash))
+    policy_packages = lapply(workspace$libraries$policy_packages, function(entry) list(id = entry$id, hash = entry$hash)),
+    regional_portfolios = lapply(workspace$libraries$regional_portfolios, function(entry) list(id = entry$id, fingerprint = .project_hash(entry)))
   )
 }
 
@@ -578,12 +591,13 @@ workspace_manifest <- function(workspace) {
     counts = list(
       projects = length(workspace$projects), scenarios = length(workspace$libraries$scenarios),
       parameter_sets = length(workspace$libraries$parameter_sets), policy_packages = length(workspace$libraries$policy_packages),
-      runs = nrow(workspace_run_history(workspace)), snapshots = length(workspace$snapshots)
+      regional_portfolios = length(workspace$libraries$regional_portfolios), runs = nrow(workspace_run_history(workspace)), snapshots = length(workspace$snapshots)
     ),
     projects = lapply(workspace$projects, function(project) list(id = project$id, title = project$title, fingerprint = project_fingerprint(project), review_status = project$metadata$review_status, publication_status = project$metadata$publication_status)),
     scenario_library = lapply(workspace$libraries$scenarios, function(entry) entry[c("id", "title", "description", "tags", "source_project_id", "fingerprint")]),
     parameter_library = lapply(workspace$libraries$parameter_sets, function(entry) entry[c("id", "model", "description", "tags", "source_project_id", "hash")]),
     policy_packages = workspace$libraries$policy_packages,
+    regional_portfolios = lapply(workspace$libraries$regional_portfolios, function(portfolio) list(id=portfolio$id,title=portfolio$title,members=length(portfolio$members),fingerprint=.project_hash(portfolio))),
     snapshots = lapply(workspace$snapshots, function(entry) entry[c("id", "note", "created_at", "workspace_fingerprint")]),
     metadata = workspace$metadata
   )
@@ -644,6 +658,7 @@ workspace_from_json <- function(path) {
     paste0("- Scenarios: ", length(workspace$libraries$scenarios)),
     paste0("- Parameter sets: ", length(workspace$libraries$parameter_sets)),
     paste0("- Policy packages: ", length(workspace$libraries$policy_packages)),
+    paste0("- Regional portfolios: ", length(workspace$libraries$regional_portfolios)),
     paste0("- Consolidated run records: ", nrow(history)),
     paste0("- Workspace snapshots: ", length(workspace$snapshots)), "",
     "## Boundary", "A workspace preserves reusable analytical records and restoration history. It does not establish model validity, publication approval, or decision authority."
@@ -689,6 +704,8 @@ export_workspace <- function(workspace, dir = ".", prefix = "catalyst-workspace"
   paths$project_index <- file.path(bundle_dir, "project-index.csv"); utils::write.csv(.workspace_index_or_empty(project_index, c("project_id", "title", "fingerprint", "scenarios", "datasets", "runs", "completed_runs", "failed_runs", "review_status", "publication_status")), paths$project_index, row.names = FALSE)
   paths$scenario_library <- file.path(bundle_dir, "scenario-library.csv"); utils::write.csv(.workspace_index_or_empty(scenario_index, c("id", "scenario_id", "title", "role", "model", "fingerprint")), paths$scenario_library, row.names = FALSE)
   paths$parameter_library <- file.path(bundle_dir, "parameter-library.csv"); utils::write.csv(parameter_index, paths$parameter_library, row.names = FALSE)
+  portfolio_index <- if (!length(workspace$libraries$regional_portfolios)) data.frame(id=character(),title=character(),members=integer(),fingerprint=character(),stringsAsFactors=FALSE) else do.call(rbind,lapply(workspace$libraries$regional_portfolios,function(portfolio)data.frame(id=portfolio$id,title=portfolio$title,members=length(portfolio$members),fingerprint=.project_hash(portfolio),stringsAsFactors=FALSE)))
+  paths$regional_portfolios <- file.path(bundle_dir, "regional-portfolios.csv"); utils::write.csv(portfolio_index, paths$regional_portfolios, row.names = FALSE)
   paths$run_history <- file.path(bundle_dir, "run-history.csv"); utils::write.csv(.workspace_index_or_empty(history, c("project_id", "project_title", "run_id", "label", "status", "created_at", "input_hash", "output_hash", "review_status")), paths$run_history, row.names = FALSE)
   paths$readme <- file.path(bundle_dir, "README.md"); writeLines(.workspace_markdown(workspace), paths$readme, useBytes = TRUE)
   files <- list.files(bundle_dir, recursive = TRUE, full.names = TRUE, all.files = FALSE)
@@ -715,6 +732,31 @@ export_workspace <- function(workspace, dir = ".", prefix = "catalyst-workspace"
     utils::zip(zipfile = basename(paths$zip), files = prefix)
   }
   paths
+}
+
+
+#' Add a reusable regional portfolio to a workspace
+#' @param workspace A workspace.
+#' @param portfolio Regional portfolio.
+#' @param replace Replace an existing portfolio.
+#' @return Updated workspace.
+#' @export
+workspace_add_regional_portfolio <- function(workspace, portfolio, replace=FALSE) {
+  validate_catalyst_workspace(workspace); validate_regional_portfolio(portfolio); .assert_flag(replace,"replace")
+  if (is.null(workspace$libraries$regional_portfolios)) workspace$libraries$regional_portfolios <- list()
+  if (!is.null(workspace$libraries$regional_portfolios[[portfolio$id]]) && !replace) stop("Regional portfolio already exists in the workspace.",call.=FALSE)
+  workspace$libraries$regional_portfolios[[portfolio$id]] <- portfolio
+  .workspace_touch(workspace,"regional_portfolio_added",list(portfolio_id=portfolio$id))
+}
+
+#' Retrieve a reusable regional portfolio
+#' @param workspace A workspace.
+#' @param portfolio_id Portfolio identifier.
+#' @return A regional portfolio.
+#' @export
+workspace_get_regional_portfolio <- function(workspace, portfolio_id) {
+  validate_catalyst_workspace(workspace); .workspace_id(portfolio_id,"portfolio_id")
+  portfolio <- workspace$libraries$regional_portfolios[[portfolio_id]]; if(is.null(portfolio))stop("Regional portfolio is not present in the workspace.",call.=FALSE); portfolio
 }
 
 #' @export

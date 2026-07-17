@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.2.0 - Regional, Sector, and Portfolio Analytics
+
+### v1.2.0 R CMD check repair
+
+- Normalize omitted and JSON `null` regional portfolio `price_year` values to `NA_integer_`.
+- Make regional portfolio construction and validation safely accept nullable price years.
+- Add regression coverage for null, omitted, non-scalar, and out-of-range price years.
+
+- Added governed geography and sector scopes.
+- Added scoped scenario mapping and reusable regional portfolio members.
+- Added weighted portfolio aggregation and multi-region ranking.
+- Added regional carbon-budget pathways and sector transition diagnostics.
+- Added workspace regional-portfolio libraries and portable analytics export.
+- Added WordPress companion v2.2.0.
+
 ## 1.1.0 - Saved Workspaces and Scenario Libraries
 
 ### R CMD check workspace snapshot fingerprint repair

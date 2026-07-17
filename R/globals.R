@@ -8,7 +8,7 @@ if (getRversion() >= "2.15.1") utils::globalVariables(c(
   "opening_value", "closing_value", "inclusive_wealth", "inclusive_wealth_per_capita",
   "generation_index", "normalized_score", "weighted_contribution",
   "series", "predicted", "residual", "split", "method", "step",
-  "max_absolute_terminal_error"
+  "max_absolute_terminal_error", "member_id", "geography_id", "remaining_budget"
 ))
 
 #' Internal constants for catalystanalyticsr
@@ -46,7 +46,9 @@ catalyst_globals <- function(dummy = NULL) {
     calibration_schema_version = "1.0.0",
     model_validation_schema_version = "1.0.0",
     model_governance_schema_version = "1.0.0",
-    demo_export_schema_version = "1.7.0"
+    regional_portfolio_schema_version = "1.0.0",
+    regional_portfolio_analysis_schema_version = "1.0.0",
+    demo_export_schema_version = "2.2.0"
   )
 }
 

@@ -1,6 +1,6 @@
 test_that("v1 API manifest declares stable contracts", {
   manifest <- catalyst_api_manifest()
-  expect_identical(manifest$package$version, "1.1.0")
+  expect_identical(manifest$package$version, "1.2.0")
   expect_true(all(c("catalyst_scenario", "run_uncertainty", "export_project_publication", "catalyst_workspace", "export_workspace") %in% manifest$stable))
   expect_identical(manifest$contract_versions$release_readiness, "1.0.0")
 })
@@ -17,8 +17,8 @@ test_that("release readiness fails closed", {
 
 test_that("compatibility manifest maps WordPress companion", {
   compatibility <- catalyst_compatibility_manifest()
-  expect_identical(compatibility$wordpress$version, "2.1.0")
-  expect_identical(compatibility$wordpress$compatible_repository_version, "1.1.0")
+  expect_identical(compatibility$wordpress$version, "2.2.0")
+  expect_identical(compatibility$wordpress$compatible_repository_version, "1.2.0")
   expect_true("1.0.0" %in% compatibility$supported_inputs$project)
   expect_true("1.0.0" %in% compatibility$supported_inputs$workspace)
 })

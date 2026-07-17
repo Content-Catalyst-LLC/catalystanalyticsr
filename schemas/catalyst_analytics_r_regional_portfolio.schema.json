@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Catalyst Analytics R regional portfolio analysis",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_type",
+    "id",
+    "title",
+    "portfolio",
+    "portfolio_aggregates",
+    "regional_comparison",
+    "meta"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_type": {
+      "const": "regional_sector_portfolio_analysis"
+    },
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "portfolio": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "portfolio_type",
+        "id",
+        "title",
+        "members"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "portfolio_type": {
+          "const": "regional_sector_portfolio"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "members": {
+          "type": "object"
+        }
+      }
+    },
+    "portfolio_aggregates": {
+      "type": "array"
+    },
+    "regional_comparison": {
+      "type": "array"
+    },
+    "carbon_budgets": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "sector_pathways": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "meta": {
+      "type": "object",
+      "required": [
+        "package_version",
+        "human_review_required"
+      ]
+    }
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0.0",
+  "portfolio_type": "regional_sector_portfolio",
+  "id": "transition-portfolio",
+  "title": "Regional Transition Portfolio",
+  "description": "Regional and sector transition evidence.",
+  "base_currency": "index",
+  "price_year": 2025,
+  "members": {
+    "north-energy": {
+      "schema_version": "1.0.0",
+      "id": "north-energy",
+      "title": "North energy",
+      "geography": {
+        "schema_version": "1.0.0",
+        "id": "NORTH",
+        "label": "Northern Region",
+        "level": "region",
+        "parent_id": null,
+        "codes": {
+          "m49": "001"
+        },
+        "metadata": {}
+      },
+      "sectors": [
+        {
+          "schema_version": "1.0.0",
+          "id": "energy",
+          "label": "Energy",
+          "classification": "ISIC",
+          "code": "D",
+          "parent_id": null,
+          "metadata": {}
+        }
+      ],
+      "weight": 60,
+      "indicators": {
+        "gdp": {
+          "id": "gdp",
+          "value": 120,
+          "unit": "index",
+          "direction": "higher_better",
+          "metadata": {}
+        },
+        "emissions": {
+          "id": "emissions",
+          "value": 42,
+          "unit": "MtCO2e",
+          "direction": "lower_better",
+          "metadata": {}
+        }
+      },
+      "carbon_budget": {
+        "budget": 50,
+        "unit": "MtCO2e"
+      },
+      "metadata": {}
+    },
+    "south-transport": {
+      "schema_version": "1.0.0",
+      "id": "south-transport",
+      "title": "South transport",
+      "geography": {
+        "schema_version": "1.0.0",
+        "id": "SOUTH",
+        "label": "Southern Region",
+        "level": "region",
+        "parent_id": null,
+        "codes": {
+          "m49": "002"
+        },
+        "metadata": {}
+      },
+      "sectors": [
+        {
+          "schema_version": "1.0.0",
+          "id": "transport",
+          "label": "Transport",
+          "classification": "custom",
+          "code": "TR",
+          "parent_id": null,
+          "metadata": {}
+        }
+      ],
+      "weight": 40,
+      "indicators": {
+        "gdp": {
+          "id": "gdp",
+          "value": 90,
+          "unit": "index",
+          "direction": "higher_better",
+          "metadata": {}
+        },
+        "emissions": {
+          "id": "emissions",
+          "value": 28,
+          "unit": "MtCO2e",
+          "direction": "lower_better",
+          "metadata": {}
+        }
+      },
+      "carbon_budget": {
+        "budget": 40,
+        "unit": "MtCO2e"
+      },
+      "metadata": {}
+    }
+  },
+  "metadata": {
+    "package_version": "1.2.0",
+    "review_status": "unreviewed"
+  }
+}

@@ -71,6 +71,9 @@
         },
         "policy_packages": {
           "type": "object"
+        },
+        "regional_portfolios": {
+          "type": "object"
         }
       }
     },

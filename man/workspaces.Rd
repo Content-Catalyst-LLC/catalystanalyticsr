@@ -21,6 +21,8 @@
 \alias{workspace_to_json}
 \alias{workspace_from_json}
 \alias{export_workspace}
+\alias{workspace_add_regional_portfolio}
+\alias{workspace_get_regional_portfolio}
 \title{Persistent workspaces and reusable analytical libraries}
 \usage{
 catalyst_workspace(workspace_id, title, description = "", owner = "",
@@ -79,6 +81,10 @@ workspace_from_json(path)
 
 export_workspace(workspace, dir = ".", prefix = "catalyst-workspace",
   include_project_results = TRUE, zip_bundle = TRUE)
+
+workspace_add_regional_portfolio(workspace, portfolio, replace = FALSE)
+
+workspace_get_regional_portfolio(workspace, portfolio_id)
 }
 \arguments{
 \item{workspace_id}{Stable workspace identifier.}
@@ -116,6 +122,8 @@ export_workspace(workspace, dir = ".", prefix = "catalyst-workspace",
 \item{prefix}{Bundle directory and ZIP prefix.}
 \item{include_project_results}{Include complete project run result payloads.}
 \item{zip_bundle}{Create a ZIP archive.}
+\item{portfolio}{A regional portfolio.}
+\item{portfolio_id}{Regional portfolio identifier.}
 }
 \value{Constructors and mutators return a workspace. Retrieval functions return stored records. Index and comparison functions return data frames. Serialization and export functions return paths or generated artifact maps.}
 \description{Creates persistent multi-project workspaces with reusable scenario, parameter, and policy-package libraries, consolidated run history, version snapshots, restoration, and portable export bundles.}

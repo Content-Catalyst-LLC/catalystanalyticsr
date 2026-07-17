@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Regional portfolio browser export",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_type",
+    "id",
+    "contract",
+    "portfolio",
+    "portfolio_aggregates",
+    "regional_comparison",
+    "carbon_budgets",
+    "sector_pathways",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_type": {
+      "const": "regional_sector_portfolio_analysis"
+    },
+    "id": {
+      "type": "string"
+    },
+    "contract": {
+      "type": "object",
+      "required": [
+        "plugin_version",
+        "compatible_repository_version",
+        "parity_status"
+      ]
+    },
+    "portfolio": {
+      "type": "object"
+    },
+    "portfolio_aggregates": {
+      "type": "array"
+    },
+    "regional_comparison": {
+      "type": "array"
+    },
+    "carbon_budgets": {
+      "type": "object"
+    },
+    "sector_pathways": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object"
+    }
+  }
+}

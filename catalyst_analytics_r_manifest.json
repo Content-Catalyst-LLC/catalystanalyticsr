@@ -1,16 +1,16 @@
 {
-  "schema_version": "2.1.0",
+  "schema_version": "2.2.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "1.1.0",
+  "repository_version": "1.2.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "2.1.0",
-    "compatible_repository_version": "1.1.0",
+    "version": "2.2.0",
+    "compatible_repository_version": "1.2.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -27,8 +27,8 @@
       "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
     },
     "browser_export": {
-      "version": "2.1.0",
-      "schema": "schemas/catalyst_analytics_r_workspace_demo_export.schema.json"
+      "version": "2.2.0",
+      "schema": "schemas/catalyst_analytics_r_regional_portfolio_demo_export.schema.json"
     },
     "comparison": {
       "version": "1.0.0",
@@ -139,6 +139,14 @@
     "project_browser_export": {
       "version": "2.0.0",
       "schema": "schemas/catalyst_analytics_r_project_demo_export.schema.json"
+    },
+    "regional_portfolio": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_regional_portfolio.schema.json"
+    },
+    "regional_portfolio_export": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_regional_portfolio_export.schema.json"
     }
   },
   "models": [
@@ -185,7 +193,11 @@
     "workspace_input": "examples/workspace_input.json",
     "workspace_export": "outputs/example_workspace_export.json",
     "browser_workspace_export": "outputs/example_browser_workspace_export.json",
-    "workspace_contract": "tests/fixtures/workspace_contract_v1.json"
+    "workspace_contract": "tests/fixtures/workspace_contract_v1.json",
+    "regional_portfolio_input": "examples/regional_portfolio_input.json",
+    "regional_portfolio_export": "outputs/example_regional_portfolio_export.json",
+    "regional_portfolio_contract": "tests/fixtures/regional_portfolio_contract_v1.json",
+    "browser_regional_portfolio_export": "outputs/example_browser_regional_portfolio_export.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [
@@ -231,7 +243,11 @@
     "reusable scenario and parameter libraries",
     "policy package libraries",
     "workspace snapshots and restoration",
-    "portable workspace bundles"
+    "portable workspace bundles",
+    "governed geography and sector scopes",
+    "regional and sector portfolio analytics",
+    "regional carbon-budget allocation",
+    "sector transition pathways"
   ],
   "method_path": "question -> evidence and scenarios -> models and parameter sets -> governed runs -> hashes and environment -> indicators and plots -> interpretation -> review -> snapshot -> publication -> Decision Studio and Knowledge Library handoffs",
   "boundaries": [

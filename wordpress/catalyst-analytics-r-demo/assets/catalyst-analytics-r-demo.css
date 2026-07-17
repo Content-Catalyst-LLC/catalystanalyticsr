@@ -3,3 +3,5 @@
 
 .scar-demo__readiness{margin:1rem 0;padding:1rem;border:1px solid currentColor;border-radius:.5rem;line-height:1.55}.scar-demo :focus-visible{outline:3px solid currentColor;outline-offset:3px}
 .scar-demo__actions{flex-wrap:wrap}.scar-demo__ledger>div small{display:block;opacity:.72;margin-top:.2rem}.scar-demo__handoffs article{min-width:0}.scar-demo__metrics strong{overflow-wrap:anywhere}
+
+.scar-demo__checks strong{color:var(--accent)} .scar-demo__handoffs article p{text-transform:none}

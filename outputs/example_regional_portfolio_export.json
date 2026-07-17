@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0.0",
+  "analysis_type": "regional_sector_portfolio_analysis",
+  "id": "transition-portfolio",
+  "title": "Regional Transition Portfolio",
+  "portfolio": {
+    "schema_version": "1.0.0",
+    "portfolio_type": "regional_sector_portfolio",
+    "id": "transition-portfolio",
+    "title": "Regional Transition Portfolio",
+    "description": "Regional and sector transition evidence.",
+    "base_currency": "index",
+    "price_year": 2025,
+    "members": {
+      "north-energy": {
+        "schema_version": "1.0.0",
+        "id": "north-energy",
+        "title": "North energy",
+        "geography": {
+          "schema_version": "1.0.0",
+          "id": "NORTH",
+          "label": "Northern Region",
+          "level": "region",
+          "parent_id": null,
+          "codes": {
+            "m49": "001"
+          },
+          "metadata": {}
+        },
+        "sectors": [
+          {
+            "schema_version": "1.0.0",
+            "id": "energy",
+            "label": "Energy",
+            "classification": "ISIC",
+            "code": "D",
+            "parent_id": null,
+            "metadata": {}
+          }
+        ],
+        "weight": 60,
+        "indicators": {
+          "gdp": {
+            "id": "gdp",
+            "value": 120,
+            "unit": "index",
+            "direction": "higher_better",
+            "metadata": {}
+          },
+          "emissions": {
+            "id": "emissions",
+            "value": 42,
+            "unit": "MtCO2e",
+            "direction": "lower_better",
+            "metadata": {}
+          }
+        },
+        "carbon_budget": {
+          "budget": 50,
+          "unit": "MtCO2e"
+        },
+        "metadata": {}
+      },
+      "south-transport": {
+        "schema_version": "1.0.0",
+        "id": "south-transport",
+        "title": "South transport",
+        "geography": {
+          "schema_version": "1.0.0",
+          "id": "SOUTH",
+          "label": "Southern Region",
+          "level": "region",
+          "parent_id": null,
+          "codes": {
+            "m49": "002"
+          },
+          "metadata": {}
+        },
+        "sectors": [
+          {
+            "schema_version": "1.0.0",
+            "id": "transport",
+            "label": "Transport",
+            "classification": "custom",
+            "code": "TR",
+            "parent_id": null,
+            "metadata": {}
+          }
+        ],
+        "weight": 40,
+        "indicators": {
+          "gdp": {
+            "id": "gdp",
+            "value": 90,
+            "unit": "index",
+            "direction": "higher_better",
+            "metadata": {}
+          },
+          "emissions": {
+            "id": "emissions",
+            "value": 28,
+            "unit": "MtCO2e",
+            "direction": "lower_better",
+            "metadata": {}
+          }
+        },
+        "carbon_budget": {
+          "budget": 40,
+          "unit": "MtCO2e"
+        },
+        "metadata": {}
+      }
+    },
+    "metadata": {
+      "package_version": "1.2.0",
+      "review_status": "unreviewed"
+    }
+  },
+  "indicator_values": [
+    {
+      "member_id": "north-energy",
+      "geography_id": "NORTH",
+      "indicator": "gdp",
+      "value": 120,
+      "unit": "index",
+      "direction": "higher_better"
+    },
+    {
+      "member_id": "south-transport",
+      "geography_id": "SOUTH",
+      "indicator": "gdp",
+      "value": 90,
+      "unit": "index",
+      "direction": "higher_better"
+    }
+  ],
+  "portfolio_aggregates": [
+    {
+      "indicator": "gdp",
+      "unit": "index",
+      "direction": "higher_better",
+      "weighted_value": 108,
+      "total_weight": 100,
+      "members": 2,
+      "minimum": 90,
+      "maximum": 120
+    }
+  ],
+  "regional_comparison": [
+    {
+      "member_id": "north-energy",
+      "geography_id": "NORTH",
+      "indicator": "gdp",
+      "value": 120,
+      "unit": "index",
+      "direction": "higher_better",
+      "rank": 1
+    },
+    {
+      "member_id": "south-transport",
+      "geography_id": "SOUTH",
+      "indicator": "gdp",
+      "value": 90,
+      "unit": "index",
+      "direction": "higher_better",
+      "rank": 2
+    }
+  ],
+  "carbon_budgets": {
+    "schema_version": "1.0.0",
+    "diagnostics": [
+      {
+        "geography_id": "NORTH",
+        "carbon_budget": 50,
+        "cumulative_emissions": 54,
+        "remaining_budget": -4,
+        "overshoot": true,
+        "overshoot_time": 2027,
+        "unit": "MtCO2e"
+      }
+    ]
+  },
+  "sector_pathways": {
+    "schema_version": "1.0.0",
+    "summary": [
+      {
+        "geography_id": "NORTH",
+        "sector_id": "energy",
+        "output_change": 0.1,
+        "emissions_change": -0.24,
+        "intensity_change": -0.31,
+        "status": "absolute_decoupling"
+      }
+    ]
+  },
+  "meta": {
+    "package_version": "1.2.0",
+    "created_at": "2026-07-17T20:00:00Z",
+    "human_review_required": true
+  }
+}

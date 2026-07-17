@@ -2,9 +2,19 @@
 
 Catalyst Analytics R is the reproducible statistical, scenario-modeling, uncertainty-analysis, sustainability-accounting, model-governance, and analytical-publication engine for the Sustainable Catalyst platform.
 
-**Current release:** `1.1.0`  
-**WordPress companion:** `2.1.0`  
+**Current release:** `1.2.0`  
+**WordPress companion:** `2.2.0`  
 **Shortcode:** `[catalyst_analytics_r_demo]`
+
+
+## v1.2.0 regional, sector, and portfolio analytics
+
+- Governed geography and sector scope records
+- Multi-region and multi-sector portfolio members
+- Weighted indicator aggregation and regional ranking
+- Regional carbon-budget allocation and overshoot diagnostics
+- Sector output, emissions, and intensity transition pathways
+- Reusable workspace portfolio libraries and portable export bundles
 
 
 ## v1.1.0 saved workspaces and scenario libraries
@@ -93,7 +103,7 @@ scripts/                            Release validation
 python3 scripts/check_release.py
 Rscript scripts/check_r_sources.R
 R CMD build .
-R CMD check --no-manual catalystanalyticsr_1.1.0.tar.gz
+R CMD check --no-manual catalystanalyticsr_1.2.0.tar.gz
 ```
 
 ## Boundary

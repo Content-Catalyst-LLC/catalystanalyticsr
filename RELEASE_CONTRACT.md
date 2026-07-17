@@ -26,8 +26,17 @@
 - Environment capture must call `utils::capture.output()` explicitly.
 - The project-publication regression test must count data-frame rows when `jsonlite` simplifies the file-record array.
 
-## v1.1.0 snapshot fingerprint repair
+## v1.2.0 snapshot fingerprint repair
 
 - A restored workspace must report the fingerprint recorded by its selected snapshot.
 - Canonical workspace JSON must not expose restoration-only fingerprint metadata.
 - Any semantic workspace mutation must clear restored fingerprint identity.
+
+
+## Regional portfolio release gate
+
+- Geography and sector scope contracts are versioned.
+- Portfolio weights, units, and directions are explicit.
+- Regional carbon budgets preserve cumulative and overshoot evidence.
+- Sector pathways preserve output, emissions, and intensity change.
+- Portfolio aggregation does not confer allocation or decision authority.
