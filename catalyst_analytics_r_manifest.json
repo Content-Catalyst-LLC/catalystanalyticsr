@@ -1,16 +1,16 @@
 {
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "0.2.0",
+  "repository_version": "0.3.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "1.1.0",
-    "compatible_repository_version": "0.2.0",
+    "version": "1.2.0",
+    "compatible_repository_version": "0.3.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -27,8 +27,17 @@
       "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
     },
     "browser_export": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "schema": "schemas/catalyst_analytics_r_demo_export.schema.json"
+    },
+    "comparison": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_comparison.schema.json",
+      "input_schema": "schemas/catalyst_analytics_r_comparison_input.schema.json"
+    },
+    "browser_comparison_input": {
+      "version": "1.1.0",
+      "schema": "schemas/catalyst_analytics_r_browser_comparison_input.schema.json"
     }
   },
   "models": [
@@ -41,7 +50,10 @@
   "fixtures": {
     "canonical_scenario": "inst/extdata/scenarios/canonical_baseline_v1.json",
     "browser_mapping": "tests/fixtures/browser_contract_mapping_v1.json",
-    "numerical_reference": "tests/fixtures/khncpa_reference_v1.json"
+    "numerical_reference": "tests/fixtures/khncpa_reference_v1.json",
+    "comparison_input": "examples/comparison_input.json",
+    "comparison_export": "outputs/example_comparison_export.json",
+    "browser_comparison_export": "outputs/example_browser_comparison_export.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [
@@ -53,9 +65,14 @@
     "indicator computation",
     "carbon budget review",
     "WordPress demo",
-    "JSON exports"
+    "JSON exports",
+    "comparative scenario engine",
+    "baseline and intervention analysis",
+    "direction-aware rankings",
+    "trade-off and Pareto diagnostics",
+    "comparison export bundles"
   ],
-  "method_path": "question -> assumptions -> scenario -> model -> indicators -> output -> interpretation -> review",
+  "method_path": "question -> assumptions -> scenarios -> models -> comparison -> trade-offs -> interpretation -> review",
   "boundaries": [
     "educational decision support",
     "not a forecast",

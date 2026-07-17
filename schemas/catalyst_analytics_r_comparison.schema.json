@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-comparison-v1.schema.json",
+  "title": "Catalyst Analytics R Comparative Scenario Export",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "comparison_id", "package", "package_version", "created_at",
+    "model", "baseline_id", "metrics", "scenarios", "terminal_values", "deltas",
+    "rankings", "tradeoffs", "pareto", "rules", "rule_results", "boundary"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "comparison_id": { "$ref": "#/$defs/id" },
+    "package": { "const": "catalystanalyticsr" },
+    "package_version": { "const": "0.3.0" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "model": { "type": "string", "pattern": "^[a-z][a-z0-9._-]*@[0-9]+\\.[0-9]+\\.[0-9]+" },
+    "baseline_id": { "$ref": "#/$defs/id" },
+    "metrics": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+    "scenarios": {
+      "type": "array", "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["schema_version", "id", "title", "role", "model", "time", "initial_state", "policy", "parameters", "constraints"],
+        "properties": {
+          "schema_version": { "const": "1.0.0" },
+          "id": { "$ref": "#/$defs/id" },
+          "role": { "enum": ["baseline", "intervention", "counterfactual", "exploratory"] }
+        }
+      }
+    },
+    "terminal_values": { "type": "array", "items": { "$ref": "#/$defs/valueRow" } },
+    "deltas": { "type": "array", "items": { "$ref": "#/$defs/deltaRow" } },
+    "rankings": { "type": "array", "items": { "$ref": "#/$defs/rankingRow" } },
+    "tradeoffs": { "type": "array", "items": { "type": "object", "required": ["scenario_id", "baseline_id", "classification"] } },
+    "pareto": {
+      "type": "object", "additionalProperties": false,
+      "required": ["front", "dominance", "metrics"],
+      "properties": {
+        "front": { "type": "array", "items": { "type": "object", "required": ["scenario_id", "pareto_rank", "non_dominated"] } },
+        "dominance": { "type": "array", "items": { "type": "object", "required": ["dominator", "dominated"] } },
+        "metrics": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } }
+      }
+    },
+    "rules": { "type": "array", "items": { "type": "object" } },
+    "rule_results": { "type": "array", "items": { "type": "object" } },
+    "boundary": { "$ref": "#/$defs/boundary" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9._-]*$", "minLength": 1, "maxLength": 100 },
+    "direction": { "enum": ["higher_better", "lower_better", "contextual"] },
+    "valueRow": {
+      "type": "object",
+      "required": ["scenario_id", "metric", "unit", "direction", "final_value"],
+      "properties": {
+        "scenario_id": { "$ref": "#/$defs/id" }, "metric": { "$ref": "#/$defs/id" },
+        "unit": { "type": "string" }, "direction": { "$ref": "#/$defs/direction" }, "final_value": { "type": "number" }
+      }
+    },
+    "deltaRow": {
+      "type": "object",
+      "required": ["scenario_id", "baseline_id", "metric", "absolute_delta", "percentage_delta", "outcome"],
+      "properties": {
+        "scenario_id": { "$ref": "#/$defs/id" }, "baseline_id": { "$ref": "#/$defs/id" }, "metric": { "$ref": "#/$defs/id" },
+        "absolute_delta": { "type": "number" }, "percentage_delta": { "type": ["number", "null"] },
+        "outcome": { "enum": ["improved", "worsened", "tied", "contextual"] }
+      }
+    },
+    "rankingRow": {
+      "type": "object",
+      "required": ["scenario_id", "metric", "final_value", "rank"],
+      "properties": {
+        "scenario_id": { "$ref": "#/$defs/id" }, "metric": { "$ref": "#/$defs/id" },
+        "final_value": { "type": "number" }, "rank": { "type": "number", "minimum": 1 }
+      }
+    },
+    "boundary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["forecast", "compliance", "professional_advice"],
+      "properties": {
+        "forecast": { "const": false }, "compliance": { "const": false }, "professional_advice": { "const": false }
+      }
+    }
+  }
+}

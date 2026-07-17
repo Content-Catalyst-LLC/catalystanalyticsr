@@ -1,0 +1,332 @@
+{
+  "schema_version": "1.0.0",
+  "comparison_id": "reference-vs-transition",
+  "package": "catalystanalyticsr",
+  "package_version": "0.3.0",
+  "created_at": "2026-07-16T00:00:00Z",
+  "model": "khncpa@1.0.0",
+  "baseline_id": "reference-baseline",
+  "metrics": [
+    "gdp",
+    "emissions",
+    "ans",
+    "natural_capital"
+  ],
+  "scenarios": [
+    {
+      "schema_version": "1.0.0",
+      "id": "reference-baseline",
+      "title": "Reference baseline",
+      "role": "baseline",
+      "model": {
+        "id": "khncpa",
+        "version": "1.0.0"
+      },
+      "time": {
+        "start": 0,
+        "end": 6,
+        "step": 1,
+        "unit": "year",
+        "values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "initial_state": {
+        "K": 1,
+        "H": 1,
+        "N": 1,
+        "C": 0,
+        "P": 1,
+        "A": 1
+      },
+      "policy": {
+        "s": 0.2,
+        "e": 0.05,
+        "a": 0
+      },
+      "parameters": {},
+      "constraints": {
+        "emissions_budget": 10
+      },
+      "units": {
+        "time": "year",
+        "states": {
+          "K": "index",
+          "H": "index",
+          "N": "index",
+          "C": "index",
+          "P": "people_index",
+          "A": "index"
+        },
+        "flows": {
+          "gdp": "index",
+          "consumption": "index",
+          "savings": "index",
+          "education": "index",
+          "abatement": "share",
+          "emissions": "tCO2e_index",
+          "depletion": "index",
+          "damages": "index"
+        }
+      },
+      "scope": {
+        "geography": {
+          "type": "global",
+          "id": "WORLD",
+          "label": "Global"
+        },
+        "sectors": [
+          "all"
+        ]
+      },
+      "currency": {
+        "code": "index",
+        "price_year": null
+      },
+      "sources": [],
+      "assumptions": [],
+      "uncertainty": [],
+      "review": {
+        "status": "draft",
+        "reviewed_by": [],
+        "notes": []
+      },
+      "metadata": {
+        "description": "Deterministic reference scenario for Catalyst Analytics R v0.2.0.",
+        "tags": [
+          "reference",
+          "canonical"
+        ],
+        "created_by": "catalystanalyticsr",
+        "created_at": "2026-07-16T00:00:00Z"
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "transition-policy",
+      "title": "Transition policy",
+      "role": "intervention",
+      "model": {
+        "id": "khncpa",
+        "version": "1.0.0"
+      },
+      "time": {
+        "start": 0,
+        "end": 6,
+        "step": 1,
+        "unit": "year",
+        "values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "initial_state": {
+        "K": 1,
+        "H": 1,
+        "N": 1,
+        "C": 0,
+        "P": 1,
+        "A": 1
+      },
+      "policy": {
+        "s": 0.24,
+        "e": 0.07,
+        "a": 0.1
+      },
+      "parameters": {
+        "emissions_intensity": 0.12,
+        "regen": 0.05
+      },
+      "constraints": {
+        "emissions_budget": 10
+      },
+      "units": {
+        "time": "year",
+        "states": {
+          "K": "index",
+          "H": "index",
+          "N": "index",
+          "C": "index",
+          "P": "people_index",
+          "A": "index"
+        },
+        "flows": {
+          "gdp": "index",
+          "consumption": "index",
+          "savings": "index",
+          "education": "index",
+          "abatement": "share",
+          "emissions": "tCO2e_index",
+          "depletion": "index",
+          "damages": "index"
+        }
+      },
+      "scope": {
+        "geography": {
+          "type": "global",
+          "id": "WORLD",
+          "label": "Global"
+        },
+        "sectors": [
+          "all"
+        ]
+      },
+      "currency": {
+        "code": "index",
+        "price_year": null
+      },
+      "sources": [],
+      "assumptions": [],
+      "uncertainty": [],
+      "review": {
+        "status": "draft",
+        "reviewed_by": [],
+        "notes": []
+      },
+      "metadata": {
+        "description": "Deterministic reference scenario for Catalyst Analytics R v0.2.0.",
+        "tags": [
+          "reference",
+          "canonical"
+        ],
+        "created_by": "catalystanalyticsr",
+        "created_at": "2026-07-16T00:00:00Z"
+      }
+    }
+  ],
+  "terminal_values": [
+    {
+      "scenario_id": "reference-baseline",
+      "metric": "gdp",
+      "unit": "index",
+      "direction": "higher_better",
+      "final_value": 1.18
+    },
+    {
+      "scenario_id": "transition-policy",
+      "metric": "gdp",
+      "unit": "index",
+      "direction": "higher_better",
+      "final_value": 1.27
+    },
+    {
+      "scenario_id": "reference-baseline",
+      "metric": "emissions",
+      "unit": "tCO2e_index",
+      "direction": "lower_better",
+      "final_value": 0.34
+    },
+    {
+      "scenario_id": "transition-policy",
+      "metric": "emissions",
+      "unit": "tCO2e_index",
+      "direction": "lower_better",
+      "final_value": 0.13
+    }
+  ],
+  "deltas": [
+    {
+      "scenario_id": "transition-policy",
+      "baseline_id": "reference-baseline",
+      "metric": "gdp",
+      "absolute_delta": 0.09,
+      "percentage_delta": 0.0763,
+      "outcome": "improved"
+    },
+    {
+      "scenario_id": "transition-policy",
+      "baseline_id": "reference-baseline",
+      "metric": "emissions",
+      "absolute_delta": -0.21,
+      "percentage_delta": -0.6176,
+      "outcome": "improved"
+    }
+  ],
+  "rankings": [
+    {
+      "scenario_id": "transition-policy",
+      "metric": "gdp",
+      "final_value": 1.27,
+      "rank": 1
+    },
+    {
+      "scenario_id": "reference-baseline",
+      "metric": "gdp",
+      "final_value": 1.18,
+      "rank": 2
+    },
+    {
+      "scenario_id": "transition-policy",
+      "metric": "emissions",
+      "final_value": 0.13,
+      "rank": 1
+    },
+    {
+      "scenario_id": "reference-baseline",
+      "metric": "emissions",
+      "final_value": 0.34,
+      "rank": 2
+    }
+  ],
+  "tradeoffs": [
+    {
+      "scenario_id": "transition-policy",
+      "baseline_id": "reference-baseline",
+      "improved_metrics": "gdp,emissions",
+      "worsened_metrics": "",
+      "tied_metrics": "",
+      "improved_count": 2,
+      "worsened_count": 0,
+      "tied_count": 0,
+      "classification": "dominates_baseline"
+    }
+  ],
+  "pareto": {
+    "front": [
+      {
+        "scenario_id": "reference-baseline",
+        "pareto_rank": 2,
+        "non_dominated": false,
+        "dominates_count": 0,
+        "dominated_by_count": 1
+      },
+      {
+        "scenario_id": "transition-policy",
+        "pareto_rank": 1,
+        "non_dominated": true,
+        "dominates_count": 1,
+        "dominated_by_count": 0
+      }
+    ],
+    "dominance": [
+      {
+        "dominator": "transition-policy",
+        "dominated": "reference-baseline"
+      }
+    ],
+    "metrics": [
+      "gdp",
+      "emissions",
+      "ans",
+      "natural_capital"
+    ]
+  },
+  "rules": [],
+  "rule_results": [],
+  "boundary": {
+    "forecast": false,
+    "compliance": false,
+    "professional_advice": false
+  }
+}

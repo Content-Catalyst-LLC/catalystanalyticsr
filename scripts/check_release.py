@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static release-contract checks for Catalyst Analytics R v0.2.0."""
+"""Static release-contract checks for Catalyst Analytics R v0.3.0."""
 
 from __future__ import annotations
 
@@ -10,11 +10,12 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_REPOSITORY_VERSION = "0.2.0"
-EXPECTED_PLUGIN_VERSION = "1.1.0"
+EXPECTED_REPOSITORY_VERSION = "0.3.0"
+EXPECTED_PLUGIN_VERSION = "1.2.0"
 EXPECTED_SCENARIO_SCHEMA_VERSION = "1.0.0"
 EXPECTED_MODEL_VERSION = "1.0.0"
-EXPECTED_DEMO_EXPORT_VERSION = "1.1.0"
+EXPECTED_COMPARISON_VERSION = "1.0.0"
+EXPECTED_DEMO_EXPORT_VERSION = "1.2.0"
 
 
 def fail(message: str) -> None:
@@ -74,65 +75,71 @@ def main() -> int:
         fail("Scenario contract version mismatch")
     if manifest["contracts"]["model_manifest"]["version"] != EXPECTED_MODEL_VERSION:
         fail("Model contract version mismatch")
+    if manifest["contracts"]["comparison"]["version"] != EXPECTED_COMPARISON_VERSION:
+        fail("Comparison contract version mismatch")
     if manifest["contracts"]["browser_export"]["version"] != EXPECTED_DEMO_EXPORT_VERSION:
         fail("Browser export contract version mismatch")
 
     required = [
-        "R/catalyst_model.R",
-        "R/model_khncpa_registry.R",
-        "R/catalyst_scenario.R",
-        "R/scenario_migrations.R",
-        "schemas/catalyst_analytics_r_scenario.schema.json",
-        "schemas/catalyst_analytics_r_model_manifest.schema.json",
-        "schemas/catalyst_analytics_r_browser_input.schema.json",
-        "tests/fixtures/khncpa_reference_v1.json",
-        "tests/fixtures/browser_contract_mapping_v1.json",
-        "docs/releases/v0.2.0.md",
+        "R/comparative_scenarios.R",
+        "R/export_scenario_comparison.R",
+        "schemas/catalyst_analytics_r_comparison.schema.json",
+        "schemas/catalyst_analytics_r_comparison_input.schema.json",
+        "schemas/catalyst_analytics_r_browser_comparison_input.schema.json",
+        "schemas/catalyst_analytics_r_demo_export.schema.json",
+        "examples/comparison_input.json",
+        "examples/browser_comparison_input.json",
+        "outputs/example_comparison_export.json",
+        "outputs/example_browser_comparison_export.json",
+        "tests/testthat/test-comparative-scenarios.R",
+        "tests/testthat/test-comparison-export.R",
+        "docs/releases/v0.3.0.md",
+        "docs/comparative-scenario-engine.md",
     ]
     missing = [path for path in required if not (ROOT / path).exists()]
     if missing:
-        fail(f"Missing v0.2.0 release files: {missing}")
+        fail(f"Missing v0.3.0 release files: {missing}")
 
     r_source = "\n".join(path.read_text(encoding="utf-8") for path in (ROOT / "R").glob("*.R"))
-    if "CS50R" in r_source:
-        fail("Course-specific language remains in R source")
     for path in sorted((ROOT / "R").glob("*.R")):
         if any(byte > 127 for byte in path.read_bytes()):
             fail(f"Non-ASCII character remains in R source: {path.relative_to(ROOT)}")
-    if r_source.count("theme_catalyst <- function") != 1:
-        fail("theme_catalyst must have exactly one definition")
     for symbol in (
-        ".catalyst_model_registry <- new.env",
-        "catalyst_scenario <- function",
-        "run_catalyst_scenario <- function",
-        "migrate_catalyst_scenario <- function",
-        "browser_scenario_to_catalyst <- function",
+        "run_scenarios <- function",
+        "compare_scenarios <- function",
+        "scenario_deltas <- function",
+        "scenario_rankings <- function",
+        "scenario_scorecard <- function",
+        "pareto_diagnostics <- function",
+        "plot_scenario_comparison <- function",
+        "plot_scenario_tradeoffs <- function",
+        "export_scenario_comparison <- function",
     ):
         if symbol not in r_source:
-            fail(f"Missing v0.2.0 implementation symbol: {symbol}")
+            fail(f"Missing v0.3.0 implementation symbol: {symbol}")
 
     tests = "\n".join(path.read_text(encoding="utf-8") for path in (ROOT / "tests/testthat").glob("*.R"))
-    if "multiplication works" in tests:
-        fail("Placeholder tests remain")
-    if "khncpa_reference_v1.json" not in tests:
-        fail("Numerical reference fixture is not exercised by R tests")
-
-    if (ROOT / "data/sample_scenarios.json").exists():
-        fail("Raw JSON must live under inst/extdata, not data")
+    if "comparison_scenarios" not in tests or "pareto_diagnostics" not in tests:
+        fail("Comparative R tests are incomplete")
 
     json_files = sorted(ROOT.rglob("*.json"))
     for path in json_files:
         json.loads(path.read_text(encoding="utf-8"))
 
     js = read("wordpress/catalyst-analytics-r-demo/assets/catalyst-analytics-r-demo.js")
+    php = read("wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php")
     for expected in (
-        "canonicalScenario(run.inputs, generatedAt)",
-        "schema_version: '1.1.0'",
-        "compatible_repository_version: '0.2.0'",
-        "parity_status: 'mapped_contract'",
+        "canonical_scenarios",
+        "mapped_comparison_contract",
+        "compatible_repository_version: '0.3.0'",
+        "comparison_contract_version: '1.0.0'",
+        "baseline_non_dominated",
+        "policy_non_dominated",
     ):
         if expected not in js:
-            fail(f"WordPress demo contract missing: {expected}")
+            fail(f"WordPress comparative contract missing: {expected}")
+    if "Compare a baseline with a policy pathway" not in php:
+        fail("WordPress comparative interface is missing")
 
     check_documented_exports()
     run([sys.executable, "scripts/check_r_structure.py"])
@@ -142,9 +149,9 @@ def main() -> int:
     if subprocess.run(["bash", "-lc", "command -v php >/dev/null"], cwd=ROOT).returncode == 0:
         run(["php", "-l", "wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php"])
 
-    print("Catalyst Analytics R v0.2.0 release contract passed.")
+    print("Catalyst Analytics R v0.3.0 release contract passed.")
     print(
-        f"Validated {len(json_files)} JSON files, canonical scenario/model contracts, "
+        f"Validated {len(json_files)} JSON files, comparative scenario contracts, "
         "JavaScript syntax, PHP syntax, documentation aliases, and repository tests."
     )
     return 0

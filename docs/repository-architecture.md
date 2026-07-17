@@ -26,3 +26,29 @@ The public plugin runs a lightweight JavaScript model. It now emits the same can
 ## Separation boundary
 
 `mapped_contract` means the browser and R layers share scenario structure, control meaning, model identity, units, and provenance fields. It does not mean their trajectories are numerically identical.
+
+## Comparative scenario layer — v0.3.0
+
+The comparative layer sits above canonical scenario execution:
+
+```text
+canonical scenarios
+        |
+        v
+run_scenarios()
+        |
+        v
+catalyst_scenario_set
+        |
+        v
+compare_scenarios()
+        |
+        +--> deltas and rankings
+        +--> targets and thresholds
+        +--> trade-off classification
+        +--> Pareto diagnostics
+        +--> comparative plots
+        +--> export_scenario_comparison()
+```
+
+The layer does not alter model equations. It compares outputs from exact model versions and preserves every scenario's canonical contract and fingerprint.

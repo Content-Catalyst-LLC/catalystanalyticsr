@@ -1,0 +1,27 @@
+{
+  "shared": {
+    "years": 20,
+    "initialCapital": 100,
+    "initialHuman": 100,
+    "initialNatural": 100,
+    "emissionsBudget": 120
+  },
+  "baseline": {
+    "scenarioName": "Reference baseline",
+    "role": "baseline",
+    "savings": 0.18,
+    "emissionsIntensity": 0.1,
+    "adaptation": 0.02,
+    "restoration": 0.01,
+    "humanInvestment": 0.02
+  },
+  "policy": {
+    "scenarioName": "Transition policy",
+    "role": "intervention",
+    "savings": 0.24,
+    "emissionsIntensity": 0.05,
+    "adaptation": 0.1,
+    "restoration": 0.08,
+    "humanInvestment": 0.07
+  }
+}

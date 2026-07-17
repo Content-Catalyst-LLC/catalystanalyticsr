@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 — Comparative Scenario Engine
+
+- Added governed multi-scenario execution.
+- Added baseline-aware deltas, rankings, scorecards, targets, thresholds, trade-offs, and Pareto diagnostics.
+- Added comparative plots and reproducible comparison bundles.
+- Added comparison JSON schemas, examples, and contract tests.
+- Upgraded the WordPress demo to v1.2.0 with baseline-versus-policy comparison.
+
 ## 0.2.0 - Canonical Scenario Contract and Model Registry
 
 - Added the versioned `catalyst_scenario` contract and JSON schema 1.0.0.

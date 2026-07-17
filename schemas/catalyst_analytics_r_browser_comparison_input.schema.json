@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-browser-comparison-input-v1.1.schema.json",
+  "title": "Catalyst Analytics R Browser Comparison Input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["shared", "baseline", "policy"],
+  "properties": {
+    "shared": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["years", "initialCapital", "initialHuman", "initialNatural", "emissionsBudget"],
+      "properties": {
+        "years": { "type": "integer", "minimum": 5, "maximum": 40 },
+        "initialCapital": { "type": "number", "minimum": 10, "maximum": 1000 },
+        "initialHuman": { "type": "number", "minimum": 10, "maximum": 1000 },
+        "initialNatural": { "type": "number", "minimum": 10, "maximum": 1000 },
+        "emissionsBudget": { "type": "number", "minimum": 10, "maximum": 1000 }
+      }
+    },
+    "baseline": { "$ref": "#/$defs/scenario" },
+    "policy": { "$ref": "#/$defs/scenario" }
+  },
+  "$defs": {
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scenarioName", "role", "savings", "emissionsIntensity", "adaptation", "restoration", "humanInvestment"],
+      "properties": {
+        "scenarioName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "role": { "enum": ["baseline", "intervention"] },
+        "savings": { "type": "number", "minimum": 0.05, "maximum": 0.45 },
+        "emissionsIntensity": { "type": "number", "minimum": 0.01, "maximum": 0.2 },
+        "adaptation": { "type": "number", "minimum": 0, "maximum": 0.25 },
+        "restoration": { "type": "number", "minimum": 0, "maximum": 0.2 },
+        "humanInvestment": { "type": "number", "minimum": 0, "maximum": 0.2 }
+      }
+    }
+  }
+}

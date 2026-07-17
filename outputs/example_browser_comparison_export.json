@@ -1,0 +1,747 @@
+{
+  "schema_version": "1.2.0",
+  "demo": "Catalyst Analytics R Demo",
+  "demo_version": "1.2.0",
+  "engine": {
+    "type": "browser_simplified",
+    "compatible_repository_version": "0.3.0",
+    "parity_status": "mapped_comparison_contract",
+    "comparison_contract_version": "1.0.0"
+  },
+  "generated_at": "2026-07-16T00:00:00Z",
+  "inputs": {
+    "shared": {
+      "years": 20,
+      "initialCapital": 100,
+      "initialHuman": 100,
+      "initialNatural": 100,
+      "emissionsBudget": 120
+    },
+    "baseline": {
+      "scenarioName": "Reference baseline",
+      "role": "baseline",
+      "savings": 0.18,
+      "emissionsIntensity": 0.1,
+      "adaptation": 0.02,
+      "restoration": 0.01,
+      "humanInvestment": 0.02
+    },
+    "policy": {
+      "scenarioName": "Transition policy",
+      "role": "intervention",
+      "savings": 0.24,
+      "emissionsIntensity": 0.05,
+      "adaptation": 0.1,
+      "restoration": 0.08,
+      "humanInvestment": 0.07
+    }
+  },
+  "canonical_scenarios": [
+    {
+      "schema_version": "1.0.0",
+      "id": "reference-baseline",
+      "title": "Reference baseline",
+      "role": "baseline",
+      "model": {
+        "id": "khncpa",
+        "version": "1.0.0"
+      },
+      "time": {
+        "start": 0,
+        "end": 20,
+        "step": 1,
+        "unit": "year",
+        "values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ]
+      },
+      "initial_state": {
+        "K": 100,
+        "H": 100,
+        "N": 100,
+        "C": 0,
+        "P": 1,
+        "A": 1
+      },
+      "policy": {
+        "s": 0.18,
+        "e": 0.02,
+        "a": 0.02
+      },
+      "parameters": {
+        "emissions_intensity": 0.1,
+        "regen": 0.01
+      },
+      "constraints": {
+        "emissions_budget": 120
+      },
+      "units": {
+        "time": "year",
+        "states": {
+          "K": "index",
+          "H": "index",
+          "N": "index",
+          "C": "index",
+          "P": "people_index",
+          "A": "index"
+        },
+        "flows": {
+          "gdp": "index",
+          "consumption": "index",
+          "savings": "index",
+          "education": "index",
+          "abatement": "share",
+          "emissions": "tCO2e_index",
+          "depletion": "index",
+          "damages": "index"
+        }
+      },
+      "scope": {
+        "geography": {
+          "type": "global",
+          "id": "WORLD",
+          "label": "Global"
+        },
+        "sectors": [
+          "all"
+        ]
+      },
+      "currency": {
+        "code": "index",
+        "price_year": null
+      },
+      "sources": [],
+      "assumptions": [],
+      "uncertainty": [],
+      "review": {
+        "status": "draft",
+        "reviewed_by": [],
+        "notes": []
+      },
+      "metadata": {
+        "description": "Deterministic reference scenario for Catalyst Analytics R v0.2.0.",
+        "tags": [
+          "reference",
+          "canonical"
+        ],
+        "created_by": "catalystanalyticsr",
+        "created_at": "2026-07-16T00:00:00Z",
+        "browser_contract_version": "1.1.0"
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "transition-policy",
+      "title": "Transition policy",
+      "role": "intervention",
+      "model": {
+        "id": "khncpa",
+        "version": "1.0.0"
+      },
+      "time": {
+        "start": 0,
+        "end": 20,
+        "step": 1,
+        "unit": "year",
+        "values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ]
+      },
+      "initial_state": {
+        "K": 100,
+        "H": 100,
+        "N": 100,
+        "C": 0,
+        "P": 1,
+        "A": 1
+      },
+      "policy": {
+        "s": 0.24,
+        "e": 0.07,
+        "a": 0.1
+      },
+      "parameters": {
+        "emissions_intensity": 0.05,
+        "regen": 0.08
+      },
+      "constraints": {
+        "emissions_budget": 120
+      },
+      "units": {
+        "time": "year",
+        "states": {
+          "K": "index",
+          "H": "index",
+          "N": "index",
+          "C": "index",
+          "P": "people_index",
+          "A": "index"
+        },
+        "flows": {
+          "gdp": "index",
+          "consumption": "index",
+          "savings": "index",
+          "education": "index",
+          "abatement": "share",
+          "emissions": "tCO2e_index",
+          "depletion": "index",
+          "damages": "index"
+        }
+      },
+      "scope": {
+        "geography": {
+          "type": "global",
+          "id": "WORLD",
+          "label": "Global"
+        },
+        "sectors": [
+          "all"
+        ]
+      },
+      "currency": {
+        "code": "index",
+        "price_year": null
+      },
+      "sources": [],
+      "assumptions": [],
+      "uncertainty": [],
+      "review": {
+        "status": "draft",
+        "reviewed_by": [],
+        "notes": []
+      },
+      "metadata": {
+        "description": "Deterministic reference scenario for Catalyst Analytics R v0.2.0.",
+        "tags": [
+          "reference",
+          "canonical"
+        ],
+        "created_by": "catalystanalyticsr",
+        "created_at": "2026-07-16T00:00:00Z",
+        "browser_contract_version": "1.1.0"
+      }
+    }
+  ],
+  "comparison": {
+    "baseline_id": "reference-baseline",
+    "policy_id": "transition-policy",
+    "deltas": [
+      {
+        "metric": "composite_score",
+        "label": "Composite score",
+        "direction": "higher_better",
+        "baseline_value": 95.44,
+        "policy_value": 131.87,
+        "absolute_delta": 36.43,
+        "percentage_delta": 0.3817,
+        "outcome": "improved"
+      },
+      {
+        "metric": "adjusted_savings",
+        "label": "Adjusted savings",
+        "direction": "higher_better",
+        "baseline_value": 20.58,
+        "policy_value": 42.1,
+        "absolute_delta": 21.52,
+        "percentage_delta": 1.0457,
+        "outcome": "improved"
+      },
+      {
+        "metric": "natural_capital",
+        "label": "Natural capital",
+        "direction": "higher_better",
+        "baseline_value": 95.26,
+        "policy_value": 105.18,
+        "absolute_delta": 9.92,
+        "percentage_delta": 0.1041,
+        "outcome": "improved"
+      },
+      {
+        "metric": "produced_capital",
+        "label": "Produced capital",
+        "direction": "higher_better",
+        "baseline_value": 174.4,
+        "policy_value": 193.66,
+        "absolute_delta": 19.26,
+        "percentage_delta": 0.1104,
+        "outcome": "improved"
+      },
+      {
+        "metric": "human_capital",
+        "label": "Human capital",
+        "direction": "higher_better",
+        "baseline_value": 133.1,
+        "policy_value": 149.76,
+        "absolute_delta": 16.66,
+        "percentage_delta": 0.1252,
+        "outcome": "improved"
+      },
+      {
+        "metric": "cumulative_emissions",
+        "label": "Cumulative emissions",
+        "direction": "lower_better",
+        "baseline_value": 233.37,
+        "policy_value": 117.77,
+        "absolute_delta": -115.6,
+        "percentage_delta": -0.4954,
+        "outcome": "improved"
+      }
+    ],
+    "tradeoff": {
+      "classification": "dominates_baseline",
+      "improved_metrics": [
+        "composite_score",
+        "adjusted_savings",
+        "natural_capital",
+        "produced_capital",
+        "human_capital",
+        "cumulative_emissions"
+      ],
+      "worsened_metrics": [],
+      "tied_metrics": []
+    },
+    "pareto": {
+      "baseline_non_dominated": false,
+      "policy_non_dominated": true
+    },
+    "budget": {
+      "value": 120,
+      "baseline_within_budget": false,
+      "policy_within_budget": true
+    }
+  },
+  "trajectories": {
+    "baseline": [
+      {
+        "year": 0,
+        "produced_capital": 100,
+        "human_capital": 100,
+        "natural_capital": 100,
+        "cumulative_emissions": 0,
+        "adjusted_savings": 14.58,
+        "composite_score": 100.0
+      },
+      {
+        "year": 1,
+        "produced_capital": 102.82,
+        "human_capital": 101.44,
+        "natural_capital": 99.81,
+        "cumulative_emissions": 9.89,
+        "adjusted_savings": 14.82,
+        "composite_score": 99.69
+      },
+      {
+        "year": 2,
+        "produced_capital": 105.72,
+        "human_capital": 102.9,
+        "natural_capital": 99.61,
+        "cumulative_emissions": 19.94,
+        "adjusted_savings": 15.06,
+        "composite_score": 99.4
+      },
+      {
+        "year": 3,
+        "produced_capital": 108.7,
+        "human_capital": 104.38,
+        "natural_capital": 99.41,
+        "cumulative_emissions": 30.16,
+        "adjusted_savings": 15.3,
+        "composite_score": 99.1
+      },
+      {
+        "year": 4,
+        "produced_capital": 111.77,
+        "human_capital": 105.89,
+        "natural_capital": 99.21,
+        "cumulative_emissions": 40.54,
+        "adjusted_savings": 15.56,
+        "composite_score": 98.82
+      },
+      {
+        "year": 5,
+        "produced_capital": 114.92,
+        "human_capital": 107.41,
+        "natural_capital": 99.0,
+        "cumulative_emissions": 51.1,
+        "adjusted_savings": 15.82,
+        "composite_score": 98.54
+      },
+      {
+        "year": 6,
+        "produced_capital": 118.16,
+        "human_capital": 108.96,
+        "natural_capital": 98.78,
+        "cumulative_emissions": 61.83,
+        "adjusted_savings": 16.08,
+        "composite_score": 98.27
+      },
+      {
+        "year": 7,
+        "produced_capital": 121.49,
+        "human_capital": 110.53,
+        "natural_capital": 98.56,
+        "cumulative_emissions": 72.75,
+        "adjusted_savings": 16.36,
+        "composite_score": 98.01
+      },
+      {
+        "year": 8,
+        "produced_capital": 124.92,
+        "human_capital": 112.12,
+        "natural_capital": 98.34,
+        "cumulative_emissions": 83.85,
+        "adjusted_savings": 16.64,
+        "composite_score": 97.75
+      },
+      {
+        "year": 9,
+        "produced_capital": 128.44,
+        "human_capital": 113.73,
+        "natural_capital": 98.11,
+        "cumulative_emissions": 95.15,
+        "adjusted_savings": 16.92,
+        "composite_score": 97.51
+      },
+      {
+        "year": 10,
+        "produced_capital": 132.06,
+        "human_capital": 115.37,
+        "natural_capital": 97.88,
+        "cumulative_emissions": 106.64,
+        "adjusted_savings": 17.22,
+        "composite_score": 97.27
+      },
+      {
+        "year": 11,
+        "produced_capital": 135.79,
+        "human_capital": 117.03,
+        "natural_capital": 97.64,
+        "cumulative_emissions": 118.32,
+        "adjusted_savings": 17.52,
+        "composite_score": 97.04
+      },
+      {
+        "year": 12,
+        "produced_capital": 139.61,
+        "human_capital": 118.72,
+        "natural_capital": 97.4,
+        "cumulative_emissions": 130.22,
+        "adjusted_savings": 17.82,
+        "composite_score": 96.82
+      },
+      {
+        "year": 13,
+        "produced_capital": 143.55,
+        "human_capital": 120.43,
+        "natural_capital": 97.15,
+        "cumulative_emissions": 142.32,
+        "adjusted_savings": 18.14,
+        "composite_score": 96.61
+      },
+      {
+        "year": 14,
+        "produced_capital": 147.6,
+        "human_capital": 122.16,
+        "natural_capital": 96.9,
+        "cumulative_emissions": 154.64,
+        "adjusted_savings": 18.46,
+        "composite_score": 96.41
+      },
+      {
+        "year": 15,
+        "produced_capital": 151.76,
+        "human_capital": 123.92,
+        "natural_capital": 96.64,
+        "cumulative_emissions": 167.18,
+        "adjusted_savings": 18.79,
+        "composite_score": 96.22
+      },
+      {
+        "year": 16,
+        "produced_capital": 156.04,
+        "human_capital": 125.7,
+        "natural_capital": 96.38,
+        "cumulative_emissions": 179.94,
+        "adjusted_savings": 19.13,
+        "composite_score": 96.05
+      },
+      {
+        "year": 17,
+        "produced_capital": 160.44,
+        "human_capital": 127.51,
+        "natural_capital": 96.11,
+        "cumulative_emissions": 192.94,
+        "adjusted_savings": 19.48,
+        "composite_score": 95.88
+      },
+      {
+        "year": 18,
+        "produced_capital": 164.97,
+        "human_capital": 129.35,
+        "natural_capital": 95.83,
+        "cumulative_emissions": 206.17,
+        "adjusted_savings": 19.84,
+        "composite_score": 95.72
+      },
+      {
+        "year": 19,
+        "produced_capital": 169.62,
+        "human_capital": 131.21,
+        "natural_capital": 95.55,
+        "cumulative_emissions": 219.65,
+        "adjusted_savings": 20.2,
+        "composite_score": 95.57
+      },
+      {
+        "year": 20,
+        "produced_capital": 174.4,
+        "human_capital": 133.1,
+        "natural_capital": 95.26,
+        "cumulative_emissions": 233.37,
+        "adjusted_savings": 20.58,
+        "composite_score": 95.44
+      }
+    ],
+    "policy": [
+      {
+        "year": 0,
+        "produced_capital": 100,
+        "human_capital": 100,
+        "natural_capital": 100,
+        "cumulative_emissions": 0,
+        "adjusted_savings": 26.96,
+        "composite_score": 100.0
+      },
+      {
+        "year": 1,
+        "produced_capital": 103.36,
+        "human_capital": 102.04,
+        "natural_capital": 100.29,
+        "cumulative_emissions": 4.72,
+        "adjusted_savings": 27.54,
+        "composite_score": 101.17
+      },
+      {
+        "year": 2,
+        "produced_capital": 106.83,
+        "human_capital": 104.12,
+        "natural_capital": 100.57,
+        "cumulative_emissions": 9.55,
+        "adjusted_savings": 28.12,
+        "composite_score": 102.37
+      },
+      {
+        "year": 3,
+        "produced_capital": 110.42,
+        "human_capital": 106.25,
+        "natural_capital": 100.86,
+        "cumulative_emissions": 14.49,
+        "adjusted_savings": 28.73,
+        "composite_score": 103.61
+      },
+      {
+        "year": 4,
+        "produced_capital": 114.13,
+        "human_capital": 108.41,
+        "natural_capital": 101.14,
+        "cumulative_emissions": 19.53,
+        "adjusted_savings": 29.35,
+        "composite_score": 104.89
+      },
+      {
+        "year": 5,
+        "produced_capital": 117.97,
+        "human_capital": 110.62,
+        "natural_capital": 101.41,
+        "cumulative_emissions": 24.68,
+        "adjusted_savings": 29.99,
+        "composite_score": 106.21
+      },
+      {
+        "year": 6,
+        "produced_capital": 121.93,
+        "human_capital": 112.88,
+        "natural_capital": 101.69,
+        "cumulative_emissions": 29.95,
+        "adjusted_savings": 30.65,
+        "composite_score": 107.57
+      },
+      {
+        "year": 7,
+        "produced_capital": 126.03,
+        "human_capital": 115.18,
+        "natural_capital": 101.96,
+        "cumulative_emissions": 35.34,
+        "adjusted_savings": 31.32,
+        "composite_score": 108.98
+      },
+      {
+        "year": 8,
+        "produced_capital": 130.26,
+        "human_capital": 117.53,
+        "natural_capital": 102.23,
+        "cumulative_emissions": 40.84,
+        "adjusted_savings": 32.02,
+        "composite_score": 110.43
+      },
+      {
+        "year": 9,
+        "produced_capital": 134.64,
+        "human_capital": 119.93,
+        "natural_capital": 102.49,
+        "cumulative_emissions": 46.48,
+        "adjusted_savings": 32.73,
+        "composite_score": 111.92
+      },
+      {
+        "year": 10,
+        "produced_capital": 139.16,
+        "human_capital": 122.38,
+        "natural_capital": 102.75,
+        "cumulative_emissions": 52.24,
+        "adjusted_savings": 33.47,
+        "composite_score": 113.47
+      },
+      {
+        "year": 11,
+        "produced_capital": 143.84,
+        "human_capital": 124.87,
+        "natural_capital": 103.01,
+        "cumulative_emissions": 58.13,
+        "adjusted_savings": 34.23,
+        "composite_score": 115.06
+      },
+      {
+        "year": 12,
+        "produced_capital": 148.67,
+        "human_capital": 127.42,
+        "natural_capital": 103.27,
+        "cumulative_emissions": 64.16,
+        "adjusted_savings": 35.01,
+        "composite_score": 116.7
+      },
+      {
+        "year": 13,
+        "produced_capital": 153.67,
+        "human_capital": 130.02,
+        "natural_capital": 103.52,
+        "cumulative_emissions": 70.33,
+        "adjusted_savings": 35.81,
+        "composite_score": 118.4
+      },
+      {
+        "year": 14,
+        "produced_capital": 158.83,
+        "human_capital": 132.67,
+        "natural_capital": 103.77,
+        "cumulative_emissions": 76.64,
+        "adjusted_savings": 36.63,
+        "composite_score": 120.15
+      },
+      {
+        "year": 15,
+        "produced_capital": 164.17,
+        "human_capital": 135.38,
+        "natural_capital": 104.01,
+        "cumulative_emissions": 83.1,
+        "adjusted_savings": 37.48,
+        "composite_score": 121.95
+      },
+      {
+        "year": 16,
+        "produced_capital": 169.68,
+        "human_capital": 138.14,
+        "natural_capital": 104.25,
+        "cumulative_emissions": 89.71,
+        "adjusted_savings": 38.35,
+        "composite_score": 123.81
+      },
+      {
+        "year": 17,
+        "produced_capital": 175.39,
+        "human_capital": 140.96,
+        "natural_capital": 104.49,
+        "cumulative_emissions": 96.48,
+        "adjusted_savings": 39.25,
+        "composite_score": 125.73
+      },
+      {
+        "year": 18,
+        "produced_capital": 181.28,
+        "human_capital": 143.84,
+        "natural_capital": 104.72,
+        "cumulative_emissions": 103.41,
+        "adjusted_savings": 40.17,
+        "composite_score": 127.72
+      },
+      {
+        "year": 19,
+        "produced_capital": 187.37,
+        "human_capital": 146.77,
+        "natural_capital": 104.95,
+        "cumulative_emissions": 110.51,
+        "adjusted_savings": 41.12,
+        "composite_score": 129.76
+      },
+      {
+        "year": 20,
+        "produced_capital": 193.66,
+        "human_capital": 149.76,
+        "natural_capital": 105.18,
+        "cumulative_emissions": 117.77,
+        "adjusted_savings": 42.1,
+        "composite_score": 131.87
+      }
+    ]
+  },
+  "interpretation_notes": [
+    "The policy pathway is compared directly with the baseline.",
+    "Treat this as exploratory decision support, not a forecast."
+  ],
+  "boundary": {
+    "forecast": false,
+    "compliance": false,
+    "autonomous_decision": false,
+    "professional_advice": false
+  }
+}

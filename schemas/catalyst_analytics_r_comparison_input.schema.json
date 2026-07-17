@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-comparison-input-v1.schema.json",
+  "title": "Catalyst Analytics R Comparative Scenario Input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "comparison_id", "baseline_id", "metrics", "targets", "thresholds", "scenarios"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "comparison_id": { "$ref": "#/$defs/id" },
+    "baseline_id": { "$ref": "#/$defs/id" },
+    "metrics": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+    "targets": { "$ref": "#/$defs/rules" },
+    "thresholds": { "$ref": "#/$defs/rules" },
+    "scenarios": {
+      "type": "array", "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["schema_version", "id", "title", "role", "model", "time", "initial_state", "policy", "parameters", "constraints"]
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9._-]*$", "minLength": 1, "maxLength": 100 },
+    "rules": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "number" },
+          {
+            "type": "object", "additionalProperties": false, "required": ["value", "operator"],
+            "properties": { "value": { "type": "number" }, "operator": { "enum": [">=", "<=", ">", "<", "=="] } }
+          }
+        ]
+      }
+    }
+  }
+}

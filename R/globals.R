@@ -1,6 +1,7 @@
 if (getRversion() >= "2.15.1") utils::globalVariables(c(
   "x", "dx", "y", "dy", "xend", "yend",
-  "value", "scenario", "param", "state"
+  "value", "scenario", "param", "state", "t", "final_value", "scenario_id",
+  "x_value", "y_value", "non_dominated"
 ))
 
 #' Internal constants for catalystanalyticsr
@@ -22,6 +23,7 @@ catalyst_globals <- function(dummy = NULL) {
     model_id = "khncpa",
     model_contract_version = "1.0.0",
     scenario_schema_version = "1.0.0",
-    demo_export_schema_version = "1.1.0"
+    comparison_schema_version = "1.0.0",
+    demo_export_schema_version = "1.2.0"
   )
 }
