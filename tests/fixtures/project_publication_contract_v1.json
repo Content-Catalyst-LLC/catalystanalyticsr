@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "project_id": "transition-evidence-project",
-  "expected_package_version": "0.9.0",
+  "expected_package_version": "1.0.0",
   "expected_run_count": 1,
   "expected_review_status": "approved",
   "expected_handoffs": [

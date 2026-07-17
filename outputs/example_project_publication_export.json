@@ -266,7 +266,7 @@
         "completed_at": "2026-07-17T17:16:01Z",
         "package": {
           "name": "catalystanalyticsr",
-          "version": "0.9.0"
+          "version": "1.0.0"
         },
         "environment": {
           "schema_version": "1.0.0",
@@ -287,7 +287,7 @@
           "packages": [
             {
               "name": "catalystanalyticsr",
-              "version": "0.9.0",
+              "version": "1.0.0",
               "installed": true
             }
           ],
@@ -516,14 +516,14 @@
       "packages": [
         {
           "name": "catalystanalyticsr",
-          "version": "0.9.0",
+          "version": "1.0.0",
           "installed": true
         }
       ],
       "session": null
     },
     "metadata": {
-      "package_version": "0.9.0",
+      "package_version": "1.0.0",
       "created_at": "2026-07-17T17:15:00Z",
       "updated_at": "2026-07-17T17:19:00Z",
       "review_status": "approved",
@@ -537,7 +537,7 @@
     "project_fingerprint": "0e03af9db2ff5c7e53177f124adb4c27",
     "package": {
       "name": "catalystanalyticsr",
-      "version": "0.9.0"
+      "version": "1.0.0"
     },
     "created_at": "2026-07-17T17:20:00Z",
     "formats": [
@@ -689,7 +689,7 @@
         "approval_not_inferred_from_reproducibility": true
       },
       "created_at": "2026-07-17T17:20:00Z",
-      "package_version": "0.9.0"
+      "package_version": "1.0.0"
     },
     "knowledge_library": {
       "schema_version": "1.0.0",
@@ -931,7 +931,7 @@
           "packages": [
             {
               "name": "catalystanalyticsr",
-              "version": "0.9.0",
+              "version": "1.0.0",
               "installed": true
             }
           ],
@@ -956,7 +956,7 @@
             }
           }
         ],
-        "package_version": "0.9.0"
+        "package_version": "1.0.0"
       },
       "publication_boundary": {
         "methodology_record_not_peer_review": true,

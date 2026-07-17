@@ -34,7 +34,7 @@ test_that("climate accounting assembles and exports auditable records", {
   )
   expect_true(all(file.exists(file.path(out$directory, expected))))
   manifest <- jsonlite::fromJSON(file.path(out$directory, "manifest.json"), simplifyVector = FALSE)
-  expect_identical(manifest$package$version, "0.9.0")
+  expect_identical(manifest$package$version, "1.0.0")
   expect_true(manifest$included$kaya)
   expect_true(manifest$included$natural_capital)
   unlink(out$directory, recursive = TRUE)

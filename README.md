@@ -2,11 +2,11 @@
 
 Catalyst Analytics R is the reproducible statistical, scenario-modeling, uncertainty-analysis, sustainability-accounting, model-governance, and analytical-publication engine for the Sustainable Catalyst platform.
 
-**Current release:** `0.9.0`  
+**Current release:** `1.0.0`  
 **WordPress companion:** `1.8.0`  
 **Shortcode:** `[catalyst_analytics_r_demo]`
 
-## v0.9.0 reproducible projects and analytical publication
+## v1.0.0 reproducible projects and analytical publication
 
 The package now preserves a complete analytical project rather than only individual model exports. A `catalyst_project` can contain canonical scenarios, governed datasets, model manifests, parameter sets, run records, result summaries, input and output hashes, software environments, indicators, plots, interpretation notes, review decisions, snapshots, and publication history.
 
@@ -26,7 +26,7 @@ project <- project_snapshot(project, "publication-candidate")
 export_project_publication(project, "outputs")
 ```
 
-## v0.9.0 capabilities
+## v1.0.0 capabilities
 
 - Governed analytical project structure
 - Stable project, scenario, dataset, parameter-set, input, and output hashes
@@ -69,9 +69,14 @@ scripts/                            Release validation
 python3 scripts/check_release.py
 Rscript scripts/check_r_sources.R
 R CMD build .
-R CMD check --no-manual catalystanalyticsr_0.9.0.tar.gz
+R CMD check --no-manual catalystanalyticsr_1.0.0.tar.gz
 ```
 
 ## Boundary
 
 A reproducible project can show exactly what was run, with which inputs, model, software environment, assumptions, warnings, interpretation, and review record. Reproducibility does not by itself establish external validity, causal identification, regulatory compliance, professional fitness, or approval for a decision.
+
+
+## v1.0 stable production contract
+
+Use `catalyst_api_manifest()` to inspect stable APIs, `catalyst_compatibility_manifest()` for contract support, and `catalyst_release_readiness()` to create a reviewable production gate record. See `docs/production-readiness.md`.

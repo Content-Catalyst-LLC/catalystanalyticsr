@@ -9,9 +9,9 @@ def load(path): return json.loads((ROOT/path).read_text(encoding='utf-8'))
 def validator(path):
  schema=load(path); jsonschema.Draft202012Validator.check_schema(schema); return jsonschema.Draft202012Validator(schema)
 
-def test_description_version(): assert re.search(r'^Version:\s*0\.9\.0$',(ROOT/'DESCRIPTION').read_text(),re.M)
+def test_description_version(): assert re.search(r'^Version:\s*1\.0\.0$',(ROOT/'DESCRIPTION').read_text(),re.M)
 def test_manifest_versions():
- m=load('catalyst_analytics_r_manifest.json'); assert m['schema_version']=='1.8.0'; assert m['repository_version']=='0.9.0'; assert m['r_package']['version']=='0.9.0'; assert m['wordpress_demo']['version']=='1.8.0'; assert m['wordpress_demo']['compatible_repository_version']=='0.9.0'
+ m=load('catalyst_analytics_r_manifest.json'); assert m['schema_version']=='2.0.0'; assert m['repository_version']=='1.0.0'; assert m['r_package']['version']=='1.0.0'; assert m['wordpress_demo']['version']=='2.0.0'; assert m['wordpress_demo']['compatible_repository_version']=='1.0.0'
 def test_new_contract_versions():
  c=load('catalyst_analytics_r_manifest.json')['contracts']
  for name in ('project','analytical_publication','project_handoff'): assert c[name]['version']=='1.0.0'
@@ -52,12 +52,12 @@ def test_r_docs_aliases_present():
  for name in ('catalyst_project','project_add_run','project_snapshot','project_manifest','export_project_publication','decision_studio_handoff','knowledge_library_handoff'): assert f'\\alias{{{name}}}' in aliases
 def test_project_test_files_present():
  for path in ('tests/testthat/helper-projects.R','tests/testthat/test-reproducible-projects.R','tests/testthat/test-project-publication.R'): assert (ROOT/path).exists()
-def test_plugin_version(): assert re.search(r'^ \* Version:\s*1\.8\.0$',(ROOT/'wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php').read_text(),re.M)
+def test_plugin_version(): assert re.search(r'^ \* Version:\s*2\.0\.0$',(ROOT/'wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php').read_text(),re.M)
 def test_plugin_project_interface():
- php=(ROOT/'wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php').read_text(); assert 'Reproducible project and publication studio' in php; assert 'Build project record' in php; assert 'Platform handoffs' in php
+ php=(ROOT/'wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php').read_text(); assert 'Production reproducibility and publication studio' in php; assert 'Build project record' in php; assert 'Platform handoffs' in php
 def test_plugin_contract_tokens():
  js=(ROOT/'wordpress/catalyst-analytics-r-demo/assets/catalyst-analytics-r-demo.js').read_text()
- for token in ('browser_reproducible_project_publication','mapped_project_contract_not_r_execution',"compatible_repository_version: '0.9.0'",'project_contract_version','publication_contract_version','decision_studio_analytical_project','knowledge_library_methodology_package'): assert token in js
+ for token in ('browser_reproducible_sustainability_analytics_engine','mapped_project_contract_not_r_execution',"compatible_repository_version: '1.0.0'",'project_contract_version','publication_contract_version','decision_studio_analytical_project','knowledge_library_methodology_package'): assert token in js
 def test_plugin_zip_integrity():
  path=ROOT/'dist/catalyst-analytics-r-demo-v1.8.0.zip'; assert path.exists()
  with zipfile.ZipFile(path) as z: assert z.testzip() is None; assert 'catalyst-analytics-r-demo/catalyst-analytics-r-demo.php' in z.namelist()

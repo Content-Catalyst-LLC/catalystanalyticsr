@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Catalyst Analytics R Demo
  * Description: Browser companion for reproducible analytical projects, run history, review, and publication handoffs in Catalyst Analytics R.
- * Version: 1.8.0
+ * Version: 2.0.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -11,8 +11,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('SCAR_DEMO_VERSION', '1.8.0');
-define('SCAR_COMPATIBLE_REPOSITORY_VERSION', '0.9.0');
+define('SCAR_DEMO_VERSION', '2.0.0');
+define('SCAR_COMPATIBLE_REPOSITORY_VERSION', '1.0.0');
 
 function scar_demo_assets() {
     $base = plugin_dir_url(__FILE__);
@@ -26,12 +26,12 @@ function scar_demo_shortcode() {
     ?>
     <section class="scar-demo" data-scar-demo>
       <header class="scar-demo__header">
-        <p class="scar-demo__eyebrow">Catalyst Analytics R v0.9.0</p>
-        <h3>Reproducible project and publication studio</h3>
+        <p class="scar-demo__eyebrow">Catalyst Analytics R v1.0.0</p>
+        <h3>Production reproducibility and publication studio</h3>
         <p>Assemble a project question, scenarios, run records, interpretation, review, snapshots, and platform handoffs into one portable analytical publication record.</p>
       </header>
 
-      <div class="scar-demo__notice"><strong>Educational browser companion.</strong> This interface maps to the v0.9.0 project and publication contracts. It does not execute the R package, render Quarto, or establish external validity.</div>
+      <div class="scar-demo__notice"><strong>Educational browser companion.</strong> This interface maps to the v1.0.0 stable project, publication, and release-readiness contracts. It does not execute the R package, render Quarto, or establish external validity.</div>
 
       <form class="scar-demo__form" data-scar-form>
         <div class="scar-demo__controls">
@@ -61,6 +61,8 @@ function scar_demo_shortcode() {
         <article><span>Run records</span><strong data-scar-runs>--</strong></article>
         <article><span>Review / publication</span><strong data-scar-status>--</strong></article>
       </div>
+
+      <div class="scar-demo__readiness" role="status" aria-live="polite"><strong>Stable production contract:</strong> API stability, versioned schemas, provenance, human review, accessibility, and browser-boundary gates are declared. This browser companion does not authorize publication or execute R.</div>
 
       <div class="scar-demo__grid">
         <article class="scar-demo__panel scar-demo__panel--wide">

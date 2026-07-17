@@ -1,16 +1,16 @@
 {
-  "schema_version": "1.8.0",
+  "schema_version": "2.0.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "0.9.0",
+  "repository_version": "1.0.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "0.9.0"
+    "version": "1.0.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "1.8.0",
-    "compatible_repository_version": "0.9.0",
+    "version": "2.0.0",
+    "compatible_repository_version": "1.0.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -27,7 +27,7 @@
       "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
     },
     "browser_export": {
-      "version": "1.8.0",
+      "version": "2.0.0",
       "schema": "schemas/catalyst_analytics_r_project_demo_export.schema.json"
     },
     "comparison": {
@@ -119,6 +119,10 @@
     "project_handoff": {
       "version": "1.0.0",
       "schema": "schemas/catalyst_analytics_r_project_handoff.schema.json"
+    },
+    "release_readiness": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_release_readiness.schema.json"
     }
   },
   "models": [
@@ -160,7 +164,8 @@
     "project_input": "examples/project_input.json",
     "project_publication_export": "outputs/example_project_publication_export.json",
     "browser_project_publication_export": "outputs/example_browser_project_publication_export.json",
-    "project_publication_contract": "tests/fixtures/project_publication_contract_v1.json"
+    "project_publication_contract": "tests/fixtures/project_publication_contract_v1.json",
+    "release_readiness": "outputs/example_release_readiness.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [
@@ -196,7 +201,12 @@
     "Markdown, HTML, Quarto, CSV, JSON, and ZIP publication bundles",
     "Decision Studio analytical handoffs",
     "Knowledge Library methodology handoffs",
-    "WordPress reproducible-project publication studio"
+    "WordPress reproducible-project publication studio",
+    "stable public API manifest",
+    "compatibility and migration policy",
+    "production release-readiness gates",
+    "accessibility and browser-boundary review",
+    "security and privacy release guidance"
   ],
   "method_path": "question -> evidence and scenarios -> models and parameter sets -> governed runs -> hashes and environment -> indicators and plots -> interpretation -> review -> snapshot -> publication -> Decision Studio and Knowledge Library handoffs",
   "boundaries": [

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_release_readiness.schema.json",
+  "title": "Catalyst Analytics R release readiness",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "package_version",
+    "status",
+    "checks",
+    "failed_checks",
+    "decision_boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "package_version": {
+      "const": "1.0.0"
+    },
+    "assessed_at": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "ready",
+        "not_ready"
+      ]
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "failed_checks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "object"
+    },
+    "decision_boundary": {
+      "type": "object",
+      "required": [
+        "human_approval_required",
+        "automated_release_authorization"
+      ],
+      "properties": {
+        "human_approval_required": {
+          "const": true
+        },
+        "automated_release_authorization": {
+          "const": false
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

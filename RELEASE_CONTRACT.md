@@ -1,9 +1,9 @@
-# Catalyst Analytics R v0.9.0 Release Contract
+# Catalyst Analytics R v1.0.0 Release Contract
 
 ## Versions
 
-- Repository and R package: `0.9.0`
-- WordPress companion: `1.8.0`
+- Repository and R package: `1.0.0`
+- WordPress companion: `2.0.0`
 - Project contract: `1.0.0`
 - Analytical publication contract: `1.0.0`
 - Project handoff contract: `1.0.0`
@@ -15,11 +15,11 @@
 3. Run records preserve stable input and output hashes, warnings, errors, package version, and review status.
 4. Publication bundles include project JSON, CSV indexes, Markdown, HTML, Quarto source, platform handoffs, and a file-integrity manifest.
 5. Decision Studio and Knowledge Library handoffs preserve explicit human-review and use boundaries.
-6. Browser companion v1.8.0 declares `mapped_project_contract_not_r_execution` and never claims R numerical parity.
+6. Browser companion v2.0.0 declares `mapped_project_contract_not_r_execution` and never claims R numerical parity.
 7. Prior scenario, comparison, uncertainty, data, climate, inclusive-development, calibration, validation, and governance contracts remain valid.
 8. `testthat`, `R CMD build`, and `R CMD check --no-manual` must complete without findings before commit or push.
 
-## v0.9.0 repair gate
+## v1.0.0 repair gate
 
 - Publication manifests must report `file_count` equal to the number of file-integrity records.
 - Manifest integrity scope must be `all_bundle_files_except_manifest`; a manifest cannot safely contain its own hash.

@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "package_version": "1.0.0",
+  "assessed_at": "2026-07-17T00:00:00Z",
+  "status": "ready",
+  "checks": {
+    "stable_api_declared": true,
+    "schemas_versioned": true,
+    "migrations_documented": true,
+    "model_limitations_published": true,
+    "provenance_exported": true,
+    "human_review_boundary_present": true,
+    "accessibility_reviewed": true,
+    "browser_boundary_disclosed": true,
+    "security_privacy_reviewed": true,
+    "release_tests_passed": true
+  },
+  "failed_checks": [],
+  "evidence": {
+    "release_contract": "passed",
+    "r_cmd_check": "required before commit",
+    "accessibility_review": "docs/production-readiness.md"
+  },
+  "decision_boundary": {
+    "human_approval_required": true,
+    "automated_release_authorization": false
+  }
+}

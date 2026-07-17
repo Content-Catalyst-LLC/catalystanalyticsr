@@ -2,8 +2,8 @@
   'use strict';
   var CONTRACT = {
     schema_version: '1.0.0',
-    compatible_repository_version: '0.9.0',
-    plugin_version: '1.8.0',
+    compatible_repository_version: '1.0.0',
+    plugin_version: '2.0.0',
     project_contract_version: '1.0.0',
     publication_contract_version: '1.0.0',
     parity_status: 'mapped_project_contract_not_r_execution'
@@ -55,7 +55,7 @@
     var publicationRecord = { schema_version: '1.0.0', export_type: 'reproducible_analytical_project_publication', project_id: project.id, project_fingerprint: fingerprint, package: { name: 'catalystanalyticsr', version: CONTRACT.compatible_repository_version }, created_at: created, formats: ['json', 'csv', 'markdown', 'html', 'quarto'], files: ['project.json', 'run-index.csv', 'analytical-publication.md', 'analytical-publication.html', 'analytical-publication.qmd', 'decision-studio-handoff.json', 'knowledge-library-methodology.json'], review_status: project.metadata.review_status, publication_status: publication };
     var decision = { schema_version: '1.0.0', handoff_type: 'decision_studio_analytical_project', project_id: project.id, project_fingerprint: fingerprint, title: project.title, alternatives: [baseline, policy], analytical_evidence: [baselineRun.result_summary, policyRun.result_summary], interpretations: project.notes, reviews: project.reviews, decision_boundary: { human_decision_required: true, approval_not_inferred_from_reproducibility: true }, created_at: created };
     var knowledge = { schema_version: '1.0.0', handoff_type: 'knowledge_library_methodology_package', project_id: project.id, project_fingerprint: fingerprint, title: project.title + ' - Methodology Record', abstract: project.description, models: project.models, assumptions: baseline.assumptions.concat(policy.assumptions), runs: [baselineRun, policyRun].map(function (r) { return { id: r.id, input_hash: r.input_hash, output_hash: r.output_hash, result_summary: r.result_summary }; }), interpretations: project.notes, review_record: project.reviews, created_at: created };
-    return { schema_version: '1.0.0', export_type: 'browser_reproducible_project_publication', contract: CONTRACT, project: project, run_index: [baselineRun, policyRun].map(function (r) { return { id: r.id, label: r.label, status: r.status, input_hash: r.input_hash, output_hash: r.output_hash, review_status: r.review_status }; }), publication: publicationRecord, handoffs: { decision_studio: decision, knowledge_library: knowledge }, review_boundary: { r_not_executed: true, reproducible_not_necessarily_valid: true, human_review_required: true, not_forecast_or_professional_advice: true } };
+    return { schema_version: '1.0.0', export_type: 'browser_reproducible_sustainability_analytics_engine', contract: CONTRACT, project: project, run_index: [baselineRun, policyRun].map(function (r) { return { id: r.id, label: r.label, status: r.status, input_hash: r.input_hash, output_hash: r.output_hash, review_status: r.review_status }; }), publication: publicationRecord, handoffs: { decision_studio: decision, knowledge_library: knowledge }, review_boundary: { r_not_executed: true, reproducible_not_necessarily_valid: true, human_review_required: true, not_forecast_or_professional_advice: true } };
   }
   function format(n) { return Number(n).toFixed(3).replace(/\.000$/, ''); }
   function render(root, payload) {

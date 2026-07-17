@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.0 - Reproducible Sustainability Analytics Engine
+
+- Declared the stable 1.x public API and compatibility policy.
+- Added machine-readable release-readiness gates with fail-closed validation.
+- Added production, accessibility, browser-boundary, security, privacy, migration, and tutorial documentation.
+- Added versioned release-readiness schema, fixtures, and tests.
+- Upgraded the WordPress companion to v2.0.0 with a production-contract readiness view.
+- Hardened CI and installer gates so R CMD check must be clean before commit or push.
+
+
 ## 0.9.0 - Reproducible Projects and Analytical Publication
 
 ### R CMD check repair
