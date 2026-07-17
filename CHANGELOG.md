@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.9.0 - Reproducible Projects and Analytical Publication
+
+### R CMD check repair
+
+- Corrected publication-manifest file counting when `jsonlite::read_json(..., simplifyVector = TRUE)` returns file records as a data frame.
+- Added an explicit `file_count` and integrity scope covering all bundle files except the self-referential manifest.
+- Qualified `capture.output()` through `utils` to eliminate the namespace NOTE.
+- Added regression and static release checks for manifest count consistency and namespace qualification.
+
+- Added the governed `catalyst_project` contract for scenarios, datasets, models, parameter sets, runs, indicators, plots, notes, reviews, snapshots, publications, and software environments.
+- Added stable project fingerprints and run-level input/output hashes.
+- Added environment capture covering R, platform, operating system, locale, timezone, and package versions.
+- Added canonical project JSON import/export and machine-readable project manifests.
+- Added Markdown, HTML, Quarto, CSV, JSON, figure, manifest, and ZIP publication bundles.
+- Added Decision Studio analytical handoffs and Knowledge Library methodology/reproducibility packages.
+- Added project, publication, handoff, and browser-export schemas and fixtures.
+- Added WordPress companion v1.8.0 with project assembly, run index, integrity records, review, publication formats, and platform handoffs.
+
 ## 0.8.0 - Calibration, Validation, and Model Governance
 
 ### R CMD check repair 3

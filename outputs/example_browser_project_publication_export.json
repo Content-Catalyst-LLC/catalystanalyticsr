@@ -1,0 +1,1208 @@
+{
+  "schema_version": "1.0.0",
+  "export_type": "browser_reproducible_project_publication",
+  "contract": {
+    "schema_version": "1.0.0",
+    "compatible_repository_version": "0.9.0",
+    "plugin_version": "1.8.0",
+    "project_contract_version": "1.0.0",
+    "publication_contract_version": "1.0.0",
+    "parity_status": "mapped_project_contract_not_r_execution"
+  },
+  "project": {
+    "schema_version": "1.0.0",
+    "project_type": "reproducible_analytical_project",
+    "id": "browser-transition-project",
+    "title": "Browser Transition Project",
+    "description": "A portable analytical project preserving scenario inputs, a governed run, interpretation, review, and publication records.",
+    "owner": "Sustainable Catalyst",
+    "scope": {
+      "geography": "WORLD",
+      "sector": "all",
+      "period": "0-4 years",
+      "decision_context": "educational scenario review"
+    },
+    "tags": [
+      "reproducibility",
+      "transition"
+    ],
+    "scenarios": {
+      "baseline": {
+        "schema_version": "1.0.0",
+        "id": "baseline",
+        "title": "Reference baseline",
+        "role": "baseline",
+        "model": {
+          "id": "khncpa",
+          "version": "1.0.0"
+        },
+        "time": {
+          "start": 0,
+          "end": 4,
+          "step": 1,
+          "unit": "year",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "initial_state": {
+          "K": 1,
+          "H": 1,
+          "N": 1,
+          "C": 0,
+          "P": 1,
+          "A": 1
+        },
+        "policy": {
+          "s": 0.18,
+          "e": 0.03,
+          "a": 0.01
+        },
+        "parameters": {
+          "emissions_intensity": 0.3,
+          "regen": 0.02
+        },
+        "constraints": {
+          "emissions_budget": 10
+        },
+        "units": {
+          "time": "year",
+          "states": {
+            "K": "index",
+            "H": "index",
+            "N": "index",
+            "C": "index",
+            "P": "people_index",
+            "A": "index"
+          },
+          "flows": {
+            "gdp": "index",
+            "consumption": "index",
+            "savings": "index",
+            "education": "index",
+            "abatement": "share",
+            "emissions": "tCO2e_index",
+            "depletion": "index",
+            "damages": "index"
+          }
+        },
+        "scope": {
+          "geography": {
+            "type": "global",
+            "id": "WORLD",
+            "label": "Global"
+          },
+          "sectors": [
+            "all"
+          ]
+        },
+        "currency": {
+          "code": "index",
+          "price_year": null
+        },
+        "sources": [],
+        "assumptions": [],
+        "uncertainty": [],
+        "review": {
+          "status": "draft",
+          "reviewed_by": [],
+          "notes": []
+        },
+        "metadata": {
+          "description": "Deterministic reference scenario for Catalyst Analytics R v0.2.0.",
+          "tags": [
+            "reference",
+            "canonical"
+          ],
+          "created_by": "catalystanalyticsr",
+          "created_at": "2026-07-16T00:00:00Z"
+        }
+      },
+      "transition-policy": {
+        "schema_version": "1.0.0",
+        "id": "transition-policy",
+        "title": "Transition policy",
+        "role": "intervention",
+        "model": {
+          "id": "khncpa",
+          "version": "1.0.0"
+        },
+        "time": {
+          "start": 0,
+          "end": 4,
+          "step": 1,
+          "unit": "year",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "initial_state": {
+          "K": 1,
+          "H": 1,
+          "N": 1,
+          "C": 0,
+          "P": 1,
+          "A": 1
+        },
+        "policy": {
+          "s": 0.25,
+          "e": 0.08,
+          "a": 0.1
+        },
+        "parameters": {
+          "emissions_intensity": 0.14,
+          "regen": 0.05
+        },
+        "constraints": {
+          "emissions_budget": 10
+        },
+        "units": {
+          "time": "year",
+          "states": {
+            "K": "index",
+            "H": "index",
+            "N": "index",
+            "C": "index",
+            "P": "people_index",
+            "A": "index"
+          },
+          "flows": {
+            "gdp": "index",
+            "consumption": "index",
+            "savings": "index",
+            "education": "index",
+            "abatement": "share",
+            "emissions": "tCO2e_index",
+            "depletion": "index",
+            "damages": "index"
+          }
+        },
+        "scope": {
+          "geography": {
+            "type": "global",
+            "id": "WORLD",
+            "label": "Global"
+          },
+          "sectors": [
+            "all"
+          ]
+        },
+        "currency": {
+          "code": "index",
+          "price_year": null
+        },
+        "sources": [],
+        "assumptions": [],
+        "uncertainty": [],
+        "review": {
+          "status": "draft",
+          "reviewed_by": [],
+          "notes": []
+        },
+        "metadata": {
+          "description": "Deterministic reference scenario for Catalyst Analytics R v0.2.0.",
+          "tags": [
+            "reference",
+            "canonical"
+          ],
+          "created_by": "catalystanalyticsr",
+          "created_at": "2026-07-16T00:00:00Z"
+        }
+      }
+    },
+    "datasets": {},
+    "models": {
+      "khncpa@1.0.0": {
+        "schema_version": "1.0.0",
+        "id": "khncpa",
+        "version": "1.0.0",
+        "title": "KH-NC-PA Vector Dynamics Model",
+        "description": "A coupled produced-capital, human-capital, natural-capital, atmospheric-carbon, population, and technology scenario model.",
+        "required_states": [
+          "K",
+          "H",
+          "N",
+          "C",
+          "P",
+          "A"
+        ],
+        "default_state": {
+          "K": 1,
+          "H": 1,
+          "N": 1,
+          "C": 0,
+          "P": 1,
+          "A": 1
+        },
+        "default_parameters": {
+          "alpha": 0.3,
+          "beta": 0.3,
+          "gamma": 0.1,
+          "deltaK": 0.05,
+          "deltaH": 0.03,
+          "Nmax": 1,
+          "regen": 0.02,
+          "depletion_intensity": 0.01,
+          "emissions_intensity": 0.3,
+          "absorption": 0.1,
+          "C0": 0,
+          "damage_scale": 0.001,
+          "pop_growth": 0.01,
+          "Pmax": null,
+          "tech_growth": 0.01,
+          "abatement_cost_scale": 0.02
+        },
+        "default_policy": {
+          "s": 0.2,
+          "e": 0.05,
+          "a": 0
+        },
+        "integration_methods": [
+          "rk4",
+          "euler"
+        ],
+        "state_units": {
+          "K": "index",
+          "H": "index",
+          "N": "index",
+          "C": "index",
+          "P": "people_index",
+          "A": "index"
+        },
+        "flow_map": {
+          "gdp": "Y",
+          "consumption": "consumption",
+          "savings": "savings",
+          "education": "education",
+          "abatement": "a",
+          "emissions": "emissions",
+          "depletion": "depletion",
+          "damages": "damages"
+        },
+        "flow_units": {
+          "gdp": "index",
+          "consumption": "index",
+          "savings": "index",
+          "education": "index",
+          "abatement": "share",
+          "emissions": "tCO2e_index",
+          "depletion": "index",
+          "damages": "index"
+        },
+        "indicator_map": {
+          "gdp": {
+            "source": "gdp",
+            "unit": "index",
+            "direction": "higher_better"
+          },
+          "emissions": {
+            "source": "emissions",
+            "unit": "tCO2e_index",
+            "direction": "lower_better"
+          },
+          "ans": {
+            "source": "ans",
+            "unit": "index",
+            "direction": "higher_better"
+          },
+          "natural_capital": {
+            "source": "N",
+            "unit": "index",
+            "direction": "higher_better"
+          },
+          "atmospheric_carbon": {
+            "source": "C",
+            "unit": "index",
+            "direction": "lower_better"
+          }
+        },
+        "metadata": {
+          "contract_version": "1.0.0",
+          "status": "experimental",
+          "intended_use": "Exploratory sustainable-development scenario analysis",
+          "prohibited_uses": [
+            "forecast",
+            "compliance determination",
+            "professional advice"
+          ]
+        }
+      }
+    },
+    "parameter_sets": {},
+    "runs": {
+      "baseline-run": {
+        "schema_version": "1.0.0",
+        "id": "baseline-run",
+        "label": "Reference baseline browser run",
+        "status": "completed",
+        "scenario_ids": [
+          "baseline"
+        ],
+        "model": {
+          "id": "khncpa",
+          "version": "1.0.0"
+        },
+        "created_at": "2026-07-17T17:30:00Z",
+        "completed_at": "2026-07-17T17:30:00Z",
+        "package": {
+          "name": "catalystanalyticsr-browser-companion",
+          "version": "1.8.0"
+        },
+        "environment": {
+          "schema_version": "1.0.0",
+          "runtime": "browser",
+          "user_agent": "fixture"
+        },
+        "input_hash": "8860657e4f2537a714c1f25dd976bd99",
+        "output_hash": "9e3ef8470296921e27d61e14a673ce38",
+        "inputs": {
+          "scenario": {
+            "schema_version": "1.0.0",
+            "id": "baseline",
+            "title": "Reference baseline",
+            "role": "baseline",
+            "model": {
+              "id": "khncpa",
+              "version": "1.0.0"
+            },
+            "time": {
+              "start": 0,
+              "end": 4,
+              "step": 1,
+              "unit": "year",
+              "values": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ]
+            },
+            "initial_state": {
+              "K": 1,
+              "H": 1,
+              "N": 1,
+              "C": 0,
+              "P": 1,
+              "A": 1
+            },
+            "policy": {
+              "s": 0.18,
+              "e": 0.03,
+              "a": 0.01
+            },
+            "parameters": {
+              "emissions_intensity": 0.3,
+              "regen": 0.02
+            },
+            "constraints": {
+              "emissions_budget": 10
+            },
+            "units": {
+              "time": "year",
+              "states": {
+                "K": "index",
+                "H": "index",
+                "N": "index",
+                "C": "index",
+                "P": "people_index",
+                "A": "index"
+              },
+              "flows": {
+                "gdp": "index",
+                "consumption": "index",
+                "savings": "index",
+                "education": "index",
+                "abatement": "share",
+                "emissions": "tCO2e_index",
+                "depletion": "index",
+                "damages": "index"
+              }
+            },
+            "scope": {
+              "geography": {
+                "type": "global",
+                "id": "WORLD",
+                "label": "Global"
+              },
+              "sectors": [
+                "all"
+              ]
+            },
+            "currency": {
+              "code": "index",
+              "price_year": null
+            },
+            "sources": [],
+            "assumptions": [],
+            "uncertainty": [],
+            "review": {
+              "status": "draft",
+              "reviewed_by": [],
+              "notes": []
+            },
+            "metadata": {
+              "description": "Deterministic reference scenario for Catalyst Analytics R v0.2.0.",
+              "tags": [
+                "reference",
+                "canonical"
+              ],
+              "created_by": "catalystanalyticsr",
+              "created_at": "2026-07-16T00:00:00Z"
+            }
+          },
+          "method": "browser-educational-approximation"
+        },
+        "result_summary": {
+          "type": "browser_scenario_run",
+          "terminal": {
+            "produced_capital": 1.27,
+            "natural_capital": 1.02,
+            "cumulative_emissions": 5.82
+          }
+        },
+        "result": {
+          "terminal": {
+            "produced_capital": 1.27,
+            "natural_capital": 1.02,
+            "cumulative_emissions": 5.82
+          },
+          "indicators": {
+            "produced_capital": 1.27,
+            "natural_capital": 1.02,
+            "cumulative_emissions": 5.82
+          }
+        },
+        "warnings": [
+          "Browser calculations are not R numerical parity."
+        ],
+        "errors": [],
+        "review_status": "unreviewed"
+      },
+      "policy-run": {
+        "schema_version": "1.0.0",
+        "id": "policy-run",
+        "label": "Transition policy browser run",
+        "status": "completed",
+        "scenario_ids": [
+          "transition-policy"
+        ],
+        "model": {
+          "id": "khncpa",
+          "version": "1.0.0"
+        },
+        "created_at": "2026-07-17T17:30:00Z",
+        "completed_at": "2026-07-17T17:30:00Z",
+        "package": {
+          "name": "catalystanalyticsr-browser-companion",
+          "version": "1.8.0"
+        },
+        "environment": {
+          "schema_version": "1.0.0",
+          "runtime": "browser",
+          "user_agent": "fixture"
+        },
+        "input_hash": "886b523a2796ecf0ec3516b9b647564b",
+        "output_hash": "94357676503d6672ee33a87e5ffdaf19",
+        "inputs": {
+          "scenario": {
+            "schema_version": "1.0.0",
+            "id": "transition-policy",
+            "title": "Transition policy",
+            "role": "intervention",
+            "model": {
+              "id": "khncpa",
+              "version": "1.0.0"
+            },
+            "time": {
+              "start": 0,
+              "end": 4,
+              "step": 1,
+              "unit": "year",
+              "values": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ]
+            },
+            "initial_state": {
+              "K": 1,
+              "H": 1,
+              "N": 1,
+              "C": 0,
+              "P": 1,
+              "A": 1
+            },
+            "policy": {
+              "s": 0.25,
+              "e": 0.08,
+              "a": 0.1
+            },
+            "parameters": {
+              "emissions_intensity": 0.14,
+              "regen": 0.05
+            },
+            "constraints": {
+              "emissions_budget": 10
+            },
+            "units": {
+              "time": "year",
+              "states": {
+                "K": "index",
+                "H": "index",
+                "N": "index",
+                "C": "index",
+                "P": "people_index",
+                "A": "index"
+              },
+              "flows": {
+                "gdp": "index",
+                "consumption": "index",
+                "savings": "index",
+                "education": "index",
+                "abatement": "share",
+                "emissions": "tCO2e_index",
+                "depletion": "index",
+                "damages": "index"
+              }
+            },
+            "scope": {
+              "geography": {
+                "type": "global",
+                "id": "WORLD",
+                "label": "Global"
+              },
+              "sectors": [
+                "all"
+              ]
+            },
+            "currency": {
+              "code": "index",
+              "price_year": null
+            },
+            "sources": [],
+            "assumptions": [],
+            "uncertainty": [],
+            "review": {
+              "status": "draft",
+              "reviewed_by": [],
+              "notes": []
+            },
+            "metadata": {
+              "description": "Deterministic reference scenario for Catalyst Analytics R v0.2.0.",
+              "tags": [
+                "reference",
+                "canonical"
+              ],
+              "created_by": "catalystanalyticsr",
+              "created_at": "2026-07-16T00:00:00Z"
+            }
+          },
+          "method": "browser-educational-approximation"
+        },
+        "result_summary": {
+          "type": "browser_scenario_run",
+          "terminal": {
+            "produced_capital": 1.375,
+            "natural_capital": 1.172,
+            "cumulative_emissions": 2.5760000000000005
+          }
+        },
+        "result": {
+          "terminal": {
+            "produced_capital": 1.375,
+            "natural_capital": 1.172,
+            "cumulative_emissions": 2.5760000000000005
+          },
+          "indicators": {
+            "produced_capital": 1.375,
+            "natural_capital": 1.172,
+            "cumulative_emissions": 2.5760000000000005
+          }
+        },
+        "warnings": [
+          "Browser calculations are not R numerical parity."
+        ],
+        "errors": [],
+        "review_status": "unreviewed"
+      }
+    },
+    "indicators": {},
+    "plots": {},
+    "notes": [
+      {
+        "id": "interpretation-1",
+        "text": "The baseline is preserved as an educational reference and is not a forecast.",
+        "author": "Analyst",
+        "run_ids": [
+          "baseline-run"
+        ],
+        "status": "approved",
+        "created_at": "2026-07-17T17:17:00Z"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "review-1",
+        "reviewer": "Reviewer",
+        "decision": "approved",
+        "comments": "Approved as a reproducibility example.",
+        "scope": "project",
+        "run_ids": [
+          "baseline-run"
+        ],
+        "reviewed_at": "2026-07-17T17:18:00Z"
+      }
+    ],
+    "snapshots": [
+      {
+        "id": "snapshot-1",
+        "note": "Publication candidate",
+        "created_at": "2026-07-17T17:19:00Z",
+        "project_fingerprint": "3008afa4245f1cc08a25ced34bbc4ba7",
+        "counts": {
+          "scenarios": 2,
+          "datasets": 0,
+          "models": 1,
+          "parameter_sets": 1,
+          "runs": 2,
+          "indicators": 0,
+          "plots": 0,
+          "notes": 1,
+          "reviews": 1
+        }
+      }
+    ],
+    "publications": [],
+    "environment": {
+      "schema_version": "1.0.0",
+      "captured_at": "2026-07-17T17:15:00Z",
+      "r": {
+        "version": "not executed",
+        "platform": "browser",
+        "arch": "browser"
+      },
+      "operating_system": {
+        "sysname": "Darwin",
+        "release": "25",
+        "version": "macOS",
+        "machine": "arm64"
+      },
+      "locale": "en_US.UTF-8",
+      "timezone": "America/Chicago",
+      "packages": [
+        {
+          "name": "catalyst-analytics-r-demo",
+          "version": "1.8.0",
+          "installed": true
+        }
+      ],
+      "session": null
+    },
+    "metadata": {
+      "package_version": "0.9.0",
+      "created_at": "2026-07-17T17:15:00Z",
+      "updated_at": "2026-07-17T17:19:00Z",
+      "review_status": "approved",
+      "publication_status": "draft"
+    }
+  },
+  "run_index": [
+    {
+      "id": "baseline-run",
+      "label": "Reference baseline browser run",
+      "status": "completed",
+      "input_hash": "8860657e4f2537a714c1f25dd976bd99",
+      "output_hash": "9e3ef8470296921e27d61e14a673ce38",
+      "review_status": "unreviewed"
+    },
+    {
+      "id": "policy-run",
+      "label": "Transition policy browser run",
+      "status": "completed",
+      "input_hash": "886b523a2796ecf0ec3516b9b647564b",
+      "output_hash": "94357676503d6672ee33a87e5ffdaf19",
+      "review_status": "unreviewed"
+    }
+  ],
+  "publication": {
+    "schema_version": "1.0.0",
+    "export_type": "reproducible_analytical_project_publication",
+    "project_id": "browser-transition-project",
+    "project_fingerprint": "3008afa4245f1cc08a25ced34bbc4ba7",
+    "package": {
+      "name": "catalystanalyticsr",
+      "version": "0.9.0"
+    },
+    "created_at": "2026-07-17T17:31:00Z",
+    "formats": [
+      "json",
+      "csv",
+      "markdown",
+      "html",
+      "quarto"
+    ],
+    "files": [
+      "project.json",
+      "run-index.csv",
+      "analytical-publication.md",
+      "analytical-publication.html",
+      "analytical-publication.qmd",
+      "decision-studio-handoff.json",
+      "knowledge-library-methodology.json"
+    ],
+    "review_status": "approved",
+    "publication_status": "draft",
+    "file_count": 7,
+    "integrity": {
+      "hash_algorithm": "md5",
+      "complete": true,
+      "scope": "all_bundle_files_except_manifest"
+    }
+  },
+  "handoffs": {
+    "decision_studio": {
+      "schema_version": "1.0.0",
+      "handoff_type": "decision_studio_analytical_project",
+      "project_id": "browser-transition-project",
+      "project_fingerprint": "3008afa4245f1cc08a25ced34bbc4ba7",
+      "title": "Browser Transition Project",
+      "alternatives": [
+        {
+          "schema_version": "1.0.0",
+          "id": "baseline",
+          "title": "Reference baseline",
+          "role": "baseline",
+          "model": {
+            "id": "khncpa",
+            "version": "1.0.0"
+          },
+          "time": {
+            "start": 0,
+            "end": 4,
+            "step": 1,
+            "unit": "year",
+            "values": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "initial_state": {
+            "K": 1,
+            "H": 1,
+            "N": 1,
+            "C": 0,
+            "P": 1,
+            "A": 1
+          },
+          "policy": {
+            "s": 0.18,
+            "e": 0.03,
+            "a": 0.01
+          },
+          "parameters": {
+            "emissions_intensity": 0.3,
+            "regen": 0.02
+          },
+          "constraints": {
+            "emissions_budget": 10
+          },
+          "units": {
+            "time": "year",
+            "states": {
+              "K": "index",
+              "H": "index",
+              "N": "index",
+              "C": "index",
+              "P": "people_index",
+              "A": "index"
+            },
+            "flows": {
+              "gdp": "index",
+              "consumption": "index",
+              "savings": "index",
+              "education": "index",
+              "abatement": "share",
+              "emissions": "tCO2e_index",
+              "depletion": "index",
+              "damages": "index"
+            }
+          },
+          "scope": {
+            "geography": {
+              "type": "global",
+              "id": "WORLD",
+              "label": "Global"
+            },
+            "sectors": [
+              "all"
+            ]
+          },
+          "currency": {
+            "code": "index",
+            "price_year": null
+          },
+          "sources": [],
+          "assumptions": [],
+          "uncertainty": [],
+          "review": {
+            "status": "draft",
+            "reviewed_by": [],
+            "notes": []
+          },
+          "metadata": {
+            "description": "Deterministic reference scenario for Catalyst Analytics R v0.2.0.",
+            "tags": [
+              "reference",
+              "canonical"
+            ],
+            "created_by": "catalystanalyticsr",
+            "created_at": "2026-07-16T00:00:00Z"
+          }
+        },
+        {
+          "schema_version": "1.0.0",
+          "id": "transition-policy",
+          "title": "Transition policy",
+          "role": "intervention",
+          "model": {
+            "id": "khncpa",
+            "version": "1.0.0"
+          },
+          "time": {
+            "start": 0,
+            "end": 4,
+            "step": 1,
+            "unit": "year",
+            "values": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "initial_state": {
+            "K": 1,
+            "H": 1,
+            "N": 1,
+            "C": 0,
+            "P": 1,
+            "A": 1
+          },
+          "policy": {
+            "s": 0.25,
+            "e": 0.08,
+            "a": 0.1
+          },
+          "parameters": {
+            "emissions_intensity": 0.14,
+            "regen": 0.05
+          },
+          "constraints": {
+            "emissions_budget": 10
+          },
+          "units": {
+            "time": "year",
+            "states": {
+              "K": "index",
+              "H": "index",
+              "N": "index",
+              "C": "index",
+              "P": "people_index",
+              "A": "index"
+            },
+            "flows": {
+              "gdp": "index",
+              "consumption": "index",
+              "savings": "index",
+              "education": "index",
+              "abatement": "share",
+              "emissions": "tCO2e_index",
+              "depletion": "index",
+              "damages": "index"
+            }
+          },
+          "scope": {
+            "geography": {
+              "type": "global",
+              "id": "WORLD",
+              "label": "Global"
+            },
+            "sectors": [
+              "all"
+            ]
+          },
+          "currency": {
+            "code": "index",
+            "price_year": null
+          },
+          "sources": [],
+          "assumptions": [],
+          "uncertainty": [],
+          "review": {
+            "status": "draft",
+            "reviewed_by": [],
+            "notes": []
+          },
+          "metadata": {
+            "description": "Deterministic reference scenario for Catalyst Analytics R v0.2.0.",
+            "tags": [
+              "reference",
+              "canonical"
+            ],
+            "created_by": "catalystanalyticsr",
+            "created_at": "2026-07-16T00:00:00Z"
+          }
+        }
+      ],
+      "analytical_evidence": [
+        {
+          "type": "browser_scenario_run",
+          "terminal": {
+            "produced_capital": 1.27,
+            "natural_capital": 1.02,
+            "cumulative_emissions": 5.82
+          }
+        },
+        {
+          "type": "browser_scenario_run",
+          "terminal": {
+            "produced_capital": 1.375,
+            "natural_capital": 1.172,
+            "cumulative_emissions": 2.5760000000000005
+          }
+        }
+      ],
+      "interpretations": [
+        {
+          "id": "interpretation-1",
+          "text": "The baseline is preserved as an educational reference and is not a forecast.",
+          "author": "Analyst",
+          "run_ids": [
+            "baseline-run"
+          ],
+          "status": "approved",
+          "created_at": "2026-07-17T17:17:00Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "review-1",
+          "reviewer": "Reviewer",
+          "decision": "approved",
+          "comments": "Approved as a reproducibility example.",
+          "scope": "project",
+          "run_ids": [
+            "baseline-run"
+          ],
+          "reviewed_at": "2026-07-17T17:18:00Z"
+        }
+      ],
+      "decision_boundary": {
+        "human_decision_required": true,
+        "approval_not_inferred_from_reproducibility": true
+      },
+      "created_at": "2026-07-17T17:31:00Z"
+    },
+    "knowledge_library": {
+      "schema_version": "1.0.0",
+      "handoff_type": "knowledge_library_methodology_package",
+      "project_id": "browser-transition-project",
+      "project_fingerprint": "3008afa4245f1cc08a25ced34bbc4ba7",
+      "title": "Browser Transition Project - Methodology Record",
+      "abstract": "A portable analytical project preserving scenario inputs, a governed run, interpretation, review, and publication records.",
+      "models": {
+        "khncpa@1.0.0": {
+          "schema_version": "1.0.0",
+          "id": "khncpa",
+          "version": "1.0.0",
+          "title": "KH-NC-PA Vector Dynamics Model",
+          "description": "A coupled produced-capital, human-capital, natural-capital, atmospheric-carbon, population, and technology scenario model.",
+          "required_states": [
+            "K",
+            "H",
+            "N",
+            "C",
+            "P",
+            "A"
+          ],
+          "default_state": {
+            "K": 1,
+            "H": 1,
+            "N": 1,
+            "C": 0,
+            "P": 1,
+            "A": 1
+          },
+          "default_parameters": {
+            "alpha": 0.3,
+            "beta": 0.3,
+            "gamma": 0.1,
+            "deltaK": 0.05,
+            "deltaH": 0.03,
+            "Nmax": 1,
+            "regen": 0.02,
+            "depletion_intensity": 0.01,
+            "emissions_intensity": 0.3,
+            "absorption": 0.1,
+            "C0": 0,
+            "damage_scale": 0.001,
+            "pop_growth": 0.01,
+            "Pmax": null,
+            "tech_growth": 0.01,
+            "abatement_cost_scale": 0.02
+          },
+          "default_policy": {
+            "s": 0.2,
+            "e": 0.05,
+            "a": 0
+          },
+          "integration_methods": [
+            "rk4",
+            "euler"
+          ],
+          "state_units": {
+            "K": "index",
+            "H": "index",
+            "N": "index",
+            "C": "index",
+            "P": "people_index",
+            "A": "index"
+          },
+          "flow_map": {
+            "gdp": "Y",
+            "consumption": "consumption",
+            "savings": "savings",
+            "education": "education",
+            "abatement": "a",
+            "emissions": "emissions",
+            "depletion": "depletion",
+            "damages": "damages"
+          },
+          "flow_units": {
+            "gdp": "index",
+            "consumption": "index",
+            "savings": "index",
+            "education": "index",
+            "abatement": "share",
+            "emissions": "tCO2e_index",
+            "depletion": "index",
+            "damages": "index"
+          },
+          "indicator_map": {
+            "gdp": {
+              "source": "gdp",
+              "unit": "index",
+              "direction": "higher_better"
+            },
+            "emissions": {
+              "source": "emissions",
+              "unit": "tCO2e_index",
+              "direction": "lower_better"
+            },
+            "ans": {
+              "source": "ans",
+              "unit": "index",
+              "direction": "higher_better"
+            },
+            "natural_capital": {
+              "source": "N",
+              "unit": "index",
+              "direction": "higher_better"
+            },
+            "atmospheric_carbon": {
+              "source": "C",
+              "unit": "index",
+              "direction": "lower_better"
+            }
+          },
+          "metadata": {
+            "contract_version": "1.0.0",
+            "status": "experimental",
+            "intended_use": "Exploratory sustainable-development scenario analysis",
+            "prohibited_uses": [
+              "forecast",
+              "compliance determination",
+              "professional advice"
+            ]
+          }
+        }
+      },
+      "assumptions": [],
+      "runs": [
+        {
+          "id": "baseline-run",
+          "input_hash": "8860657e4f2537a714c1f25dd976bd99",
+          "output_hash": "9e3ef8470296921e27d61e14a673ce38",
+          "result_summary": {
+            "type": "browser_scenario_run",
+            "terminal": {
+              "produced_capital": 1.27,
+              "natural_capital": 1.02,
+              "cumulative_emissions": 5.82
+            }
+          }
+        },
+        {
+          "id": "policy-run",
+          "input_hash": "886b523a2796ecf0ec3516b9b647564b",
+          "output_hash": "94357676503d6672ee33a87e5ffdaf19",
+          "result_summary": {
+            "type": "browser_scenario_run",
+            "terminal": {
+              "produced_capital": 1.375,
+              "natural_capital": 1.172,
+              "cumulative_emissions": 2.5760000000000005
+            }
+          }
+        }
+      ],
+      "interpretations": [
+        {
+          "id": "interpretation-1",
+          "text": "The baseline is preserved as an educational reference and is not a forecast.",
+          "author": "Analyst",
+          "run_ids": [
+            "baseline-run"
+          ],
+          "status": "approved",
+          "created_at": "2026-07-17T17:17:00Z"
+        }
+      ],
+      "review_record": [
+        {
+          "id": "review-1",
+          "reviewer": "Reviewer",
+          "decision": "approved",
+          "comments": "Approved as a reproducibility example.",
+          "scope": "project",
+          "run_ids": [
+            "baseline-run"
+          ],
+          "reviewed_at": "2026-07-17T17:18:00Z"
+        }
+      ],
+      "created_at": "2026-07-17T17:31:00Z"
+    }
+  },
+  "review_boundary": {
+    "r_not_executed": true,
+    "reproducible_not_necessarily_valid": true,
+    "human_review_required": true,
+    "not_forecast_or_professional_advice": true
+  }
+}

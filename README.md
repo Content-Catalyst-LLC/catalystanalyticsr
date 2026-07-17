@@ -1,57 +1,58 @@
 # Catalyst Analytics R
 
-Catalyst Analytics R is the reproducible statistical, scenario-modeling, uncertainty-analysis, and sustainability-accounting engine for the Sustainable Catalyst platform.
+Catalyst Analytics R is the reproducible statistical, scenario-modeling, uncertainty-analysis, sustainability-accounting, model-governance, and analytical-publication engine for the Sustainable Catalyst platform.
 
-**Current release:** `0.7.0`  
-**WordPress companion:** `1.6.0`  
+**Current release:** `0.9.0`  
+**WordPress companion:** `1.8.0`  
 **Shortcode:** `[catalyst_analytics_r_demo]`
 
-## v0.8.0 calibration, validation, and governance
+## v0.9.0 reproducible projects and analytical publication
 
-Catalyst Analytics R now supports bounded parameter calibration, historical and holdout validation, error metrics, residual diagnostics, solver and time-step benchmarks, stability and invariant checks, model cards, parameter cards, assumption and limitation ledgers, reviewer approvals, and governed lifecycle transitions. The release keeps a strict distinction between numerical fit and approved use: a model may fit a benchmark and still remain prohibited for forecasting, compliance, or professional advice.
+The package now preserves a complete analytical project rather than only individual model exports. A `catalyst_project` can contain canonical scenarios, governed datasets, model manifests, parameter sets, run records, result summaries, input and output hashes, software environments, indicators, plots, interpretation notes, review decisions, snapshots, and publication history.
 
 ```r
-spec <- calibration_spec(list(regen = list(target = "parameters.regen", initial = 0.02, lower = 0, upper = 0.08)))
-calibration <- calibrate_model(scenario, observations, spec)
-validation <- validate_model_fit(calibration, thresholds = list(rmse = 0.01))
+project <- catalyst_project(
+  "transition-evidence",
+  "Transition Evidence Project",
+  description = "Compare a baseline and transition pathway.",
+  owner = "Sustainable Catalyst"
+)
+
+project <- project_add_scenario(project, scenario)
+project <- project_add_run(project, run, "baseline-run", scenario_ids = scenario$id)
+project <- project_add_note(project, "interpretation-1", "Results remain conditional on the declared model.")
+project <- project_snapshot(project, "publication-candidate")
+
+export_project_publication(project, "outputs")
 ```
 
-## v0.8.0 capabilities
+## v0.9.0 capabilities
 
-- Produced-, human-, and natural-capital stock-and-flow accounts
-- Declared shadow prices and reconciliation errors
-- Inclusive wealth and per-capita wealth
-- Adjusted Net Savings decomposition
-- Human-development dimension indices
-- Weighted distribution and social-floor diagnostics
-- Intergenerational wealth comparison
-- Transparent composite scores and weight sensitivity
-- Reproducible JSON, CSV, Markdown, manifest, and ZIP exports
+- Governed analytical project structure
+- Stable project, scenario, dataset, parameter-set, input, and output hashes
+- Run history with warnings, errors, environment, and review status
+- Software, R, operating-system, locale, timezone, and dependency capture
+- Interpretation notes and human review records
+- Immutable project snapshots
+- JSON, CSV, Markdown, HTML, Quarto, and ZIP publication outputs
+- Registered PNG, SVG, PDF, and other figure artifacts
+- Decision Studio analytical handoffs
+- Knowledge Library methodology and reproducibility handoffs
+- Browser project-publication companion with explicit non-R parity boundary
 
 ## Existing analytical foundation
 
 - Canonical scenarios and model registry
 - Comparative scenario engine
 - Monte Carlo, Latin hypercube, sensitivity, and stress testing
-- Governed CSV/JSON intake and indicator registry
-- Emissions inventories, carbon budgets, Kaya decomposition, natural-capital accounts, and sustainability boundaries
-
-## Example
-
-```r
-produced <- capital_account("produced", 500, investment = 55, depreciation = 20, closing_stock = 535)
-human <- capital_account("human", 400, investment = 36, depreciation = 12, closing_stock = 424, shadow_price = 1.2)
-natural <- capital_account("natural", 300, investment = 12, depletion = 8, damages = 6, closing_stock = 298, shadow_price = 1.5)
-
-wealth <- inclusive_wealth_account(produced, human, natural, population = 5)
-ans <- adjusted_net_savings_decomposition(80, 20, 22, 14, 8, 5, 6, gni = 1000)
-hdi <- human_development_indicators(72, 13, 9, 16000)
-```
+- Governed data intake and indicator registry
+- Climate, carbon, natural-capital, inclusive-wealth, human-development, and distribution accounting
+- Calibration, historical and holdout validation, solver benchmarks, stability tests, and model governance
 
 ## Repository layout
 
 ```text
-R/                                  Analytical implementation
+R/                                  Analytical and project implementation
 man/                                R documentation
 inst/extdata/                       Governed fixtures
 schemas/                            Machine-readable contracts
@@ -68,9 +69,9 @@ scripts/                            Release validation
 python3 scripts/check_release.py
 Rscript scripts/check_r_sources.R
 R CMD build .
-R CMD check --no-manual catalystanalyticsr_0.7.0.tar.gz
+R CMD check --no-manual catalystanalyticsr_0.9.0.tar.gz
 ```
 
 ## Boundary
 
-Capital stocks, shadow prices, human-capital measurement, goalposts, social floors, distribution weights, intergenerational discount rates, and composite weights require explicit human review. Outputs are exploratory decision support, not forecasts, compliance determinations, autonomous decisions, or professional advice.
+A reproducible project can show exactly what was run, with which inputs, model, software environment, assumptions, warnings, interpretation, and review record. Reproducibility does not by itself establish external validity, causal identification, regulatory compliance, professional fitness, or approval for a decision.

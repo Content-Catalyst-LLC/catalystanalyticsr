@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-publication-v1.json",
+  "title": "Catalyst Analytics R analytical publication manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "export_type",
+    "project_id",
+    "project_fingerprint",
+    "package",
+    "created_at",
+    "formats",
+    "file_count",
+    "files",
+    "integrity",
+    "use_boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "export_type": {
+      "const": "reproducible_analytical_project_publication"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "project_fingerprint": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{32}$"
+    },
+    "package": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "formats": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "json",
+          "csv",
+          "markdown",
+          "html",
+          "quarto"
+        ]
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "file",
+          "bytes",
+          "md5"
+        ],
+        "properties": {
+          "file": {
+            "type": "string"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "md5": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{32}$"
+          }
+        }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "required": [
+        "hash_algorithm",
+        "complete",
+        "scope"
+      ],
+      "properties": {
+        "hash_algorithm": {
+          "const": "md5"
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "scope": {
+          "const": "all_bundle_files_except_manifest"
+        }
+      }
+    },
+    "use_boundary": {
+      "type": "object"
+    },
+    "file_count": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

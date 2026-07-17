@@ -369,8 +369,59 @@ def model_validation_brief(payload: dict) -> str:
     lines.extend(["", "## Review boundary", "", "Calibration fit does not automatically establish causal validity, forecasting accuracy, compliance suitability, or professional fitness. Intended use, validation thresholds, numerical tolerances, limitations, and lifecycle approval require qualified human review.", ""])
     return "\n".join(lines)
 
+
+def project_publication_brief(payload: dict) -> str:
+    project = payload.get("project", payload)
+    publication = payload.get("publication_manifest", payload.get("publication", {}))
+    runs = project.get("runs", {})
+    if isinstance(runs, list):
+        run_rows = runs
+    else:
+        run_rows = list(runs.values())
+    reviews = project.get("reviews", [])
+    notes = project.get("notes", [])
+    lines = [
+        "# Catalyst Analytics R Project Publication Brief", "",
+        f"**Project:** {project.get('title', project.get('id', 'Untitled'))}",
+        f"**Project id:** {project.get('id', 'n/a')}",
+        f"**Owner:** {project.get('owner', 'n/a')}",
+        f"**Fingerprint:** {publication.get('project_fingerprint', 'n/a')}",
+        f"**Package:** {publication.get('package', {}).get('version', project.get('metadata', {}).get('package_version', 'n/a'))}",
+        f"**Review status:** {project.get('metadata', {}).get('review_status', 'n/a')}", "",
+        "## Analytical purpose", "",
+        project.get("description", "No description recorded."), "",
+        "## Reproducibility record", "",
+        f"- Scenarios: {len(project.get('scenarios', {}))}",
+        f"- Datasets: {len(project.get('datasets', {}))}",
+        f"- Models: {len(project.get('models', {}))}",
+        f"- Runs: {len(run_rows)}",
+        f"- Snapshots: {len(project.get('snapshots', []))}", "",
+        "## Analytical runs", "",
+    ]
+    if run_rows:
+        for run in run_rows:
+            lines.append(f"- **{run.get('label', run.get('id', 'run'))}**: {run.get('status', 'n/a')}; input `{run.get('input_hash', 'n/a')}`; output `{run.get('output_hash', 'n/a')}`; review `{run.get('review_status', 'n/a')}`")
+    else:
+        lines.append("- No runs recorded.")
+    lines.extend(["", "## Interpretation notes", ""])
+    if notes:
+        for note in notes:
+            lines.append(f"- {note.get('text', '')}")
+    else:
+        lines.append("- No interpretation notes recorded.")
+    lines.extend(["", "## Review record", ""])
+    if reviews:
+        for review in reviews:
+            lines.append(f"- {review.get('reviewer', 'Reviewer')}: {review.get('decision', 'pending')}. {review.get('comments', '')}")
+    else:
+        lines.append("- No review records.")
+    lines.extend(["", "## Publication boundary", "", "This brief preserves project inputs, run hashes, environment, interpretation, and review records. Reproducibility does not establish external validity, causal identification, compliance, fitness for use, or professional approval.", ""])
+    return "\n".join(lines)
+
 def brief(payload: dict) -> str:
     engine = payload.get("engine", {})
+    if payload.get("export_type") in ("reproducible_analytical_project_publication", "browser_reproducible_project_publication") or payload.get("project_type") == "reproducible_analytical_project":
+        return project_publication_brief(payload)
     if payload.get("export_type") in ("model_validation_governance", "browser_model_validation_governance") or payload.get("analysis_type") == "calibration_validation_model_governance":
         return model_validation_brief(payload)
     if payload.get("export_type") == "browser_inclusive_development" or payload.get("analysis_type") == "inclusive_wealth_human_development_distribution":

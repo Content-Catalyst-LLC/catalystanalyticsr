@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-project-demo-v1.json",
+  "title": "Catalyst Analytics R browser project publication export",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "export_type",
+    "contract",
+    "project",
+    "run_index",
+    "publication",
+    "handoffs",
+    "review_boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "export_type": {
+      "const": "browser_reproducible_project_publication"
+    },
+    "contract": {
+      "type": "object",
+      "required": [
+        "compatible_repository_version",
+        "plugin_version",
+        "parity_status"
+      ]
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "description",
+        "owner",
+        "scope",
+        "scenarios",
+        "datasets",
+        "runs",
+        "notes",
+        "reviews",
+        "snapshots"
+      ]
+    },
+    "run_index": {
+      "type": "array"
+    },
+    "publication": {
+      "type": "object"
+    },
+    "handoffs": {
+      "type": "object"
+    },
+    "review_boundary": {
+      "type": "object"
+    }
+  }
+}

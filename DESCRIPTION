@@ -1,11 +1,11 @@
 Package: catalystanalyticsr
 Type: Package
 Title: Sustainable Development Scenario Engine for the Catalyst Suite
-Version: 0.8.0
+Version: 0.9.0
 Authors@R: c(person("Tariq", "Ahmad", email = "tariq@thecontentcatalyst.net", role = c("aut", "cre")))
 Description: Catalyst Analytics R is a sustainable-development analytics engine that simulates vector
     dynamical systems (calculus), computes inclusive-wealth indicators (e.g., Adjusted Net Savings),
-    evaluates climate and carbon budgets, greenhouse-gas inventories, Kaya decompositions, capital stock-and-flow accounts, inclusive wealth, Adjusted Net Savings, human development, distribution, intergenerational equity, transparent composite scores, natural-capital accounts, sustainability boundaries, governed model calibration, historical and holdout validation, residual diagnostics, numerical solver benchmarks, stability testing, model cards, and lifecycle governance; imports and validates documented datasets; computes governed indicators; propagates declared uncertainty; runs sensitivity and stress tests; and produces reproducible tables,
+    evaluates climate and carbon budgets, greenhouse-gas inventories, Kaya decompositions, capital stock-and-flow accounts, inclusive wealth, Adjusted Net Savings, human development, distribution, intergenerational equity, transparent composite scores, natural-capital accounts, sustainability boundaries, governed model calibration, historical and holdout validation, residual diagnostics, numerical solver benchmarks, stability testing, model cards, lifecycle governance, reproducible analytical projects, run histories, environment capture, portable publication bundles, Quarto and HTML outputs, and governed Decision Studio and Knowledge Library handoffs; imports and validates documented datasets; computes governed indicators; propagates declared uncertainty; runs sensitivity and stress tests; and produces reproducible tables,
     plots, and export bundles for the broader Catalyst product suite.
 License: MIT + file LICENSE
 Encoding: UTF-8

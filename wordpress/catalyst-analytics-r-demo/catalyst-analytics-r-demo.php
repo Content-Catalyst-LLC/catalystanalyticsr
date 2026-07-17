@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Catalyst Analytics R Demo
- * Description: Browser companion for calibration, validation, numerical testing, and model governance in Catalyst Analytics R.
- * Version: 1.7.0
+ * Description: Browser companion for reproducible analytical projects, run history, review, and publication handoffs in Catalyst Analytics R.
+ * Version: 1.8.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -11,8 +11,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('SCAR_DEMO_VERSION', '1.7.0');
-define('SCAR_COMPATIBLE_REPOSITORY_VERSION', '0.8.0');
+define('SCAR_DEMO_VERSION', '1.8.0');
+define('SCAR_COMPATIBLE_REPOSITORY_VERSION', '0.9.0');
 
 function scar_demo_assets() {
     $base = plugin_dir_url(__FILE__);
@@ -26,57 +26,71 @@ function scar_demo_shortcode() {
     ?>
     <section class="scar-demo" data-scar-demo>
       <header class="scar-demo__header">
-        <p class="scar-demo__eyebrow">Catalyst Analytics R v0.8.0</p>
-        <h3>Calibration, validation, and model governance</h3>
-        <p>Fit one declared parameter to historical observations, reserve a holdout period, inspect residual and solver evidence, and document the exact use boundary required before a model can move through review.</p>
+        <p class="scar-demo__eyebrow">Catalyst Analytics R v0.9.0</p>
+        <h3>Reproducible project and publication studio</h3>
+        <p>Assemble a project question, scenarios, run records, interpretation, review, snapshots, and platform handoffs into one portable analytical publication record.</p>
       </header>
 
-      <div class="scar-demo__notice"><strong>Educational browser companion.</strong> This interface maps to the v0.8.0 governance contract but does not execute R or establish real-world model validity.</div>
+      <div class="scar-demo__notice"><strong>Educational browser companion.</strong> This interface maps to the v0.9.0 project and publication contracts. It does not execute the R package, render Quarto, or establish external validity.</div>
 
       <form class="scar-demo__form" data-scar-form>
         <div class="scar-demo__controls">
-          <label><span>Initial regeneration rate</span><input type="number" name="initial" min="0" max="0.08" step="0.001" value="0.020"></label>
-          <label><span>Lower bound</span><input type="number" name="lower" min="0" max="0.08" step="0.001" value="0.000"></label>
-          <label><span>Upper bound</span><input type="number" name="upper" min="0" max="0.20" step="0.001" value="0.080"></label>
-          <label><span>Holdout years</span><input type="number" name="holdout" min="1" max="4" step="1" value="3"></label>
-          <label><span>RMSE acceptance threshold</span><input type="number" name="threshold" min="0.001" max="0.10" step="0.001" value="0.010"></label>
-          <label><span>Solver step</span><select name="solverStep"><option value="1">1 year</option><option value="0.5" selected>0.5 year</option><option value="0.25">0.25 year</option></select></label>
+          <label><span>Project title</span><input type="text" name="title" value="Transition Evidence Project" required></label>
+          <label><span>Project owner</span><input type="text" name="owner" value="Sustainable Catalyst"></label>
+          <label><span>Project id</span><input type="text" name="projectId" value="transition-evidence-project" pattern="[A-Za-z0-9._-]+" required></label>
+          <label class="scar-demo__control--wide"><span>Analytical question</span><textarea name="question" rows="3">How does a transition policy compare with the declared baseline while preserving a reviewable analytical record?</textarea></label>
+          <label><span>Baseline savings rate</span><input type="number" name="baselineSavings" min="0.05" max="0.60" step="0.01" value="0.18"></label>
+          <label><span>Policy savings rate</span><input type="number" name="policySavings" min="0.05" max="0.60" step="0.01" value="0.25"></label>
+          <label><span>Baseline emissions intensity</span><input type="number" name="baselineEmissions" min="0.01" max="1" step="0.01" value="0.30"></label>
+          <label><span>Policy emissions intensity</span><input type="number" name="policyEmissions" min="0.01" max="1" step="0.01" value="0.14"></label>
+          <label><span>Review decision</span><select name="review"><option value="pending">Pending</option><option value="changes_requested">Changes requested</option><option value="approved" selected>Approved</option><option value="rejected">Rejected</option></select></label>
+          <label><span>Publication status</span><select name="publication"><option value="draft" selected>Draft</option><option value="reviewed">Reviewed</option><option value="published">Published</option></select></label>
+          <label class="scar-demo__control--wide"><span>Interpretation note</span><textarea name="note" rows="3">The transition pathway improves the selected educational indicators, but results remain conditional on the declared model, parameters, and browser approximation.</textarea></label>
         </div>
-        <div class="scar-demo__actions"><button type="submit">Run calibration and validation</button><button type="button" class="scar-demo__secondary" data-scar-download>Export governance JSON</button><button type="button" class="scar-demo__link" data-scar-reset>Reset</button></div>
+        <div class="scar-demo__actions">
+          <button type="submit">Build project record</button>
+          <button type="button" class="scar-demo__secondary" data-scar-json>Export project JSON</button>
+          <button type="button" class="scar-demo__secondary" data-scar-markdown>Export Markdown</button>
+          <button type="button" class="scar-demo__link" data-scar-reset>Reset</button>
+        </div>
       </form>
 
       <div class="scar-demo__metrics">
-        <article><span>Calibrated rate</span><strong data-scar-estimate>--</strong></article>
-        <article><span>Calibration RMSE</span><strong data-scar-calibration>--</strong></article>
-        <article><span>Holdout RMSE</span><strong data-scar-holdout>--</strong></article>
-        <article><span>Lifecycle recommendation</span><strong data-scar-status>--</strong></article>
+        <article><span>Project fingerprint</span><strong data-scar-fingerprint>--</strong></article>
+        <article><span>Scenarios</span><strong data-scar-scenarios>--</strong></article>
+        <article><span>Run records</span><strong data-scar-runs>--</strong></article>
+        <article><span>Review / publication</span><strong data-scar-status>--</strong></article>
       </div>
 
       <div class="scar-demo__grid">
         <article class="scar-demo__panel scar-demo__panel--wide">
-          <div class="scar-demo__panel-header"><div><p>Historical and holdout evidence</p><h4>Observed versus calibrated pathway</h4></div><span class="scar-demo__badge" data-scar-validation>Not run</span></div>
-          <canvas data-scar-chart aria-label="Observed and calibrated natural-capital pathway"></canvas>
-          <div class="scar-demo__legend"><span><i data-kind="observed"></i>Observed</span><span><i data-kind="calibration"></i>Calibration fit</span><span><i data-kind="holdout"></i>Holdout prediction</span></div>
+          <div class="scar-demo__panel-header"><div><p>Project graph</p><h4>Evidence preserved from question to publication</h4></div><span class="scar-demo__badge" data-scar-contract>Contract 1.0.0</span></div>
+          <div class="scar-demo__path" data-scar-path></div>
         </article>
 
         <article class="scar-demo__panel">
-          <div class="scar-demo__panel-header"><div><p>Residual diagnostics</p><h4>Error evidence</h4></div></div>
-          <div class="scar-demo__ledger" data-scar-residuals></div>
+          <div class="scar-demo__panel-header"><div><p>Scenario and run index</p><h4>Reproducible records</h4></div></div>
+          <div class="scar-demo__ledger" data-scar-run-index></div>
         </article>
 
         <article class="scar-demo__panel">
-          <div class="scar-demo__panel-header"><div><p>Numerical validation</p><h4>Solver and stability checks</h4></div></div>
-          <div class="scar-demo__checks" data-scar-numerical></div>
+          <div class="scar-demo__panel-header"><div><p>Integrity</p><h4>Hashes and environment</h4></div></div>
+          <div class="scar-demo__checks" data-scar-integrity></div>
+        </article>
+
+        <article class="scar-demo__panel">
+          <div class="scar-demo__panel-header"><div><p>Publication set</p><h4>Portable formats</h4></div></div>
+          <div class="scar-demo__artifacts" data-scar-artifacts></div>
+        </article>
+
+        <article class="scar-demo__panel">
+          <div class="scar-demo__panel-header"><div><p>Platform handoffs</p><h4>Decision and knowledge records</h4></div></div>
+          <div class="scar-demo__handoffs" data-scar-handoffs></div>
         </article>
 
         <article class="scar-demo__panel scar-demo__panel--wide">
-          <div class="scar-demo__panel-header"><div><p>Model card</p><h4>Approved use boundary</h4></div><span class="scar-demo__badge" data-scar-governance>Experimental</span></div>
-          <div class="scar-demo__governance">
-            <section><h5>Intended use</h5><p>Educational synthetic-benchmark analysis and method development.</p></section>
-            <section><h5>Prohibited use</h5><p>Forecasting, compliance determinations, investment decisions, or professional advice.</p></section>
-            <section><h5>Approval scope</h5><p data-scar-scope>Pending validation.</p></section>
-          </div>
-          <div class="scar-demo__limitations" data-scar-limitations></div>
+          <div class="scar-demo__panel-header"><div><p>Interpretation and review</p><h4>Human accountability record</h4></div><span class="scar-demo__badge" data-scar-review>Pending</span></div>
+          <div class="scar-demo__review-grid"><section><h5>Interpretation</h5><p data-scar-note></p></section><section><h5>Review boundary</h5><p>Reproducibility preserves the analytical record; it does not establish causal validity, compliance, fitness for use, or professional approval.</p></section></div>
         </article>
       </div>
     </section>
