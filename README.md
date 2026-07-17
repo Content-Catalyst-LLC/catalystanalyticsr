@@ -1,149 +1,183 @@
 # Catalyst Analytics R
 
-Catalyst Analytics R is the reproducible sustainability-analysis layer of the Sustainable Catalyst platform. It combines governed data intake, versioned indicator definitions, scenario modeling, comparative analysis, uncertainty, stress testing, visualization, and portable evidence bundles.
+Catalyst Analytics R is the reproducible sustainability-analysis layer of the Sustainable Catalyst platform. It combines governed data intake, versioned indicators, scenario modeling, comparative analysis, uncertainty, climate and carbon accounting, natural-capital accounting, visualization, and portable evidence bundles.
 
-The repository also includes a WordPress companion. The browser tool does not execute R, but its dataset, indicator, quality, and trace records map to the public R contracts.
+The repository includes a WordPress companion. The browser tool does not execute R, but its inventory, carbon-pathway, Kaya, natural-capital, boundary, and review records map to the public R contracts.
 
-## v0.5.0 - Data Intake and Indicator Registry
+## v0.6.0 - Climate, Carbon, and Natural-Capital Accounting
 
-Version 0.5.0 adds the governed data layer required before model calibration and broader sustainability accounting:
+Version 0.6.0 turns the earlier carbon-budget and natural-capital concepts into governed accounting modules:
 
-- CSV and JSON data import
-- Versioned `catalyst_dataset` contracts
-- Source, publisher, license, citation, and retrieval metadata
-- Dataset fingerprints and file checksums
-- Tidy time-series and entity-key validation
-- Missing-value, duplicate-row, duplicate-key, and time-order flags
-- Geographic, sector, currency, and price-year metadata
-- Field-level units and a linear unit-conversion registry
-- Transformation-history records
-- Versioned `catalyst_indicator` definitions
-- Built-in per-capita, carbon-intensity, cumulative-emissions, adjusted-net-savings, and natural-capital indicators
-- Custom indicator registration
-- Grouped indicator calculations
-- Formula, unit, source-field, and calculation trace records
-- Reproducible data-analysis export bundles
-- WordPress data-intake and indicator-registry demo
+- Normalized greenhouse-gas inventories
+- Gross emissions, removals, and net emissions
+- Period-total and rate-based accounting
+- Declared GWP and CO2-equivalent basis
+- Carbon-budget pathways and remaining-budget trajectories
+- Overshoot and recovery timing
+- Target-year, lock-in, and stranded-pathway diagnostics
+- Additive LMDI Kaya decomposition
+- Natural-capital opening and closing stocks
+- Regeneration, restoration, additions, extraction, degradation, and damages
+- Reconciliation errors and stock-and-flow summaries
+- At-or-below, at-or-above, and inside-range sustainability boundaries
+- Warning margins and unit-mismatch detection
+- Auditable climate-accounting export bundles
+- WordPress climate-accounting companion
 
 ## Versions
 
-- Repository and R package: **0.5.0**
+- Repository and R package: **0.6.0**
+- Emissions-inventory contract: **1.0.0**
+- Climate-accounting contract: **1.0.0**
+- Natural-capital contract: **1.0.0**
+- Sustainability-boundary contract: **1.0.0**
 - Dataset contract: **1.0.0**
 - Indicator registry contract: **1.0.0**
-- Data-analysis export: **1.0.0**
 - Canonical scenario schema: **1.0.0**
 - Comparative scenario schema: **1.0.0**
 - Uncertainty schema: **1.0.0**
 - KH-NC-PA model: **1.0.0**
-- WordPress demo plugin: **1.4.0**
-- Browser data export: **1.4.0**
+- WordPress demo plugin: **1.5.0**
+- Browser climate export: **1.5.0**
 
-## Data-intake quickstart
+## Climate-accounting quickstart
 
 ```r
 path <- system.file(
-  "extdata", "data", "sample_country_timeseries.csv",
+  "extdata", "climate", "sample_climate_accounting.csv",
   package = "catalystanalyticsr"
 )
 
 dataset <- read_catalyst_data(
   path,
-  id = "regional-sustainability",
-  title = "Regional sustainability time series",
+  id = "sample-climate-accounting-data",
+  title = "Synthetic climate-accounting data",
   time_field = "year",
   entity_fields = "region",
-  required_fields = c("year", "region", "gdp", "population", "emissions"),
+  required_fields = c(
+    "year", "region", "emissions", "removals",
+    "energy", "gdp", "population"
+  ),
   units = list(
-    year = "year",
+    emissions = "MtCO2e",
+    removals = "MtCO2e",
+    energy = "PJ",
     gdp = "currency_index",
-    population = "person_index",
-    emissions = "tCO2e_index"
+    population = "million_persons"
   )
 )
 
-print(dataset)
-data_quality_report(dataset)
-dataset_manifest(dataset)
-```
-
-## Indicator registry quickstart
-
-```r
-list_catalyst_indicators()
-
-carbon <- calculate_indicator(dataset, "carbon_intensity")
-savings <- calculate_indicator(dataset, "adjusted_net_savings")
-regional_emissions <- calculate_indicator(
+inventory <- as_emissions_inventory(
   dataset,
-  "cumulative_emissions",
-  group_by = "region"
+  emissions_field = "emissions",
+  removals_field = "removals",
+  energy_field = "energy",
+  gdp_field = "gdp",
+  population_field = "population",
+  gwp_basis = "AR6 GWP100 synthetic CO2e fixture"
 )
 
-carbon$values
-indicator_trace(carbon)
-```
-
-Register a custom indicator with an explicit formula and calculation callback:
-
-```r
-savings_rate <- new_catalyst_indicator(
-  id = "savings_rate_observed",
-  version = "1.0.0",
-  title = "Observed savings rate",
-  description = "Gross savings divided by GDP.",
-  formula = "gross_savings / gdp",
-  required_fields = c("gross_savings", "gdp"),
-  unit = "fraction",
-  direction = "higher_better",
-  aggregation = "rowwise",
-  source = list(type = "derived"),
-  calculation = function(data, dataset, na_rm) data$gross_savings / data$gdp
+carbon <- carbon_budget_pathway(
+  inventory,
+  budget = 300,
+  target_year = 2030,
+  target_net_emissions = 0
 )
 
-register_catalyst_indicator(savings_rate)
-calculate_indicator(dataset, "savings_rate_observed")
+carbon_pathway_summary(carbon)
+kaya_decomposition(inventory)
 ```
 
-## Data-analysis export
+## Natural-capital account
 
 ```r
-export_data_analysis(
+natural <- natural_capital_from_dataset(
   dataset,
-  indicators = c(
-    "carbon_intensity",
-    "adjusted_net_savings",
-    "cumulative_emissions"
+  opening_field = "opening_stock",
+  regeneration_field = "regeneration",
+  restoration_field = "restoration",
+  additions_field = "additions",
+  extraction_field = "extraction",
+  degradation_field = "degradation",
+  damages_field = "damages",
+  closing_field = "closing_stock",
+  unit = "natural_capital_index"
+)
+
+validate_natural_capital_account(natural)
+natural_capital_summary(natural)
+```
+
+## Boundary assessment
+
+```r
+boundaries <- list(
+  boundary_definition(
+    id = "cumulative-carbon-budget",
+    title = "Cumulative net-emissions budget",
+    indicator = "cumulative_net_emissions",
+    unit = "MtCO2e",
+    upper = 300
   ),
-  group_by = "region",
+  boundary_definition(
+    id = "natural-capital-floor",
+    title = "Natural-capital closing-stock floor",
+    indicator = "natural_capital_closing_stock",
+    unit = "natural_capital_index",
+    direction = "at_or_above",
+    lower = 1000
+  )
+)
+
+analysis <- climate_accounting(
+  inventory,
+  budget = 300,
+  natural_capital = natural,
+  boundaries = boundaries,
+  target_year = 2030,
+  target_net_emissions = 0,
+  analysis_id = "sample-climate-accounting"
+)
+
+climate_accounting_summary(analysis)
+```
+
+## Reproducible export
+
+```r
+export_climate_accounting(
+  analysis,
   dir = "outputs",
-  analysis_id = "regional-indicator-review"
+  prefix = "sample-climate-accounting"
 )
 ```
 
-The bundle contains source records, dataset metadata, quality flags, transformation history, indicator definitions, calculated values, calculation traces, checksums, and a machine-readable manifest.
+The bundle contains normalized inventory records, emissions summaries, carbon pathways, budget diagnostics, Kaya levels and contributions, natural-capital accounts, boundary definitions and results, terminal indicators, methodology metadata, checksums, and a review brief.
 
-## Scenario and uncertainty analysis
+## Data, indicator, scenario, and uncertainty layers
 
-The v0.2.0-v0.4.0 analytical contracts remain available:
+The earlier governed analytical contracts remain available:
 
 ```r
+quality <- data_quality_report(dataset)
+registered <- list_catalyst_indicators()
+net <- calculate_indicator(dataset, "net_emissions")
+
 baseline <- scenario_from_json("examples/scenario_input.json")
 policy <- scenario_from_json("examples/uncertainty_input.json")
 comparison <- compare_scenarios(run_scenarios(list(baseline, policy)))
 ensemble <- run_uncertainty(policy, n = 500, sampling = "latin_hypercube", seed = 42)
 ```
 
-Existing scenario bundles now include registered indicator definitions alongside indicator values.
-
 ## WordPress demo
 
-Install `dist/catalyst-analytics-r-demo-v1.4.0.zip` and use:
+Install `dist/catalyst-analytics-r-demo-v1.5.0.zip` and use:
 
 ```text
 [catalyst_analytics_r_demo]
 ```
 
-The public interface parses pasted CSV records, reports quality flags, calculates a selected governed indicator, displays its formula and required fields, and exports a data-and-indicator trace. It does not verify the truth, license, geographic comparability, currency basis, or methodological suitability of user-supplied data.
+The public interface creates a deterministic educational emissions pathway, tracks a declared budget, computes a Kaya decomposition, reconciles a natural-capital account, evaluates declared boundaries, and exports a governed JSON record. It does not verify source inventories, select or allocate a scientifically defensible carbon budget, determine a GWP basis, value natural capital, establish compliance, or execute R.
 
 ## Repository structure
 
@@ -152,10 +186,11 @@ R/                                  R package functions and contracts
 man/                                R package documentation
 tests/testthat/                     R behavioral and numerical tests
 tests_py/                           Static repository contract tests
-inst/extdata/data/                  Packaged CSV, JSON, and source fixtures
+inst/extdata/climate/               Climate-accounting CSV and source fixtures
+inst/extdata/data/                  General data fixtures
 inst/extdata/scenarios/             Canonical scenario fixtures
-wordpress/catalyst-analytics-r-demo WordPress data-intake demo
-schemas/                            Dataset, indicator, scenario, and export schemas
+wordpress/catalyst-analytics-r-demo WordPress browser companion
+schemas/                            Dataset, scenario, climate, and export schemas
 examples/                           Example inputs
 outputs/                            Example exports
 docs/                               Methodology and release documentation
@@ -169,9 +204,9 @@ python3 -m pip install pytest jsonschema
 python3 scripts/check_release.py
 Rscript scripts/check_r_sources.R
 R CMD build .
-R CMD check --no-manual catalystanalyticsr_0.5.0.tar.gz
+R CMD check --no-manual catalystanalyticsr_0.6.0.tar.gz
 ```
 
 ## Boundaries
 
-Catalyst Analytics R provides transparent exploratory and decision-support analysis. Data import does not establish source validity, licensing rights, unit compatibility, causal identification, or fitness for a particular decision. Outputs are not forecasts, compliance determinations, autonomous decisions, or professional advice.
+Catalyst Analytics R provides transparent exploratory and decision-support analysis. Source and organizational boundaries, gas coverage, GWP basis, carbon-budget allocation, temporal interpretation, natural-capital measurement and valuation, and indicator suitability require human review. Outputs are not forecasts, compliance determinations, autonomous decisions, or professional advice.

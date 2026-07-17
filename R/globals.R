@@ -1,7 +1,10 @@
 if (getRversion() >= "2.15.1") utils::globalVariables(c(
   "x", "dx", "y", "dy", "xend", "yend",
   "value", "scenario", "param", "state", "t", "final_value", "scenario_id",
-  "x_value", "y_value", "non_dominated", "absolute_delta"
+  "x_value", "y_value", "non_dominated", "absolute_delta",
+  "cumulative_net_emissions", "carbon_budget", "group_label", "time_value",
+  "factor", "contribution", "measure", "stock", "entity", "boundary_label",
+  "normalized_distance", "status", "metric", "time"
 ))
 
 #' Internal constants for catalystanalyticsr
@@ -25,7 +28,13 @@ catalyst_globals <- function(dummy = NULL) {
     scenario_schema_version = "1.0.0",
     comparison_schema_version = "1.0.0",
     uncertainty_schema_version = "1.0.0",
-    demo_export_schema_version = "1.3.0"
+    dataset_schema_version = "1.0.0",
+    indicator_schema_version = "1.0.0",
+    emissions_inventory_schema_version = "1.0.0",
+    climate_accounting_schema_version = "1.0.0",
+    natural_capital_schema_version = "1.0.0",
+    boundary_schema_version = "1.0.0",
+    demo_export_schema_version = "1.5.0"
   )
 }
 

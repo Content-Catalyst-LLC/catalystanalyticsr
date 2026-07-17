@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-climate-demo-export-v1.5.schema.json",
+  "title": "Catalyst Analytics R Climate Browser Export",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "export_type", "demo_version", "generated_at", "contract",
+    "inputs", "inventory", "carbon_pathway", "kaya_decomposition",
+    "natural_capital_account", "boundary_assessment", "review_boundary"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.5.0"},
+    "export_type": {"const": "browser_climate_accounting"},
+    "demo_version": {"const": "1.5.0"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "contract": {
+      "type": "object",
+      "required": [
+        "compatible_repository_version", "emissions_inventory_contract_version",
+        "climate_accounting_contract_version", "natural_capital_contract_version",
+        "boundary_contract_version", "parity_status"
+      ],
+      "properties": {
+        "compatible_repository_version": {"const": "0.6.0"},
+        "emissions_inventory_contract_version": {"const": "1.0.0"},
+        "climate_accounting_contract_version": {"const": "1.0.0"},
+        "natural_capital_contract_version": {"const": "1.0.0"},
+        "boundary_contract_version": {"const": "1.0.0"},
+        "parity_status": {"const": "mapped_contract_browser_calculation"}
+      }
+    },
+    "inputs": {"type": "object"},
+    "inventory": {"type": "array", "minItems": 2},
+    "carbon_pathway": {"type": "array", "minItems": 2},
+    "kaya_decomposition": {"type": "object"},
+    "natural_capital_account": {"type": "array", "minItems": 1},
+    "boundary_assessment": {"type": "array", "minItems": 1},
+    "review_boundary": {
+      "type": "object",
+      "required": ["educational_companion", "source_review_required", "budget_allocation_review_required", "natural_capital_valuation_review_required", "not_compliance_advice"],
+      "properties": {
+        "educational_companion": {"const": true},
+        "source_review_required": {"const": true},
+        "budget_allocation_review_required": {"const": true},
+        "natural_capital_valuation_review_required": {"const": true},
+        "not_compliance_advice": {"const": true}
+      }
+    }
+  }
+}

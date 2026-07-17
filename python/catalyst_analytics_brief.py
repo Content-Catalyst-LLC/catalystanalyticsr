@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate a Catalyst Analytics R Markdown brief from scenario, comparison, uncertainty, or data-analysis JSON."""
+"""Generate a Catalyst Analytics R Markdown brief from governed analytics JSON exports."""
 
 from __future__ import annotations
 
@@ -181,8 +181,102 @@ def data_analysis_brief(payload: dict) -> str:
     ])
     return "\n".join(lines)
 
+
+def climate_accounting_brief(payload: dict) -> str:
+    is_browser = payload.get("export_type") == "browser_climate_accounting"
+    if is_browser:
+        title = "Browser climate, carbon, and natural-capital account"
+        contract = payload.get("contract", {})
+        carbon_pathway = payload.get("carbon_pathway", [])
+        diagnostics = []
+        if carbon_pathway:
+            final = carbon_pathway[-1]
+            diagnostics.append({
+                "group": final.get("region", "Global"),
+                "cumulative_net_emissions": final.get("cumulative_net_emissions"),
+                "carbon_budget": final.get("carbon_budget"),
+                "remaining_budget": final.get("remaining_budget"),
+                "overshoot_time": next((row.get("year") for row in carbon_pathway if not row.get("within_budget", True)), None),
+                "within_budget": final.get("within_budget"),
+            })
+        kaya = payload.get("kaya_decomposition", {})
+        natural_rows = payload.get("natural_capital_account", [])
+        boundaries = payload.get("boundary_assessment", [])
+        package_version = contract.get("compatible_repository_version", "n/a")
+        parity = contract.get("parity_status", "n/a")
+    else:
+        title = payload.get("title", payload.get("analysis_id", "Untitled climate account"))
+        diagnostics = payload.get("carbon", {}).get("diagnostics", [])
+        kaya = payload.get("kaya", {})
+        natural_rows = payload.get("natural_capital", {}).get("data", [])
+        boundaries = payload.get("boundary_assessment", {}).get("assessment", [])
+        package_version = payload.get("package", {}).get("version", "n/a")
+        parity = "r_package_accounting"
+
+    lines = [
+        "# Catalyst Analytics R Climate Accounting Brief", "",
+        f"**Analysis:** {title}",
+        f"**Package compatibility:** {package_version}",
+        f"**Accounting boundary:** {parity}",
+        f"**Schema version:** {payload.get('schema_version', 'n/a')}", "",
+        "## Carbon-budget diagnostics", "",
+        "| Scope | Cumulative net emissions | Budget | Remaining budget | Overshoot time | Status |",
+        "|---|---:|---:|---:|---:|---|",
+    ]
+    for row in diagnostics:
+        status = "within budget" if row.get("within_budget") else "overshoot"
+        lines.append(
+            f"| {row.get('group', row.get('region', 'n/a'))} | "
+            f"{row.get('cumulative_net_emissions', 'n/a')} | {row.get('carbon_budget', row.get('budget', 'n/a'))} | "
+            f"{row.get('remaining_budget', 'n/a')} | {row.get('overshoot_time', 'n/a')} | {status} |"
+        )
+    if not diagnostics:
+        lines.append("| n/a | n/a | n/a | n/a | n/a | no diagnostics |")
+
+    contributions = kaya.get("contributions", []) if isinstance(kaya, dict) else []
+    lines.extend(["", "## Kaya decomposition", ""])
+    if contributions:
+        for row in contributions:
+            effects = []
+            for key in ("population_effect", "affluence_effect", "energy_intensity_effect", "carbon_intensity_effect", "residual"):
+                if key in row:
+                    effects.append(f"{key.replace('_', ' ')}={row.get(key)}")
+            label = row.get("group", row.get("region", row.get("period", "decomposition")))
+            lines.append(f"- {label}: " + ", ".join(effects))
+    else:
+        lines.append("- No Kaya decomposition was included.")
+
+    lines.extend(["", "## Natural-capital account", ""])
+    if natural_rows:
+        final_natural = natural_rows[-1]
+        lines.extend([
+            f"- Closing stock: {final_natural.get('closing_stock', 'n/a')} {final_natural.get('unit', '')}".rstrip(),
+            f"- Net change: {final_natural.get('net_change', 'n/a')}",
+            f"- Reconciliation error: {final_natural.get('reconciliation_error', 'n/a')}",
+        ])
+    else:
+        lines.append("- No natural-capital account was included.")
+
+    lines.extend(["", "## Boundary assessment", ""])
+    if boundaries:
+        for row in boundaries:
+            lines.append(
+                f"- {row.get('boundary_title', row.get('boundary_id', 'Boundary'))}: "
+                f"{row.get('status', 'unknown')} (value={row.get('value', 'n/a')} {row.get('unit', '')})"
+            )
+    else:
+        lines.append("- No boundary assessment was included.")
+
+    lines.extend([
+        "", "## Review boundary", "",
+        "These accounts preserve declared sources, scopes, carbon-budget assumptions, GWP basis, and natural-capital accounting records. They are not forecasts, compliance determinations, autonomous decisions, or professional advice.", ""
+    ])
+    return "\n".join(lines)
+
 def brief(payload: dict) -> str:
     engine = payload.get("engine", {})
+    if payload.get("export_type") == "browser_climate_accounting" or ("inventory" in payload and "carbon" in payload and "natural_capital" in payload):
+        return climate_accounting_brief(payload)
     if "dataset" in payload and ("indicators" in payload or "indicator_registry" in payload or engine.get("type") == "browser_data_intake"):
         return data_analysis_brief(payload)
     if payload.get("analysis_type") == "uncertainty_ensemble":

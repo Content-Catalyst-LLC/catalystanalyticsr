@@ -1,0 +1,639 @@
+{
+  "schema_version": "1.0.0",
+  "analysis_id": "sample-climate-accounting",
+  "title": "Synthetic climate, carbon, and natural-capital account",
+  "created_at": "2026-07-17T00:00:00Z",
+  "package": {
+    "name": "catalystanalyticsr",
+    "version": "0.6.0"
+  },
+  "inventory": {
+    "schema_version": "1.0.0",
+    "id": "sample-climate-accounting-data-emissions-inventory",
+    "title": "Synthetic climate accounting data emissions inventory",
+    "dataset_id": "sample-climate-accounting-data",
+    "dataset_fingerprint": "0915904d1da3d039c5661d51b6a4666a",
+    "time_field": "year",
+    "entity_fields": [
+      "region"
+    ],
+    "mappings": {
+      "emissions": "emissions",
+      "removals": "removals",
+      "gas": null,
+      "source": null,
+      "energy": "energy",
+      "gdp": "gdp",
+      "population": "population"
+    },
+    "unit": "MtCO2e",
+    "accounting_basis": "period_total",
+    "gwp_basis": "AR6 GWP100 synthetic CO2e fixture",
+    "boundaries": {
+      "geography": "Global",
+      "scope": "synthetic"
+    },
+    "source": {
+      "id": "sample-climate-accounting-source",
+      "title": "Synthetic climate and natural-capital accounting fixture",
+      "publisher": "Content Catalyst LLC",
+      "url": "",
+      "license": "CC0-1.0 synthetic example",
+      "retrieved_at": "2026-07-17T00:00:00Z",
+      "citation": "Catalyst Analytics R v0.6.0 synthetic climate-accounting fixture.",
+      "metadata": {
+        "synthetic": true,
+        "review_status": "fixture_only"
+      }
+    },
+    "metadata": {
+      "package_version": "0.6.0",
+      "created_at": "2026-07-17T00:00:00Z",
+      "row_count": 6,
+      "gross_total": 418.0,
+      "removals_total": 84.0,
+      "net_total": 334.0
+    },
+    "data": [
+      {
+        "region": "Global",
+        "year": 2025,
+        "gross_emissions": 100.0,
+        "removals": 5.0,
+        "net_emissions": 95.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 500.0,
+        "gdp": 1000.0,
+        "population": 100.0
+      },
+      {
+        "region": "Global",
+        "year": 2026,
+        "gross_emissions": 90.0,
+        "removals": 7.0,
+        "net_emissions": 83.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 480.0,
+        "gdp": 1030.0,
+        "population": 101.0
+      },
+      {
+        "region": "Global",
+        "year": 2027,
+        "gross_emissions": 78.0,
+        "removals": 10.0,
+        "net_emissions": 68.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 450.0,
+        "gdp": 1060.0,
+        "population": 102.0
+      },
+      {
+        "region": "Global",
+        "year": 2028,
+        "gross_emissions": 65.0,
+        "removals": 14.0,
+        "net_emissions": 51.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 420.0,
+        "gdp": 1090.0,
+        "population": 103.0
+      },
+      {
+        "region": "Global",
+        "year": 2029,
+        "gross_emissions": 50.0,
+        "removals": 20.0,
+        "net_emissions": 30.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 380.0,
+        "gdp": 1120.0,
+        "population": 104.0
+      },
+      {
+        "region": "Global",
+        "year": 2030,
+        "gross_emissions": 35.0,
+        "removals": 28.0,
+        "net_emissions": 7.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 340.0,
+        "gdp": 1150.0,
+        "population": 105.0
+      }
+    ]
+  },
+  "carbon": {
+    "schema_version": "1.0.0",
+    "pathway": [
+      {
+        "region": "Global",
+        "year": 2025,
+        "gross_emissions": 100.0,
+        "removals": 5.0,
+        "net_emissions": 95.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 500.0,
+        "gdp": 1000.0,
+        "population": 100.0,
+        "cumulative_gross_emissions": 100.0,
+        "cumulative_removals": 5.0,
+        "cumulative_net_emissions": 95.0,
+        "carbon_budget": 300.0,
+        "remaining_budget": 205.0,
+        "budget_share_used": 0.31666666666666665,
+        "within_budget": true,
+        "budget_status": "within_budget"
+      },
+      {
+        "region": "Global",
+        "year": 2026,
+        "gross_emissions": 90.0,
+        "removals": 7.0,
+        "net_emissions": 83.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 480.0,
+        "gdp": 1030.0,
+        "population": 101.0,
+        "cumulative_gross_emissions": 190.0,
+        "cumulative_removals": 12.0,
+        "cumulative_net_emissions": 178.0,
+        "carbon_budget": 300.0,
+        "remaining_budget": 122.0,
+        "budget_share_used": 0.5933333333333334,
+        "within_budget": true,
+        "budget_status": "within_budget"
+      },
+      {
+        "region": "Global",
+        "year": 2027,
+        "gross_emissions": 78.0,
+        "removals": 10.0,
+        "net_emissions": 68.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 450.0,
+        "gdp": 1060.0,
+        "population": 102.0,
+        "cumulative_gross_emissions": 268.0,
+        "cumulative_removals": 22.0,
+        "cumulative_net_emissions": 246.0,
+        "carbon_budget": 300.0,
+        "remaining_budget": 54.0,
+        "budget_share_used": 0.82,
+        "within_budget": true,
+        "budget_status": "within_budget"
+      },
+      {
+        "region": "Global",
+        "year": 2028,
+        "gross_emissions": 65.0,
+        "removals": 14.0,
+        "net_emissions": 51.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 420.0,
+        "gdp": 1090.0,
+        "population": 103.0,
+        "cumulative_gross_emissions": 333.0,
+        "cumulative_removals": 36.0,
+        "cumulative_net_emissions": 297.0,
+        "carbon_budget": 300.0,
+        "remaining_budget": 3.0,
+        "budget_share_used": 0.99,
+        "within_budget": true,
+        "budget_status": "within_budget"
+      },
+      {
+        "region": "Global",
+        "year": 2029,
+        "gross_emissions": 50.0,
+        "removals": 20.0,
+        "net_emissions": 30.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 380.0,
+        "gdp": 1120.0,
+        "population": 104.0,
+        "cumulative_gross_emissions": 383.0,
+        "cumulative_removals": 56.0,
+        "cumulative_net_emissions": 327.0,
+        "carbon_budget": 300.0,
+        "remaining_budget": -27.0,
+        "budget_share_used": 1.09,
+        "within_budget": false,
+        "budget_status": "overshoot"
+      },
+      {
+        "region": "Global",
+        "year": 2030,
+        "gross_emissions": 35.0,
+        "removals": 28.0,
+        "net_emissions": 7.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 340.0,
+        "gdp": 1150.0,
+        "population": 105.0,
+        "cumulative_gross_emissions": 418.0,
+        "cumulative_removals": 84.0,
+        "cumulative_net_emissions": 334.0,
+        "carbon_budget": 300.0,
+        "remaining_budget": -34.0,
+        "budget_share_used": 1.1133333333333333,
+        "within_budget": false,
+        "budget_status": "overshoot"
+      }
+    ],
+    "diagnostics": [
+      {
+        "region": "Global",
+        "budget": 300.0,
+        "cumulative_gross_emissions": 418.0,
+        "cumulative_removals": 84.0,
+        "cumulative_net_emissions": 334.0,
+        "remaining_budget": -34.0,
+        "budget_share_used": 1.1133333333333333,
+        "overshoot_time": 2029,
+        "recovery_time": null,
+        "terminal_net_emissions": 7.0,
+        "target_year": 2030,
+        "target_net_emissions": 0.0,
+        "net_emissions_at_target": 7.0,
+        "post_target_positive_emissions": 7.0,
+        "carbon_lock_in_share": 0.023333333333333334,
+        "stranded_pathway_signal": true,
+        "within_budget": false,
+        "unit": "MtCO2e"
+      }
+    ]
+  },
+  "kaya": {
+    "schema_version": "1.0.0",
+    "method": "additive_lmdi_kaya_identity",
+    "levels": [
+      {
+        "region": "Global",
+        "year": 2025,
+        "gross_emissions": 100.0,
+        "removals": 5.0,
+        "net_emissions": 95.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 500.0,
+        "gdp": 1000.0,
+        "population": 100.0,
+        "affluence": 10.0,
+        "energy_intensity": 0.5,
+        "carbon_intensity": 0.2,
+        "reconstructed_emissions": 100.0,
+        "identity_error": 0.0
+      },
+      {
+        "region": "Global",
+        "year": 2026,
+        "gross_emissions": 90.0,
+        "removals": 7.0,
+        "net_emissions": 83.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 480.0,
+        "gdp": 1030.0,
+        "population": 101.0,
+        "affluence": 10.198019801980198,
+        "energy_intensity": 0.46601941747572817,
+        "carbon_intensity": 0.1875,
+        "reconstructed_emissions": 90.0,
+        "identity_error": 0.0
+      },
+      {
+        "region": "Global",
+        "year": 2027,
+        "gross_emissions": 78.0,
+        "removals": 10.0,
+        "net_emissions": 68.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 450.0,
+        "gdp": 1060.0,
+        "population": 102.0,
+        "affluence": 10.392156862745098,
+        "energy_intensity": 0.42452830188679247,
+        "carbon_intensity": 0.17333333333333334,
+        "reconstructed_emissions": 78.0,
+        "identity_error": 0.0
+      },
+      {
+        "region": "Global",
+        "year": 2028,
+        "gross_emissions": 65.0,
+        "removals": 14.0,
+        "net_emissions": 51.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 420.0,
+        "gdp": 1090.0,
+        "population": 103.0,
+        "affluence": 10.58252427184466,
+        "energy_intensity": 0.3853211009174312,
+        "carbon_intensity": 0.15476190476190477,
+        "reconstructed_emissions": 65.0,
+        "identity_error": 0.0
+      },
+      {
+        "region": "Global",
+        "year": 2029,
+        "gross_emissions": 50.0,
+        "removals": 20.0,
+        "net_emissions": 30.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 380.0,
+        "gdp": 1120.0,
+        "population": 104.0,
+        "affluence": 10.76923076923077,
+        "energy_intensity": 0.3392857142857143,
+        "carbon_intensity": 0.13157894736842105,
+        "reconstructed_emissions": 50.0,
+        "identity_error": 0.0
+      },
+      {
+        "region": "Global",
+        "year": 2030,
+        "gross_emissions": 35.0,
+        "removals": 28.0,
+        "net_emissions": 7.0,
+        "gas": "CO2e",
+        "source_category": "total",
+        "energy": 340.0,
+        "gdp": 1150.0,
+        "population": 105.0,
+        "affluence": 10.952380952380953,
+        "energy_intensity": 0.2956521739130435,
+        "carbon_intensity": 0.10294117647058823,
+        "reconstructed_emissions": 35.0,
+        "identity_error": 0.0
+      }
+    ],
+    "contributions": [
+      {
+        "region": "Global",
+        "baseline_time": 2025,
+        "comparison_time": 2030,
+        "baseline_emissions": 100.0,
+        "comparison_emissions": 35.0,
+        "emissions_change": -65.0,
+        "population_effect": 3.0208552449087542,
+        "affluence_effect": 5.632540451741724,
+        "energy_intensity_effect": -32.53178487114968,
+        "carbon_intensity_effect": -41.12161082550076,
+        "explained_change": -64.99999999999996,
+        "residual": -4.263256414560601e-14,
+        "unit": "MtCO2e"
+      }
+    ]
+  },
+  "natural_capital": {
+    "schema_version": "1.0.0",
+    "id": "sample-climate-accounting-data-natural-capital",
+    "title": "Synthetic natural capital account",
+    "unit": "natural_capital_index",
+    "meta": {
+      "package_version": "0.6.0",
+      "created_at": "2026-07-17T00:00:00Z",
+      "row_count": 6,
+      "reconciliation_tolerance": 1e-08
+    },
+    "data": [
+      {
+        "entity": "Global",
+        "time": 2025,
+        "opening_stock": 1000.0,
+        "regeneration": 10.0,
+        "restoration": 2.0,
+        "additions": 0.0,
+        "extraction": 12.0,
+        "degradation": 5.0,
+        "damages": 2.0,
+        "expected_closing_stock": 993.0,
+        "closing_stock": 993.0,
+        "net_change": -7.0,
+        "accounting_net_change": -7.0,
+        "reconciliation_error": 0.0,
+        "unit": "natural_capital_index"
+      },
+      {
+        "entity": "Global",
+        "time": 2026,
+        "opening_stock": 993.0,
+        "regeneration": 11.0,
+        "restoration": 3.0,
+        "additions": 0.0,
+        "extraction": 11.0,
+        "degradation": 5.0,
+        "damages": 1.0,
+        "expected_closing_stock": 990.0,
+        "closing_stock": 990.0,
+        "net_change": -3.0,
+        "accounting_net_change": -3.0,
+        "reconciliation_error": 0.0,
+        "unit": "natural_capital_index"
+      },
+      {
+        "entity": "Global",
+        "time": 2027,
+        "opening_stock": 990.0,
+        "regeneration": 12.0,
+        "restoration": 4.0,
+        "additions": 1.0,
+        "extraction": 10.0,
+        "degradation": 5.0,
+        "damages": 2.0,
+        "expected_closing_stock": 990.0,
+        "closing_stock": 990.0,
+        "net_change": 0.0,
+        "accounting_net_change": 0.0,
+        "reconciliation_error": 0.0,
+        "unit": "natural_capital_index"
+      },
+      {
+        "entity": "Global",
+        "time": 2028,
+        "opening_stock": 990.0,
+        "regeneration": 13.0,
+        "restoration": 5.0,
+        "additions": 1.0,
+        "extraction": 9.0,
+        "degradation": 4.0,
+        "damages": 3.0,
+        "expected_closing_stock": 993.0,
+        "closing_stock": 993.0,
+        "net_change": 3.0,
+        "accounting_net_change": 3.0,
+        "reconciliation_error": 0.0,
+        "unit": "natural_capital_index"
+      },
+      {
+        "entity": "Global",
+        "time": 2029,
+        "opening_stock": 993.0,
+        "regeneration": 14.0,
+        "restoration": 6.0,
+        "additions": 1.0,
+        "extraction": 8.0,
+        "degradation": 4.0,
+        "damages": 3.0,
+        "expected_closing_stock": 999.0,
+        "closing_stock": 999.0,
+        "net_change": 6.0,
+        "accounting_net_change": 6.0,
+        "reconciliation_error": 0.0,
+        "unit": "natural_capital_index"
+      },
+      {
+        "entity": "Global",
+        "time": 2030,
+        "opening_stock": 999.0,
+        "regeneration": 15.0,
+        "restoration": 7.0,
+        "additions": 1.0,
+        "extraction": 7.0,
+        "degradation": 3.0,
+        "damages": 2.0,
+        "expected_closing_stock": 1010.0,
+        "closing_stock": 1010.0,
+        "net_change": 11.0,
+        "accounting_net_change": 11.0,
+        "reconciliation_error": 0.0,
+        "unit": "natural_capital_index"
+      }
+    ]
+  },
+  "boundary_assessment": {
+    "schema_version": "1.0.0",
+    "definitions": [
+      {
+        "schema_version": "1.0.0",
+        "id": "cumulative-carbon-budget",
+        "title": "Cumulative net-emissions budget",
+        "indicator": "cumulative_net_emissions",
+        "unit": "MtCO2e",
+        "direction": "at_or_below",
+        "lower": null,
+        "upper": 300,
+        "warning_margin": 0.1,
+        "source": {
+          "type": "declared_analysis_constraint",
+          "review_required": true
+        },
+        "metadata": {
+          "status": "active"
+        }
+      },
+      {
+        "schema_version": "1.0.0",
+        "id": "natural-capital-floor",
+        "title": "Natural-capital closing-stock floor",
+        "indicator": "natural_capital_closing_stock",
+        "unit": "natural_capital_index",
+        "direction": "at_or_above",
+        "lower": 1000,
+        "upper": null,
+        "warning_margin": 0.05,
+        "source": {
+          "type": "declared_analysis_constraint",
+          "review_required": true
+        },
+        "metadata": {
+          "status": "active"
+        }
+      }
+    ],
+    "assessment": [
+      {
+        "region": "Global",
+        "indicator": "cumulative_net_emissions",
+        "value": 334.0,
+        "unit": "MtCO2e",
+        "boundary_id": "cumulative-carbon-budget",
+        "boundary_title": "Cumulative net-emissions budget",
+        "direction": "at_or_below",
+        "lower": null,
+        "upper": 300.0,
+        "status": "breached",
+        "distance": -34.0,
+        "normalized_distance": -0.11333333333333333,
+        "message": "Value breaches the declared boundary."
+      },
+      {
+        "entity": "Global",
+        "indicator": "natural_capital_closing_stock",
+        "value": 1010.0,
+        "unit": "natural_capital_index",
+        "boundary_id": "natural-capital-floor",
+        "boundary_title": "Natural-capital closing-stock floor",
+        "direction": "at_or_above",
+        "lower": 1000.0,
+        "upper": null,
+        "status": "warning",
+        "distance": 10.0,
+        "normalized_distance": 0.01,
+        "message": "Value is within the warning margin of the boundary."
+      }
+    ]
+  },
+  "terminal_values": [
+    {
+      "region": "Global",
+      "indicator": "cumulative_net_emissions",
+      "value": 334.0,
+      "unit": "MtCO2e"
+    },
+    {
+      "region": "Global",
+      "indicator": "remaining_carbon_budget",
+      "value": -34.0,
+      "unit": "MtCO2e"
+    },
+    {
+      "region": "Global",
+      "indicator": "terminal_net_emissions",
+      "value": 7.0,
+      "unit": "MtCO2e"
+    },
+    {
+      "region": "Global",
+      "indicator": "carbon_lock_in_share",
+      "value": 0.023333333333333334,
+      "unit": "fraction"
+    },
+    {
+      "entity": "Global",
+      "indicator": "natural_capital_closing_stock",
+      "value": 1010.0,
+      "unit": "natural_capital_index"
+    },
+    {
+      "entity": "Global",
+      "indicator": "natural_capital_net_change",
+      "value": 10.0,
+      "unit": "natural_capital_index"
+    }
+  ],
+  "review_boundaries": {
+    "source_and_scope_review_required": true,
+    "carbon_budget_allocation_review_required": true,
+    "global_warming_potential_basis_review_required": true,
+    "natural_capital_valuation_review_required": true,
+    "causal_claim": false,
+    "autonomous_decision": false
+  }
+}

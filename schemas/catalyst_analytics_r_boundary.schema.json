@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-boundary-v1.schema.json",
+  "title": "Catalyst Analytics R Sustainability Boundary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "id", "title", "indicator", "unit", "direction",
+    "lower", "upper", "warning_margin", "source", "metadata"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9._-]*$"},
+    "title": {"type": "string", "minLength": 1},
+    "indicator": {"type": "string", "minLength": 1},
+    "unit": {"type": "string", "minLength": 1},
+    "direction": {"enum": ["at_or_below", "at_or_above", "inside_range"]},
+    "lower": {"type": ["number", "null"]},
+    "upper": {"type": ["number", "null"]},
+    "warning_margin": {"type": "number", "minimum": 0, "maximum": 1},
+    "source": {"type": "object"},
+    "metadata": {"type": "object"}
+  }
+}

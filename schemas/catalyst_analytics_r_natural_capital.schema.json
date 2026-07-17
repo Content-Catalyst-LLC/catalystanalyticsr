@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-natural-capital-v1.schema.json",
+  "title": "Catalyst Analytics R Natural-Capital Account",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "unit", "meta", "data"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "unit": {"type": "string", "minLength": 1},
+    "meta": {"type": "object"},
+    "data": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "entity", "time", "opening_stock", "regeneration", "restoration",
+          "additions", "extraction", "degradation", "damages",
+          "expected_closing_stock", "closing_stock", "net_change",
+          "accounting_net_change", "reconciliation_error", "unit"
+        ],
+        "properties": {
+          "opening_stock": {"type": "number", "minimum": 0},
+          "regeneration": {"type": "number", "minimum": 0},
+          "restoration": {"type": "number", "minimum": 0},
+          "additions": {"type": "number", "minimum": 0},
+          "extraction": {"type": "number", "minimum": 0},
+          "degradation": {"type": "number", "minimum": 0},
+          "damages": {"type": "number", "minimum": 0},
+          "closing_stock": {"type": "number", "minimum": 0},
+          "reconciliation_error": {"type": "number"}
+        }
+      }
+    }
+  }
+}

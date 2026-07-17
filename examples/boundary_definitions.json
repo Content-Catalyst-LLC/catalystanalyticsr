@@ -1,0 +1,38 @@
+[
+  {
+    "schema_version": "1.0.0",
+    "id": "cumulative-carbon-budget",
+    "title": "Cumulative net-emissions budget",
+    "indicator": "cumulative_net_emissions",
+    "unit": "MtCO2e",
+    "direction": "at_or_below",
+    "lower": null,
+    "upper": 300,
+    "warning_margin": 0.1,
+    "source": {
+      "type": "declared_analysis_constraint",
+      "review_required": true
+    },
+    "metadata": {
+      "status": "active"
+    }
+  },
+  {
+    "schema_version": "1.0.0",
+    "id": "natural-capital-floor",
+    "title": "Natural-capital closing-stock floor",
+    "indicator": "natural_capital_closing_stock",
+    "unit": "natural_capital_index",
+    "direction": "at_or_above",
+    "lower": 1000,
+    "upper": null,
+    "warning_margin": 0.05,
+    "source": {
+      "type": "declared_analysis_constraint",
+      "review_required": true
+    },
+    "metadata": {
+      "status": "active"
+    }
+  }
+]

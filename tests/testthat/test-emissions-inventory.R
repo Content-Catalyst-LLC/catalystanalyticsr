@@ -1,0 +1,23 @@
+test_that("emissions inventories preserve source, mappings, removals, and net totals", {
+  inventory <- sample_emissions_inventory()
+  expect_s3_class(inventory, "catalyst_emissions_inventory")
+  expect_true(validate_emissions_inventory(inventory))
+  expect_equal(inventory$data$net_emissions, inventory$data$gross_emissions - inventory$data$removals)
+  expect_identical(inventory$unit, "MtCO2e")
+  expect_identical(inventory$mappings$energy, "energy")
+  summary <- emissions_inventory_summary(inventory)
+  expect_equal(summary$gross_emissions, 418)
+  expect_equal(summary$removals, 84)
+  expect_equal(summary$net_emissions, 334)
+  manifest <- emissions_inventory_manifest(inventory)
+  expect_identical(manifest$dataset_id, "climate-test-dataset")
+  expect_false("data" %in% names(manifest) && !is.null(manifest$data))
+})
+
+test_that("climate accounting indicators are registered", {
+  registry <- list_catalyst_indicators()
+  expect_true(all(c("net_emissions", "removal_share", "energy_intensity", "natural_capital_balance") %in% registry$id))
+  dataset <- sample_climate_dataset()
+  net <- calculate_indicator(dataset, "net_emissions")
+  expect_equal(net$values$value[1], 95)
+})

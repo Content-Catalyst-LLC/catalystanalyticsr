@@ -69,3 +69,21 @@ Contents include:
 - `manifest.json`
 
 The manifest records the package version, dataset fingerprint, source id, dimensions, quality-flag count, indicator versions, output-row counts, file sizes, and MD5 checksums. The bundle explicitly records that source quality and unit compatibility require human review and that the result does not constitute a causal claim or autonomous decision.
+
+## Climate-accounting bundles - v0.6.0
+
+`export_climate_accounting()` writes:
+
+- `inventory_manifest.json`
+- `emissions_inventory.csv`
+- `emissions_summary.csv`
+- `carbon_pathway.csv`
+- `carbon_diagnostics.csv`
+- `terminal_values.csv`
+- `kaya_levels.csv` and `kaya_contributions.csv` when available
+- `natural_capital_account.csv` and summary when available
+- `boundary_definitions.json` and `boundary_assessment.csv` when available
+- `manifest.json`
+- `brief.md`
+
+The manifest declares contract versions, source fingerprints, accounting basis, included modules, overshoot and stranded-pathway counts, human-review boundaries, and file checksums.

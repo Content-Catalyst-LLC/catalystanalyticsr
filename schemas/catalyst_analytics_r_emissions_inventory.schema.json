@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-emissions-inventory-v1.schema.json",
+  "title": "Catalyst Analytics R Emissions Inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "id", "title", "dataset_id", "dataset_fingerprint",
+    "time_field", "entity_fields", "mappings", "unit", "accounting_basis",
+    "gwp_basis", "boundaries", "source", "metadata", "data"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "dataset_id": {"type": "string", "minLength": 1},
+    "dataset_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{32}$"},
+    "time_field": {"type": "string", "minLength": 1},
+    "entity_fields": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "mappings": {
+      "type": "object",
+      "required": ["emissions", "removals", "gas", "source", "energy", "gdp", "population"]
+    },
+    "unit": {"type": "string", "minLength": 1},
+    "accounting_basis": {"enum": ["period_total", "rate"]},
+    "gwp_basis": {"type": "string", "minLength": 1},
+    "boundaries": {"type": "object"},
+    "source": {"type": "object"},
+    "metadata": {"type": "object"},
+    "data": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["gross_emissions", "removals", "net_emissions", "gas", "source_category"],
+        "properties": {
+          "gross_emissions": {"type": "number", "minimum": 0},
+          "removals": {"type": "number", "minimum": 0},
+          "net_emissions": {"type": "number"},
+          "gas": {"type": "string"},
+          "source_category": {"type": "string"}
+        }
+      }
+    }
+  }
+}

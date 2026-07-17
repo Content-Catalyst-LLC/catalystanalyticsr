@@ -19,3 +19,19 @@ question → assumptions → scenario → model → indicators → output → in
 ## Model boundaries
 
 The R package and browser demo are educational and decision-support oriented. They do not certify compliance, forecast outcomes, or provide professional advice.
+
+## Climate and natural-capital accounting - v0.6.0
+
+Gross emissions and removals are represented separately; net emissions are their arithmetic difference. Period-total observations are accumulated by summation. Rate observations are integrated with the trapezoidal rule against ordered numeric or date-like time values.
+
+Kaya decomposition uses the identity:
+
+`emissions = population * (GDP / population) * (energy / GDP) * (emissions / energy)`
+
+Additive LMDI contributions use the logarithmic mean of baseline and comparison emissions. The contribution sum is tested against the observed emissions change and the residual remains visible.
+
+Natural-capital accounting uses:
+
+`closing = opening + regeneration + restoration + additions - extraction - degradation - damages`
+
+When an observed closing stock is provided, the difference from the accounting identity is retained as a reconciliation error.

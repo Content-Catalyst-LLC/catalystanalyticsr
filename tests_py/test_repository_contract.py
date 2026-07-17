@@ -35,14 +35,14 @@ def validator(path: str):
 def test_release_manifest_versions_and_contracts_are_consistent():
     manifest = load_json("catalyst_analytics_r_manifest.json")
     assert manifest["repository"] == "catalystanalyticsr"
-    assert manifest["repository_version"] == "0.5.0"
-    assert manifest["r_package"]["version"] == description_version() == "0.5.0"
-    assert manifest["wordpress_demo"]["version"] == plugin_version() == "1.4.0"
-    assert manifest["wordpress_demo"]["compatible_repository_version"] == "0.5.0"
+    assert manifest["repository_version"] == "0.6.0"
+    assert manifest["r_package"]["version"] == description_version() == "0.6.0"
+    assert manifest["wordpress_demo"]["version"] == plugin_version() == "1.5.0"
+    assert manifest["wordpress_demo"]["compatible_repository_version"] == "0.6.0"
     assert manifest["wordpress_demo"]["shortcode"] == "[catalyst_analytics_r_demo]"
     assert manifest["contracts"]["scenario"]["version"] == "1.0.0"
     assert manifest["contracts"]["model_manifest"]["version"] == "1.0.0"
-    assert manifest["contracts"]["browser_export"]["version"] == "1.4.0"
+    assert manifest["contracts"]["browser_export"]["version"] == "1.5.0"
     assert manifest["contracts"]["dataset"]["version"] == "1.0.0"
     assert manifest["contracts"]["indicator_registry"]["version"] == "1.0.0"
     assert manifest["contracts"]["data_analysis"]["version"] == "1.0.0"
@@ -208,17 +208,17 @@ def test_r_comparative_engine_exports_are_present():
     assert "baseline" in source and "counterfactual" in source
 
 
-def test_wordpress_demo_performs_governed_data_intake_and_indicator_calculation():
+def test_wordpress_demo_performs_climate_and_natural_capital_accounting():
     php = (ROOT / "wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php").read_text(encoding="utf-8")
     js = (ROOT / "wordpress/catalyst-analytics-r-demo/assets/catalyst-analytics-r-demo.js").read_text(encoding="utf-8")
-    assert "Validate data and calculate governed indicators" in php
-    assert "CSV records" in php and "Data-quality report" in php
-    assert "browser_data_intake" in js
-    assert "mapped_data_indicator_contract" in js
-    assert "compatible_repository_version: '0.5.0'" in js
-    assert "dataset_contract_version: '1.0.0'" in js
-    assert "indicator_contract_version: '1.0.0'" in js
-    assert "duplicate_keys" in js and "required_fields" in js
+    assert "Climate, carbon, and natural-capital accounting" in php
+    assert "Run governed accounting" in php and "Boundary assessment" in php
+    assert "browser_climate_accounting" in js
+    assert "mapped_contract_browser_calculation" in js
+    assert "compatible_repository_version: '0.6.0'" in js
+    assert "emissions_inventory_contract_version: '1.0.0'" in js
+    assert "natural_capital_contract_version: '1.0.0'" in js
+    assert "cumulative_net_emissions" in js and "kaya_decomposition" in js
 
 
 def test_python_brief_supports_comparative_exports(tmp_path):
@@ -373,3 +373,77 @@ def test_python_brief_supports_data_analysis_exports():
     assert "Synthetic regional sustainability time series" in text
     assert "Indicator definitions" in text
     assert "Data-quality flags" in text
+
+
+def test_climate_accounting_contracts_and_examples_validate():
+    inventory_validator = validator("schemas/catalyst_analytics_r_emissions_inventory.schema.json")
+    natural_validator = validator("schemas/catalyst_analytics_r_natural_capital.schema.json")
+    boundary_validator = validator("schemas/catalyst_analytics_r_boundary.schema.json")
+    climate_validator = validator("schemas/catalyst_analytics_r_climate_accounting.schema.json")
+    browser_validator = validator("schemas/catalyst_analytics_r_climate_demo_export.schema.json")
+    export = load_json("outputs/example_climate_accounting_export.json")
+    climate_validator.validate(export)
+    inventory_validator.validate(export["inventory"])
+    natural_validator.validate(export["natural_capital"])
+    for definition in load_json("examples/boundary_definitions.json"):
+        boundary_validator.validate(definition)
+    browser = load_json("outputs/example_browser_climate_export.json")
+    browser_validator.validate(browser)
+    assert export["carbon"]["diagnostics"][0]["overshoot_time"] == 2029
+    assert export["carbon"]["diagnostics"][0]["stranded_pathway_signal"] is True
+    assert abs(export["kaya"]["contributions"][0]["residual"]) < 1e-8
+    assert all(abs(row["reconciliation_error"]) < 1e-8 for row in export["natural_capital"]["data"])
+
+
+def test_r_climate_accounting_exports_are_present():
+    namespace = (ROOT / "NAMESPACE").read_text(encoding="utf-8")
+    for name in (
+        "as_emissions_inventory", "validate_emissions_inventory",
+        "emissions_inventory_manifest", "emissions_inventory_summary",
+        "carbon_budget_pathway", "carbon_pathway_summary", "kaya_decomposition",
+        "natural_capital_account", "natural_capital_from_dataset",
+        "validate_natural_capital_account", "natural_capital_summary",
+        "boundary_definition", "validate_boundary_definition",
+        "evaluate_boundaries", "boundary_summary", "climate_accounting",
+        "climate_accounting_summary", "export_climate_accounting",
+    ):
+        assert f"export({name})" in namespace
+    sources = "\n".join((ROOT / path).read_text(encoding="utf-8") for path in (
+        "R/emissions_inventory.R", "R/carbon_accounting.R",
+        "R/natural_capital_accounting.R", "R/boundary_accounting.R",
+        "R/climate_accounting.R", "R/export_climate_accounting.R",
+    ))
+    for token in (
+        "gross_emissions", "cumulative_net_emissions", "overshoot_time",
+        "carbon_lock_in_share", "additive_lmdi_kaya_identity",
+        "reconciliation_error", "unit_mismatch", "review_boundaries",
+    ):
+        assert token in sources
+
+
+def test_climate_fixture_preserves_accounting_invariants():
+    fixture = load_json("tests/fixtures/climate_accounting_contract_v1.json")
+    inventory = fixture["inventory"]["data"]
+    assert all(math.isclose(row["net_emissions"], row["gross_emissions"] - row["removals"], abs_tol=1e-10) for row in inventory)
+    pathway = fixture["carbon"]["pathway"]
+    assert math.isclose(pathway[-1]["cumulative_net_emissions"], 334.0, abs_tol=1e-10)
+    assert math.isclose(pathway[-1]["remaining_budget"], -34.0, abs_tol=1e-10)
+    natural = fixture["natural_capital"]["data"]
+    assert all(math.isclose(row["closing_stock"], row["expected_closing_stock"], abs_tol=1e-10) for row in natural)
+
+
+def test_python_brief_supports_climate_accounting_exports():
+    import importlib.util
+    path = ROOT / "python/catalyst_analytics_brief.py"
+    spec = importlib.util.spec_from_file_location("catalyst_analytics_brief_climate", path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec and spec.loader
+    spec.loader.exec_module(module)
+    package_text = module.brief(load_json("outputs/example_climate_accounting_export.json"))
+    browser_text = module.brief(load_json("outputs/example_browser_climate_export.json"))
+    for text in (package_text, browser_text):
+        assert "# Catalyst Analytics R Climate Accounting Brief" in text
+        assert "Carbon-budget diagnostics" in text
+        assert "Kaya decomposition" in text
+        assert "Natural-capital account" in text
+        assert "Boundary assessment" in text

@@ -17,6 +17,6 @@ test_that("data analysis export preserves records, definitions, quality, and tra
   expect_true(all(file.exists(file.path(out$directory, expected))))
   manifest <- jsonlite::fromJSON(file.path(out$directory, "manifest.json"), simplifyVector = FALSE)
   expect_identical(manifest$dataset$id, dataset$id)
-  expect_identical(manifest$package$version, "0.5.0")
+  expect_identical(manifest$package$version, "0.6.0")
   unlink(out$directory, recursive = TRUE)
 })

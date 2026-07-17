@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-climate-accounting-v1.schema.json",
+  "title": "Catalyst Analytics R Climate Accounting Export",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "analysis_id", "title", "created_at", "package",
+    "inventory", "carbon", "kaya", "natural_capital", "boundary_assessment",
+    "terminal_values", "review_boundaries"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "analysis_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"const": "catalystanalyticsr"},
+        "version": {"const": "0.6.0"}
+      }
+    },
+    "inventory": {"type": "object"},
+    "carbon": {
+      "type": "object",
+      "required": ["pathway", "diagnostics"],
+      "properties": {
+        "pathway": {"type": "array", "minItems": 1},
+        "diagnostics": {"type": "array", "minItems": 1}
+      }
+    },
+    "kaya": {"type": ["object", "null"]},
+    "natural_capital": {"type": ["object", "null"]},
+    "boundary_assessment": {"type": ["object", "null"]},
+    "terminal_values": {"type": "array", "minItems": 1},
+    "review_boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_and_scope_review_required", "carbon_budget_allocation_review_required",
+        "global_warming_potential_basis_review_required", "natural_capital_valuation_review_required",
+        "causal_claim", "autonomous_decision"
+      ],
+      "properties": {
+        "source_and_scope_review_required": {"const": true},
+        "carbon_budget_allocation_review_required": {"const": true},
+        "global_warming_potential_basis_review_required": {"const": true},
+        "natural_capital_valuation_review_required": {"const": true},
+        "causal_claim": {"const": false},
+        "autonomous_decision": {"const": false}
+      }
+    }
+  }
+}

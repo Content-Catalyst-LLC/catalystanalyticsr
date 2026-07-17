@@ -91,3 +91,13 @@ calculate_indicator(s)()
 ```
 
 The layer preserves the source-to-formula-to-output chain and keeps causal or autonomous-decision claims outside the package contract.
+
+## Climate-accounting layer - v0.6.0
+
+- `R/emissions_inventory.R` normalizes documented emissions inventories.
+- `R/carbon_accounting.R` calculates carbon pathways and Kaya decomposition.
+- `R/natural_capital_accounting.R` reconciles natural-capital stocks and flows.
+- `R/boundary_accounting.R` defines and evaluates sustainability boundaries.
+- `R/climate_accounting.R` assembles the governed analysis object.
+- `R/export_climate_accounting.R` produces portable accounting bundles.
+- `schemas/catalyst_analytics_r_*climate*.schema.json` governs machine-readable exchange.

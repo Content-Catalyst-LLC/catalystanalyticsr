@@ -1,41 +1,21 @@
-# Online Data and Indicator Demo
+# WordPress Browser Companion
 
-The WordPress plugin exposes the shortcode:
+## Plugin v1.5.0
 
-```text
-[catalyst_analytics_r_demo]
-```
+The public companion demonstrates the Catalyst Analytics R v0.6.0 climate-accounting contracts.
 
-## v1.4.0 behavior
+Users can declare a synthetic time horizon, starting emissions, decarbonization rate, removals pathway, carbon budget, target net emissions, Kaya drivers, and natural-capital flows. The interface calculates:
 
-The public interface now demonstrates the v0.5.0 data-intake and indicator contracts. Users can paste tidy CSV records, declare source and license metadata, validate required fields and entity/time keys, select a registered indicator, inspect the definition and trace, and export the governed browser record.
+- Annual gross, removal, and net emissions
+- Cumulative net emissions and remaining budget
+- First overshoot year
+- Kaya population, affluence, energy-intensity, and carbon-intensity effects
+- Natural-capital opening and closing stocks
+- Carbon-budget, target-net, and natural-capital boundary status
+- A governed JSON export
 
-The interface provides:
+The browser export schema is 1.5.0 and declares compatibility with repository version 0.6.0.
 
-- CSV parsing with required-field checks
-- Missing-value, duplicate-row, and duplicate-key diagnostics
-- Dataset, source, license, currency, time, and entity metadata
-- Versioned built-in indicator definitions
-- Rowwise and grouped indicator calculations
-- Indicator formula, unit, direction, and required-field display
-- Result chart and table
-- Calculation trace and canonical JSON export
+## Interpretation boundary
 
-## Export mapping
-
-The browser export includes:
-
-- Browser-engine and repository compatibility metadata
-- Dataset contract version 1.0.0
-- Indicator contract version 1.0.0
-- Source and license records
-- Quality summary and flags
-- Selected indicator definition
-- Calculated values and trace metadata
-- Interpretation boundaries
-
-The browser export schema is 1.4.0 and declares compatibility with repository version 0.5.0.
-
-## Analytical boundary
-
-The browser tool validates and calculates a limited public indicator registry. It does not execute arbitrary R functions, import remote data, or replace the R package's governed dataset, registry, export, and review workflows. Use the browser interface for explanation and preliminary inspection; use the R package for reproducible analysis and publication bundles.
+The companion does not execute R. It does not verify source inventories, determine gas coverage or GWP basis, allocate a global carbon budget, value natural capital, establish compliance, or provide professional advice.

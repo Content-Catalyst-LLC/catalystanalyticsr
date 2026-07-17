@@ -1,16 +1,16 @@
 {
-  "schema_version": "1.4.0",
+  "schema_version": "1.5.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "0.5.0",
+  "repository_version": "0.6.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "0.5.0"
+    "version": "0.6.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "1.4.0",
-    "compatible_repository_version": "0.5.0",
+    "version": "1.5.0",
+    "compatible_repository_version": "0.6.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -27,8 +27,8 @@
       "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
     },
     "browser_export": {
-      "version": "1.4.0",
-      "schema": "schemas/catalyst_analytics_r_data_demo_export.schema.json"
+      "version": "1.5.0",
+      "schema": "schemas/catalyst_analytics_r_climate_demo_export.schema.json"
     },
     "comparison": {
       "version": "1.0.0",
@@ -59,6 +59,22 @@
     "data_analysis": {
       "version": "1.0.0",
       "schema": "schemas/catalyst_analytics_r_data_analysis.schema.json"
+    },
+    "emissions_inventory": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_emissions_inventory.schema.json"
+    },
+    "climate_accounting": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_climate_accounting.schema.json"
+    },
+    "natural_capital": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_natural_capital.schema.json"
+    },
+    "boundary": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_boundary.schema.json"
     }
   },
   "models": [
@@ -82,7 +98,12 @@
     "indicator_registry_input": "examples/indicator_registry_input.json",
     "data_analysis_export": "outputs/example_data_analysis_export.json",
     "browser_data_export": "outputs/example_browser_data_export.json",
-    "data_indicator_contract": "tests/fixtures/data_indicator_contract_v1.json"
+    "data_indicator_contract": "tests/fixtures/data_indicator_contract_v1.json",
+    "climate_accounting_input": "examples/climate_accounting_input.json",
+    "boundary_definitions": "examples/boundary_definitions.json",
+    "climate_accounting_export": "outputs/example_climate_accounting_export.json",
+    "browser_climate_export": "outputs/example_browser_climate_export.json",
+    "climate_accounting_contract": "tests/fixtures/climate_accounting_contract_v1.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [
@@ -95,13 +116,21 @@
     "dataset source and quality contracts",
     "unit conversion registry",
     "versioned indicator registry",
-    "indicator calculation trace",
-    "data-analysis export bundles",
-    "WordPress data-intake demo"
+    "greenhouse-gas emissions inventory",
+    "carbon-budget pathway accounting",
+    "Kaya identity decomposition",
+    "natural-capital stock-and-flow accounts",
+    "sustainability boundary assessment",
+    "climate-accounting export bundles",
+    "WordPress climate-accounting demo"
   ],
-  "method_path": "question -> source data -> validation -> units -> indicator definition -> calculation -> trace -> interpretation -> review",
+  "method_path": "question -> source data -> inventory boundary -> emissions and removals -> carbon budget -> Kaya drivers -> natural-capital account -> boundary assessment -> interpretation -> review",
   "boundaries": [
     "educational decision support",
+    "source and scope review required",
+    "carbon-budget allocation review required",
+    "GWP basis review required",
+    "natural-capital valuation review required",
     "not a forecast",
     "not compliance advice",
     "not professional advice"

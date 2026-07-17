@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0 - Climate, Carbon, and Natural-Capital Accounting
+
+- Added governed greenhouse-gas inventories with gross emissions, removals, net emissions, source, unit, GWP basis, and scope records.
+- Added period-total and rate-based carbon-budget pathways with overshoot, recovery, lock-in, target-year, and stranded-pathway diagnostics.
+- Added additive LMDI Kaya identity decomposition with numerical reconciliation.
+- Added natural-capital stock-and-flow accounts covering regeneration, restoration, additions, extraction, degradation, damages, and closing-stock reconciliation.
+- Added sustainability-boundary definitions, warning margins, unit checks, assessments, summaries, and plots.
+- Added climate-accounting orchestration, terminal indicators, export bundles, schemas, examples, fixtures, and regression tests.
+- Added climate-specific built-in indicators for net emissions, removal share, energy intensity, and natural-capital balance.
+- Upgraded the WordPress demo to v1.5.0 with carbon pathways, Kaya drivers, natural-capital reconciliation, boundary signals, and governed JSON export.
+
 ## 0.5.0 - Data Intake and Indicator Registry
 
 ### R CMD check repair

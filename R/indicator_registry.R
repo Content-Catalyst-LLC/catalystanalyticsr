@@ -161,6 +161,39 @@ validate_catalyst_indicator <- function(indicator) {
         values[length(values)] - values[1L]
       },
       metadata = list(builtin = TRUE)
+    ),
+    new_catalyst_indicator(
+      "net_emissions", "1.0.0", "Net greenhouse-gas emissions", "Gross emissions less removals and sequestration.",
+      "emissions - removals", c("emissions", "removals"), "tCO2e", "lower_better", "rowwise",
+      source = list(type = "derived", methodology = "Gross emissions minus non-negative removals."),
+      calculation = function(data, dataset, na_rm) as.numeric(data$emissions) - as.numeric(data$removals),
+      metadata = list(builtin = TRUE, climate_accounting = TRUE)
+    ),
+    new_catalyst_indicator(
+      "removal_share", "1.0.0", "Emissions removal share", "Removals as a share of gross emissions.",
+      "removals / emissions", c("emissions", "removals"), "fraction", "higher_better", "rowwise",
+      source = list(type = "derived", methodology = "Removals divided by gross emissions."),
+      calculation = function(data, dataset, na_rm) as.numeric(data$removals) / pmax(as.numeric(data$emissions), .Machine$double.eps),
+      metadata = list(builtin = TRUE, climate_accounting = TRUE)
+    ),
+    new_catalyst_indicator(
+      "energy_intensity", "1.0.0", "Energy intensity", "Energy use per unit of economic output.",
+      "energy / gdp", c("energy", "gdp"), "energy/currency", "lower_better", "rowwise",
+      source = list(type = "derived", methodology = "Energy use divided by GDP."),
+      calculation = function(data, dataset, na_rm) as.numeric(data$energy) / pmax(as.numeric(data$gdp), .Machine$double.eps),
+      metadata = list(builtin = TRUE, climate_accounting = TRUE)
+    ),
+    new_catalyst_indicator(
+      "natural_capital_balance", "1.0.0", "Natural-capital accounting balance", "Additions less extraction, degradation, and damages.",
+      "regeneration + restoration + additions - extraction - degradation - damages",
+      c("regeneration", "restoration", "additions", "extraction", "degradation", "damages"),
+      "index", "higher_better", "rowwise",
+      source = list(type = "derived", methodology = "Transparent natural-capital stock-and-flow accounting identity."),
+      calculation = function(data, dataset, na_rm) {
+        as.numeric(data$regeneration) + as.numeric(data$restoration) + as.numeric(data$additions) -
+          as.numeric(data$extraction) - as.numeric(data$degradation) - as.numeric(data$damages)
+      },
+      metadata = list(builtin = TRUE, climate_accounting = TRUE)
     )
   )
   for (definition in definitions) {
