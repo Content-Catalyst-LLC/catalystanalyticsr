@@ -62,7 +62,7 @@ test_that("policy evaluation exports portable evidence", {
   expect_true(file.exists(paths$analysis)); expect_true(file.exists(paths$effects)); expect_true(file.exists(paths$manifest))
   manifest <- jsonlite::fromJSON(paths$manifest, simplifyVector=FALSE)
   expect_true(manifest$file_count >= 5L)
-  expect_identical(manifest$package$version, "1.6.0")
+  expect_identical(manifest$package$version, "2.0.0")
 })
 
 test_that("workspaces retain reusable policy evaluations", {

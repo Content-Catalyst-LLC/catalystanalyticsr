@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/contracts/catalyst-analytics-r/connected-platform-export/2.0.0",
+  "title": "Connected Platform Export Manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "export_type",
+    "platform_id",
+    "platform_fingerprint",
+    "package",
+    "created_at",
+    "file_count",
+    "files",
+    "integrity",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "2.0.0"
+    },
+    "export_type": {
+      "const": "connected_sustainability_platform_bundle"
+    },
+    "platform_id": {
+      "type": "string"
+    },
+    "platform_fingerprint": {
+      "type": "string"
+    },
+    "package": {
+      "type": "object"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "file_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "files": {
+      "type": "array"
+    },
+    "integrity": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

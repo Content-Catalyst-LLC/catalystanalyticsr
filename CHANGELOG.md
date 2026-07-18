@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.0.0
+
+- Added the Connected Sustainability Analytics and Decision Platform.
+- Added governed graph nodes and lineage edges.
+- Added federated model, indicator, and evidence registries.
+- Added connected decision, publication, governance, handoff, and workflow records.
+- Added connected API v2 and portable platform bundles.
+- Preserved stable v1 analytical contracts through compatibility references.
+
+# Changelog
+
 ## 1.6.0
 
 - Added collaborative institutional review workflows and role-based governance.
@@ -250,3 +261,9 @@
 ### Notes
 - The browser demo is intentionally simplified and does not run the R package in WordPress.
 - The R package remains the source for deeper reproducible analytics.
+### v2.0.0 connected-platform fingerprint repair
+
+- Preserved the semantic connected-platform fingerprint across canonical JSON round trips.
+- Added a serialized fingerprint marker inside platform metadata without changing the connected-platform schema.
+- Added imported-state tracking so a restored fingerprint is used only while the restored semantic state remains unchanged.
+- Cleared restored fingerprint identity on platform mutations and added regression tests proving that semantic changes generate new fingerprints.

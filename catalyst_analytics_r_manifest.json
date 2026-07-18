@@ -1,16 +1,16 @@
 {
-  "schema_version": "2.6.0",
+  "schema_version": "3.0.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "1.6.0",
+  "repository_version": "2.0.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "1.6.0"
+    "version": "2.0.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "2.6.0",
-    "compatible_repository_version": "1.6.0",
+    "version": "3.0.0",
+    "compatible_repository_version": "2.0.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -27,8 +27,8 @@
       "schema": "schemas/catalyst_analytics_r_browser_input.schema.json"
     },
     "browser_export": {
-      "version": "2.6.0",
-      "schema": "schemas/catalyst_analytics_r_institutional_governance_demo_export.schema.json"
+      "version": "3.0.0",
+      "schema": "schemas/catalyst_analytics_r_connected_platform_demo_export.schema.json"
     },
     "comparison": {
       "version": "1.0.0",
@@ -199,6 +199,18 @@
     "institutional_governance_export": {
       "version": "1.0.0",
       "schema": "schemas/catalyst_analytics_r_institutional_governance_export.schema.json"
+    },
+    "connected_platform": {
+      "version": "2.0.0",
+      "schema": "schemas/catalyst_analytics_r_connected_platform.schema.json"
+    },
+    "connected_platform_export": {
+      "version": "2.0.0",
+      "schema": "schemas/catalyst_analytics_r_connected_platform_export.schema.json"
+    },
+    "connected_api": {
+      "version": "2.0.0",
+      "manifest": "catalyst_connected_api_manifest"
     }
   },
   "models": [
@@ -261,7 +273,11 @@
     "institutional_governance_input": "examples/institutional_governance_input.json",
     "institutional_governance_export": "outputs/example_institutional_governance_export.json",
     "browser_institutional_governance_export": "outputs/example_browser_institutional_governance_export.json",
-    "institutional_governance_contract": "tests/fixtures/institutional_governance_contract_v1.json"
+    "institutional_governance_contract": "tests/fixtures/institutional_governance_contract_v1.json",
+    "connected_platform_input": "examples/connected_platform_input.json",
+    "connected_platform_export": "outputs/example_connected_platform_export.json",
+    "browser_connected_platform_export": "outputs/example_browser_connected_platform_export.json",
+    "connected_platform_contract": "tests/fixtures/connected_platform_contract_v2.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [
@@ -326,9 +342,17 @@
     "synthetic-control evaluation",
     "explicit causal-identification assumptions",
     "policy-effect publication and workspace libraries",
-    "WordPress econometrics and policy-evaluation companion"
+    "WordPress econometrics and policy-evaluation companion",
+    "connected analytical graph",
+    "cross-product lineage and dependency traversal",
+    "federated model, indicator, and evidence registries",
+    "evidence-backed decision and publication records",
+    "governed connected workflows",
+    "connected public API v2",
+    "portable connected-platform publication bundles",
+    "WordPress connected-platform companion"
   ],
-  "method_path": "question -> data and identification assumptions -> regression or quasi-experimental design -> diagnostics and uncertainty -> policy effects -> robustness review -> human interpretation -> publication and platform handoff",
+  "method_path": "question -> governed data and evidence -> models and scenarios -> uncertainty and evaluation -> connected lineage graph -> collaborative review -> decision record -> publication and cross-product handoff",
   "boundaries": [
     "educational decision support",
     "source and scope review required",
@@ -355,11 +379,19 @@
     "Research Lab compute handoffs",
     "Workbench formula handoffs",
     "Catalyst Canvas assumption handoffs",
-    "portable first-party platform handoff bundles"
+    "portable first-party platform handoff bundles",
+    "connected platform graph and lineage traversal",
+    "federated analytical registries",
+    "evidence-backed decision records",
+    "connected API v2",
+    "connected platform export bundles"
   ],
   "known_boundaries": [
     "public API contract does not include an HTTP server",
     "host platforms provide authentication, authorization, rate limiting, and retention",
-    "platform handoffs do not autonomously execute cross-product actions"
+    "platform handoffs do not autonomously execute cross-product actions",
+    "connected graph records do not authorize decisions",
+    "connected API v2 does not include an HTTP server or durable identity layer",
+    "workflow records do not autonomously execute cross-product actions"
   ]
 }

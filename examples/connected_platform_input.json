@@ -1,0 +1,193 @@
+{
+  "schema_version": "2.0.0",
+  "platform_type": "connected_sustainability_analytics_and_decision_platform",
+  "id": "sustainable-catalyst-connected",
+  "title": "Sustainable Catalyst Connected Analytics",
+  "institution": {
+    "id": "sustainable-catalyst",
+    "name": "Sustainable Catalyst"
+  },
+  "workspaces": {},
+  "projects": {},
+  "nodes": {
+    "workspace.transition": {
+      "schema_version": "1.0.0",
+      "id": "workspace.transition",
+      "node_type": "workspace",
+      "title": "Transition Portfolio",
+      "reference": {
+        "contract": "catalyst_workspace@1.0.0",
+        "record_id": "transition"
+      },
+      "provenance": {},
+      "review_status": "in_review",
+      "metadata": {}
+    },
+    "project.transition-evidence": {
+      "schema_version": "1.0.0",
+      "id": "project.transition-evidence",
+      "node_type": "project",
+      "title": "Transition Evidence",
+      "reference": {
+        "contract": "catalyst_project@1.0.0",
+        "record_id": "transition-evidence"
+      },
+      "provenance": {},
+      "review_status": "approved",
+      "metadata": {}
+    },
+    "registry.evidence.evidence.baseline": {
+      "schema_version": "1.0.0",
+      "id": "registry.evidence.evidence.baseline",
+      "node_type": "evidence",
+      "title": "Baseline emissions dataset",
+      "reference": {
+        "registry": "evidence",
+        "record_id": "baseline"
+      },
+      "provenance": {},
+      "review_status": "approved",
+      "metadata": {}
+    },
+    "decision.transition-policy": {
+      "schema_version": "1.0.0",
+      "id": "decision.transition-policy",
+      "node_type": "decision",
+      "title": "Transition policy decision",
+      "reference": {
+        "contract": "catalyst_connected_decision@1.0.0",
+        "record_id": "transition-policy"
+      },
+      "provenance": {},
+      "review_status": "in_review",
+      "metadata": {}
+    },
+    "publication.transition-brief": {
+      "schema_version": "1.0.0",
+      "id": "publication.transition-brief",
+      "node_type": "publication",
+      "title": "Transition policy brief",
+      "reference": {
+        "contract": "catalyst_connected_publication@1.0.0",
+        "record_id": "transition-brief"
+      },
+      "provenance": {},
+      "review_status": "approved",
+      "metadata": {}
+    }
+  },
+  "edges": {
+    "workspace.transition--contains_project--project.transition-evidence": {
+      "schema_version": "1.0.0",
+      "id": "workspace.transition--contains_project--project.transition-evidence",
+      "from_id": "workspace.transition",
+      "to_id": "project.transition-evidence",
+      "relation": "contains_project",
+      "evidence_ids": [],
+      "provenance": {},
+      "review_status": "approved",
+      "metadata": {}
+    },
+    "registry.evidence.evidence.baseline--supports_decision--decision.transition-policy": {
+      "schema_version": "1.0.0",
+      "id": "registry.evidence.evidence.baseline--supports_decision--decision.transition-policy",
+      "from_id": "registry.evidence.evidence.baseline",
+      "to_id": "decision.transition-policy",
+      "relation": "supports_decision",
+      "evidence_ids": [
+        "baseline"
+      ],
+      "provenance": {},
+      "review_status": "in_review",
+      "metadata": {}
+    },
+    "decision.transition-policy--informs_publication--publication.transition-brief": {
+      "schema_version": "1.0.0",
+      "id": "decision.transition-policy--informs_publication--publication.transition-brief",
+      "from_id": "decision.transition-policy",
+      "to_id": "publication.transition-brief",
+      "relation": "informs_publication",
+      "evidence_ids": [
+        "baseline"
+      ],
+      "provenance": {},
+      "review_status": "approved",
+      "metadata": {}
+    }
+  },
+  "registries": {
+    "models": {},
+    "indicators": {},
+    "evidence": {
+      "baseline": {
+        "id": "baseline",
+        "title": "Baseline emissions dataset",
+        "source_type": "dataset",
+        "source_ref": {
+          "dataset_id": "baseline-emissions"
+        },
+        "claims": [
+          "baseline emissions"
+        ],
+        "quality_status": "verified",
+        "metadata": {}
+      }
+    }
+  },
+  "decisions": {
+    "transition-policy": {
+      "id": "transition-policy",
+      "title": "Transition policy decision",
+      "alternatives": [
+        "baseline",
+        "accelerated-transition"
+      ],
+      "evidence_ids": [
+        "baseline"
+      ],
+      "selected_alternative": null,
+      "governance_status": "in_review",
+      "metadata": {}
+    }
+  },
+  "publications": {
+    "transition-brief": {
+      "id": "transition-brief",
+      "title": "Transition policy brief",
+      "artifact_refs": {
+        "brief": "transition-policy-brief.html"
+      },
+      "evidence_ids": [
+        "baseline"
+      ],
+      "review_status": "approved",
+      "publication_status": "approved",
+      "metadata": {}
+    }
+  },
+  "governance": {},
+  "handoffs": {},
+  "workflows": {},
+  "audit": [
+    {
+      "id": "platform-audit-1",
+      "action": "platform_created",
+      "details": {
+        "institution_id": "sustainable-catalyst"
+      },
+      "recorded_at": "2026-07-17T23:30:00Z"
+    }
+  ],
+  "metadata": {
+    "package_version": "2.0.0",
+    "created_at": "2026-07-17T23:30:00Z",
+    "updated_at": "2026-07-17T23:30:00Z",
+    "status": "active"
+  },
+  "boundary": {
+    "human_review_required": true,
+    "automated_decision_authorization": false,
+    "automated_publication": false,
+    "external_identity_and_transport_provided_by_host": true
+  }
+}

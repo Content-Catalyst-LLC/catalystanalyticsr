@@ -142,3 +142,8 @@ Use `catalyst_api_manifest()` to inspect stable APIs, `catalyst_compatibility_ma
 ## Econometrics and Policy Evaluation (v1.4.0)
 
 Build governed regressions, panel models, difference-in-differences, event studies, interrupted time series, and synthetic controls. Estimates retain robust or clustered uncertainty, diagnostics, explicit causal assumptions, review status, and portable publication evidence.
+
+
+## Connected platform v2.0.0
+
+Use `connected_sustainability_platform()` to connect workspaces, projects, evidence, decisions, publications, governance records, handoffs, and workflows in a reviewable analytical graph. `platform_lineage()` traces derivation and evidence relationships, while `export_connected_platform()` creates a portable institutional bundle.

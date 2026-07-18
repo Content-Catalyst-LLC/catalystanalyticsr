@@ -10,3 +10,5 @@
 .scar-demo select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff}.scar-demo__pareto article p{overflow-wrap:anywhere}
 
 .scar-demo__handoffs article strong{color:var(--accent)} .scar-demo__notice strong,.scar-demo__readiness strong{font-weight:800}
+
+.scar-demo__path span{min-width:112px}.scar-demo__path i{font-style:normal;opacity:.55}.scar-demo__handoffs article{border-left:3px solid currentColor}.scar-demo__panel--wide{grid-column:1/-1}

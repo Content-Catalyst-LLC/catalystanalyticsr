@@ -46,7 +46,7 @@ test_that("institutional governance export writes review, signature, audit, and 
   paths <- export_institutional_governance(workflow, out, zip_bundle = FALSE)
   expect_true(all(vapply(paths[c("workflow", "summary", "review_assignments", "comments", "change_requests", "approvals", "signed_releases", "audit", "manifest")], file.exists, logical(1))))
   manifest <- jsonlite::fromJSON(paths$manifest, simplifyVector = FALSE)
-  expect_identical(manifest$package$version, "1.6.0")
+  expect_identical(manifest$package$version, "2.0.0")
   expect_true(manifest$boundary$human_approval_required)
   expect_false(manifest$boundary$automated_publication)
 })

@@ -11,7 +11,7 @@ def test_institutional_governance_examples_validate():
     for schema,payload in pairs: jsonschema.Draft202012Validator(load(schema)).validate(load(payload))
 def test_institutional_governance_contract_has_roles_and_boundaries():
     fixture=load('tests/fixtures/institutional_governance_contract_v1.json')
-    assert fixture['repository_version']=='1.6.0'
+    assert fixture['repository_version']=='2.0.0'
     assert set(('analyst','reviewer','approver','publisher')).issubset(fixture['roles'])
     assert fixture['boundaries']['human_approval_required'] is True
     source=(ROOT/'R/institutional_governance.R').read_text()

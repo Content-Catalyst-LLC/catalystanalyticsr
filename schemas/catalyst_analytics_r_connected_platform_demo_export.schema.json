@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/contracts/catalyst-analytics-r/browser-connected-platform/3.0.0",
+  "title": "Browser Connected Platform Preview",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "export_type",
+    "contract",
+    "platform",
+    "boundary",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "3.0.0"
+    },
+    "export_type": {
+      "const": "browser_connected_platform_preview"
+    },
+    "contract": {
+      "type": "object",
+      "required": [
+        "plugin_version",
+        "compatible_repository_version",
+        "connected_platform_schema_version",
+        "parity_status"
+      ]
+    },
+    "platform": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://sustainablecatalyst.com/contracts/catalyst-analytics-r/connected-platform/2.0.0",
+      "title": "Catalyst Analytics R Connected Platform",
+      "type": "object",
+      "required": [
+        "schema_version",
+        "platform_type",
+        "id",
+        "title",
+        "institution",
+        "workspaces",
+        "projects",
+        "nodes",
+        "edges",
+        "registries",
+        "decisions",
+        "publications",
+        "governance",
+        "handoffs",
+        "workflows",
+        "audit",
+        "metadata",
+        "boundary"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "2.0.0"
+        },
+        "platform_type": {
+          "const": "connected_sustainability_analytics_and_decision_platform"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "institution": {
+          "type": "object",
+          "required": [
+            "id",
+            "name"
+          ]
+        },
+        "workspaces": {
+          "type": "object"
+        },
+        "projects": {
+          "type": "object"
+        },
+        "nodes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "schema_version",
+              "id",
+              "node_type",
+              "title",
+              "reference",
+              "provenance",
+              "review_status",
+              "metadata"
+            ]
+          }
+        },
+        "edges": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "schema_version",
+              "id",
+              "from_id",
+              "to_id",
+              "relation",
+              "evidence_ids",
+              "provenance",
+              "review_status",
+              "metadata"
+            ]
+          }
+        },
+        "registries": {
+          "type": "object",
+          "required": [
+            "models",
+            "indicators",
+            "evidence"
+          ]
+        },
+        "decisions": {
+          "type": "object"
+        },
+        "publications": {
+          "type": "object"
+        },
+        "governance": {
+          "type": "object"
+        },
+        "handoffs": {
+          "type": "object"
+        },
+        "workflows": {
+          "type": "object"
+        },
+        "audit": {
+          "type": "array"
+        },
+        "metadata": {
+          "type": "object"
+        },
+        "boundary": {
+          "type": "object",
+          "required": [
+            "human_review_required",
+            "automated_decision_authorization",
+            "automated_publication"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "boundary": {
+      "type": "object",
+      "required": [
+        "r_not_executed",
+        "identity_not_verified",
+        "durable_storage_not_included",
+        "automated_decision_authorization",
+        "automated_publication",
+        "human_review_required"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

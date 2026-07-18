@@ -1,0 +1,46 @@
+{
+  "repository_version": "2.0.0",
+  "wordpress_version": "3.0.0",
+  "connected_platform_contract": "2.0.0",
+  "connected_api_contract": "2.0.0",
+  "legacy_contracts_supported": [
+    "scenario@1.0.0",
+    "project@1.0.0",
+    "workspace@1.0.0",
+    "platform_handoff@1.0.0",
+    "institutional_governance@1.0.0"
+  ],
+  "node_types": [
+    "workspace",
+    "project",
+    "scenario",
+    "dataset",
+    "model",
+    "indicator",
+    "evidence",
+    "decision",
+    "governance",
+    "publication",
+    "handoff",
+    "workflow",
+    "external_source"
+  ],
+  "required_exports": [
+    "connected-platform.json",
+    "platform-manifest.json",
+    "node-index.csv",
+    "edge-index.csv",
+    "evidence-index.csv",
+    "decision-index.csv",
+    "publication-index.csv",
+    "workflow-index.csv",
+    "README.md",
+    "manifest.json"
+  ],
+  "boundaries": {
+    "human_review_required": true,
+    "automated_decision_authorization": false,
+    "automated_publication": false,
+    "external_identity_and_transport_provided_by_host": true
+  }
+}
