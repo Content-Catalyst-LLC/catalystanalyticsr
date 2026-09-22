@@ -3,7 +3,7 @@
   "request_type": "sc.core.analytical-execution-request.v1",
   "request_key": "analysis-uncertainty-001",
   "provider_ref": "catalystanalyticsr",
-  "provider_version": "2.1.0",
+  "provider_version": "2.2.0",
   "analysis_type": "uncertainty_analysis",
   "method_ref": "run_uncertainty",
   "runtime": "r",
@@ -26,7 +26,7 @@
   "status": "declared",
   "visibility": "public",
   "provenance": {
-    "source": "platform-core-3.1.0"
+    "source": "platform-core-3.2.0"
   },
   "submitted_at": "2026-09-21T20:00:00Z",
   "boundary": {

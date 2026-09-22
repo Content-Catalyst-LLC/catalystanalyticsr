@@ -1,24 +1,3 @@
-# Catalyst Analytics R v2.1.0 Release Contract
+# Catalyst Analytics R v2.2.0 Release Contract
 
-The release is valid only when package and repository identity report 2.1.0; the Core provider, Core request, Core result, and Workspace execution-envelope schemas validate; the provider declares runtime `r`, execution host `workspace`, and `core_executes_provider=false`; all twelve Platform Core 3.1 analytical capabilities are declared; arbitrary function dispatch is forbidden; Connected Platform protocol contracts remain 2.0.0; the WordPress v3.1.0 companion maps repository 2.1.0; repository tests and JSON-schema validation pass; and archive integrity passes. Human review remains mandatory for decisions and publication.
-
-Platform Core 3.1.0's seeded provider version 2.0.1 is treated as a registry baseline, not as permission to mutate Core's release seed. Analytics R 2.1.0 reports its real package version in provider/result provenance; Core should update its provider registry in the next integration release.
-
-# Catalyst Analytics R v2.0.1 Release Contract
-
-The release is valid only when package and repository identity report 2.0.1, the release-readiness schema accepts 2.0.1, Workspace is a governed first-party handoff target, Connected Platform protocol contracts remain at 2.0.0, the WordPress v3.0.0 companion maps repository 2.0.1, repository tests and JSON-schema validation pass, and archive integrity passes. Human review remains mandatory for decisions and publication.
-
-The package remains transport-neutral. Workspace is the execution host boundary: authentication, runtime isolation, resource enforcement, durable job state, and remote execution are supplied by the host rather than Catalyst Analytics R.
-
-# Catalyst Analytics R v2.0.0 Release Contract
-
-The release is valid only when the connected-platform schemas, examples, graph APIs, lineage behavior, API v2 manifest, WordPress v3.0.0 mapping, repository tests, JSON validation, R package checks, and archive integrity pass. Human review remains mandatory for decisions and publication.
-
-# Catalyst Analytics R v1.6.0 Release Contract
-
-- Repository and R package version: 1.6.0.
-- WordPress companion version: 2.6.0.
-- Institutional governance and export contracts: 1.0.0.
-- Roles, assignments, comments, change requests, approvals, signatures, access controls, audit history, retention, and archival records are validated.
-- Existing scenario, project, workspace, econometric, API, and handoff contracts remain compatible.
-- Human approval remains mandatory; automated publication and identity verification are outside the package boundary.
+The release is valid when package/repository identity is 2.2.0; WordPress companion identity is 3.2.0; `sc.analytics-r.statistical-diagnostics-validation.v1` validates; the Core provider remains `sc.core.analytical-runtime-provider.v1`; Core minimum integration is 3.2.0; Workspace is the execution host; diagnostic evidence cannot automatically certify scientific validity, statistical significance, causal identification, or a preferred model; all prior connected-platform contracts remain compatible; repository tests, JSON-schema validation, PHP/JavaScript syntax, package source checks, and ZIP integrity pass. Human methodological review remains mandatory.

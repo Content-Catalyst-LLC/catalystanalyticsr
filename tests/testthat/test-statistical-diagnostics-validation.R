@@ -1,0 +1,10 @@
+test_that("statistical diagnostics contract is evidence-only", {
+  m <- statistical_diagnostics_manifest()
+  expect_identical(m$contract, "sc.analytics-r.statistical-diagnostics-validation.v1")
+  expect_identical(m$provider_version, "2.2.0")
+  expect_true(m$boundaries$no_automatic_scientific_validity_certification)
+  d <- statistical_diagnostic("diagnostic:rmse", "fit_metric", "RMSE", 1.2)
+  a <- statistical_assumption("assumption:normality", "Residual normality", "Residual distribution is adequately described for the intended method.", "not_assessed")
+  b <- statistical_validation_bundle("bundle:test", "analysis:test", diagnostics=list(d), assumptions=list(a))
+  expect_true(b$boundary$evidence_only); expect_true(b$boundary$human_review_required); expect_silent(validate_statistical_validation_bundle(b))
+})

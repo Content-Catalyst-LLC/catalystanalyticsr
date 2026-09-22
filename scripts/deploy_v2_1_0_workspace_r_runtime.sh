@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-VERSION="2.1.0"
+VERSION="2.2.0"
 TAG="v${VERSION}"
 REPO_URL="${REPO_URL:-https://github.com/Content-Catalyst-LLC/catalystanalyticsr.git}"
 REPO_DIR="${1:-/opt/sustainable-catalyst/catalystanalyticsr}"
@@ -15,12 +15,12 @@ log "RELEASE CONTRACT"
 rm -rf "${VENV}"; python3 -m venv "${VENV}"; "${VENV}/bin/python" -m pip -q install --upgrade pip; "${VENV}/bin/python" -m pip -q install jsonschema pytest
 (cd "${REPO_DIR}" && PYTHONDONTWRITEBYTECODE=1 "${VENV}/bin/python" scripts/check_release.py)
 rm -rf "${VENV}"
-VERIFY='stopifnot(as.character(packageVersion("catalystanalyticsr")) == "2.1.0"); p <- catalystanalyticsr::catalyst_core_provider_manifest(); stopifnot(p$provider_key == "catalystanalyticsr", p$runtime == "r", p$execution_host == "workspace", identical(p$boundary$core_executes_provider, FALSE)); q <- catalystanalyticsr::core_analytical_request("deploy-check", "uncertainty_analysis", c("scenario:deploy")); e <- catalystanalyticsr::workspace_core_execution_envelope(q); stopifnot(e$boundary$workspace_controls_execution); cat("package=", as.character(packageVersion("catalystanalyticsr")), "\n", sep=""); cat("core_contract=", p$core_contract, "\n", sep=""); cat("execution_host=", p$execution_host, "\n", sep="")'
+VERIFY='stopifnot(as.character(packageVersion("catalystanalyticsr")) == "2.2.0"); p <- catalystanalyticsr::catalyst_core_provider_manifest(); stopifnot(p$provider_key == "catalystanalyticsr", p$runtime == "r", p$execution_host == "workspace", identical(p$boundary$core_executes_provider, FALSE)); q <- catalystanalyticsr::core_analytical_request("deploy-check", "uncertainty_analysis", c("scenario:deploy")); e <- catalystanalyticsr::workspace_core_execution_envelope(q); stopifnot(e$boundary$workspace_controls_execution); cat("package=", as.character(packageVersion("catalystanalyticsr")), "\n", sep=""); cat("core_contract=", p$core_contract, "\n", sep=""); cat("execution_host=", p$execution_host, "\n", sep="")'
 if command -v docker >/dev/null 2>&1 && docker inspect "${WORKSPACE_R_CONTAINER}" >/dev/null 2>&1; then
   log "INSTALLING INTO ${WORKSPACE_R_CONTAINER}"
-  docker exec "${WORKSPACE_R_CONTAINER}" sh -lc 'rm -rf /tmp/catalystanalyticsr-v2.1.0 && mkdir -p /tmp/catalystanalyticsr-v2.1.0'
-  tar -C "${REPO_DIR}" --exclude='.git' --exclude='.pytest_cache' --exclude='__pycache__' -cf - . | docker exec -i "${WORKSPACE_R_CONTAINER}" tar -C /tmp/catalystanalyticsr-v2.1.0 -xf -
-  docker exec "${WORKSPACE_R_CONTAINER}" sh -lc 'R CMD INSTALL --preclean /tmp/catalystanalyticsr-v2.1.0'
+  docker exec "${WORKSPACE_R_CONTAINER}" sh -lc 'rm -rf /tmp/catalystanalyticsr-v2.2.0 && mkdir -p /tmp/catalystanalyticsr-v2.2.0'
+  tar -C "${REPO_DIR}" --exclude='.git' --exclude='.pytest_cache' --exclude='__pycache__' -cf - . | docker exec -i "${WORKSPACE_R_CONTAINER}" tar -C /tmp/catalystanalyticsr-v2.2.0 -xf -
+  docker exec "${WORKSPACE_R_CONTAINER}" sh -lc 'R CMD INSTALL --preclean /tmp/catalystanalyticsr-v2.2.0'
   docker exec "${WORKSPACE_R_CONTAINER}" Rscript -e "${VERIFY}"
 elif command -v R >/dev/null 2>&1 && command -v Rscript >/dev/null 2>&1; then
   log "WORKSPACE R CONTAINER NOT FOUND - INSTALLING INTO HOST R"

@@ -13,7 +13,7 @@ def test_core_provider_contract_examples_validate():
 
 def test_provider_matches_platform_core_310_contract():
     p=load('examples/core_provider_manifest.json')
-    assert p['provider_key']=='catalystanalyticsr' and p['provider_version']=='2.1.0'
+    assert p['provider_key']=='catalystanalyticsr' and p['provider_version']=='2.2.0'
     assert p['core_contract']=='sc.core.analytical-runtime-provider.v1'
     assert p['runtime']=='r' and p['execution_host']=='workspace'
     assert p['boundary']['core_executes_provider'] is False

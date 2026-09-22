@@ -1,16 +1,16 @@
 {
-  "schema_version": "3.1.0",
+  "schema_version": "3.2.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "2.1.0",
+  "repository_version": "2.2.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "2.1.0"
+    "version": "2.2.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "3.1.0",
-    "compatible_repository_version": "2.1.0",
+    "version": "3.2.0",
+    "compatible_repository_version": "2.2.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -228,6 +228,13 @@
     "workspace_core_execution": {
       "version": "1.0.0",
       "schema": "schemas/catalyst_analytics_r_workspace_core_execution.schema.json"
+    },
+    "statistical_diagnostics_validation": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_statistical_diagnostics_validation.schema.json",
+      "contract": "sc.analytics-r.statistical-diagnostics-validation.v1",
+      "core_minimum_release": "3.2.0",
+      "workspace_minimum_release": "3.5.0"
     }
   },
   "models": [

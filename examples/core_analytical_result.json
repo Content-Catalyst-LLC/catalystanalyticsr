@@ -6,7 +6,7 @@
   "request_key": "analysis-uncertainty-001",
   "result_ref": "result:uncertainty-001",
   "provider_ref": "catalystanalyticsr",
-  "provider_version": "2.1.0",
+  "provider_version": "2.2.0",
   "runtime": "r",
   "execution_host": "workspace",
   "analysis_type": "uncertainty_analysis",
@@ -35,7 +35,7 @@
   "provenance": {
     "package": {
       "name": "catalystanalyticsr",
-      "version": "2.1.0"
+      "version": "2.2.0"
     },
     "core_contract": "sc.core.analytical-runtime-provider.v1"
   },

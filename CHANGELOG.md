@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.2.0
+
+- Added the Statistical Diagnostics & Validation Contract (`sc.analytics-r.statistical-diagnostics-validation.v1`).
+- Added first-class diagnostic, assumption, robustness, model-comparison, and validation-evidence records.
+- Added adapters for existing model-validation and policy-regression outputs.
+- Added Core 3.2 result/provenance compatibility metadata while preserving Workspace-hosted execution.
+- Added WordPress companion 3.2.0 diagnostics-contract visibility.
+- Preserved evidence-only, human-review, no-auto-certification boundaries.
+
 ## 2.1.0
 
 - Added Platform Core 3.1+ computational-provider contract.

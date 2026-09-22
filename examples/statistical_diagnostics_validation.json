@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0.0",
+  "bundle_type": "statistical_validation_evidence",
+  "contract": "sc.analytics-r.statistical-diagnostics-validation.v1",
+  "id": "diagnostics:policy-regression-001",
+  "analysis_ref": "analysis:policy-regression-001",
+  "model_ref": "model:policy-regression-001",
+  "diagnostics": [
+    {
+      "schema_version": "1.0.0",
+      "record_type": "statistical_diagnostic",
+      "id": "diagnostic:rmse",
+      "diagnostic_type": "fit_metric",
+      "name": "RMSE",
+      "observed": 1.82,
+      "reference": null,
+      "operator": null,
+      "p_value": null,
+      "method_ref": "fit_policy_regression",
+      "units": null,
+      "evidence_refs": [
+        "artifact:residual-table"
+      ],
+      "notes": [],
+      "boundary": {
+        "p_value_is_evidence_not_validity": true,
+        "threshold_does_not_certify_model": true,
+        "human_interpretation_required": true
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "record_type": "statistical_diagnostic",
+      "id": "diagnostic:bp",
+      "diagnostic_type": "assumption_test",
+      "name": "Breusch-Pagan statistic",
+      "observed": 4.1,
+      "reference": null,
+      "operator": null,
+      "p_value": 0.129,
+      "method_ref": "breusch_pagan",
+      "units": null,
+      "evidence_refs": [],
+      "notes": [],
+      "boundary": {
+        "p_value_is_evidence_not_validity": true,
+        "threshold_does_not_certify_model": true,
+        "human_interpretation_required": true
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "schema_version": "1.0.0",
+      "record_type": "statistical_assumption",
+      "id": "assumption:parallel-trends",
+      "label": "Parallel trends",
+      "statement": "Untreated potential outcomes would have followed comparable trends.",
+      "status": "not_assessed",
+      "evidence_refs": [],
+      "limitations": [
+        "Requires design-specific review."
+      ],
+      "boundary": {
+        "status_is_evidence_state_not_certification": true,
+        "human_review_required": true
+      }
+    }
+  ],
+  "robustness": [],
+  "comparisons": [],
+  "source_status": "recorded",
+  "limitations": [
+    "Diagnostics are evidence and do not certify scientific validity."
+  ],
+  "review_status": "unreviewed",
+  "summary": {
+    "diagnostic_count": 2,
+    "assumption_count": 1,
+    "robustness_count": 0,
+    "comparison_count": 0
+  },
+  "provenance": {
+    "package": {
+      "name": "catalystanalyticsr",
+      "version": "2.2.0"
+    },
+    "created_at": "2026-09-22T00:00:00Z"
+  },
+  "boundary": {
+    "evidence_only": true,
+    "no_automatic_scientific_validity_certification": true,
+    "no_automatic_significance_conclusion": true,
+    "no_automatic_model_selection": true,
+    "human_review_required": true
+  }
+}

@@ -1,6 +1,6 @@
 # Catalyst Analytics R
 
-Current package release: **2.1.0** (release-contract repair; Connected Platform contract remains 2.0.0).
+Current package release: **2.2.0** (Statistical Diagnostics & Validation Contract; Core provider contract remains v1).
 
 Catalyst Analytics R is the reproducible statistical, scenario-modeling, uncertainty-analysis, sustainability-accounting, model-governance, and analytical-publication engine for the Sustainable Catalyst platform.
 
@@ -150,6 +150,11 @@ Build governed regressions, panel models, difference-in-differences, event studi
 
 Use `connected_sustainability_platform()` to connect workspaces, projects, evidence, decisions, publications, governance records, handoffs, and workflows in a reviewable analytical graph. `platform_lineage()` traces derivation and evidence relationships, while `export_connected_platform()` creates a portable institutional bundle.
 
-## Platform Core computational provider (2.1.0)
+## Platform Core computational provider (2.2.0)
 
 Catalyst Analytics R implements `sc.core.analytical-runtime-provider.v1` as a Workspace-hosted R provider. Use `catalyst_core_provider_manifest()`, `core_analytical_request()`, `core_execution_plan()`, `workspace_core_execution_envelope()`, and `core_analytical_result()` to bridge Core analytical work to governed R execution without embedding R inside Core.
+
+
+## Statistical Diagnostics & Validation Contract (2.2.0)
+
+Use `statistical_validation_bundle()` and the conversion helpers to turn statistical diagnostics into provenance-aware evidence for Platform Core 3.2+. The contract records evidence without automatically certifying significance, validity, causality, or a preferred model.

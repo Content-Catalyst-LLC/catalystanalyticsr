@@ -2,11 +2,11 @@
 /**
  * Plugin Name: Catalyst Analytics R Demo
  * Description: Connected Sustainability Analytics and Decision Platform companion for Catalyst Analytics R.
- * Version: 3.1.0
+ * Version: 3.2.0
  * Author: Content Catalyst LLC
  */
 if (!defined('ABSPATH')) { exit; }
-define('SCAR_DEMO_VERSION','3.1.0');
+define('SCAR_DEMO_VERSION','3.2.0');
 function scar_demo_assets(){
   $base=plugin_dir_url(__FILE__);
   wp_enqueue_style('scar-demo',$base.'assets/catalyst-analytics-r-demo.css',array(),SCAR_DEMO_VERSION);
@@ -15,7 +15,7 @@ function scar_demo_assets(){
 add_action('wp_enqueue_scripts','scar_demo_assets');
 function scar_demo_shortcode(){ ob_start(); ?>
 <section class="scar-demo" data-scar-demo>
-<header class="scar-demo__hero"><p class="scar-demo__eyebrow">Catalyst Analytics R v2.1.0 / WordPress v3.1.0</p><h3>Connected Sustainability Analytics and Decision Platform</h3><p>Map workspaces, evidence, models, decisions, governance, publications, and first-party handoffs into one reviewable analytical graph.</p></header>
+<header class="scar-demo__hero"><p class="scar-demo__eyebrow">Catalyst Analytics R v2.2.0 / WordPress v3.2.0</p><h3>Connected Sustainability Analytics and Decision Platform</h3><p>Map workspaces, evidence, models, decisions, governance, publications, and first-party handoffs into one reviewable analytical graph.</p></header>
 <div class="scar-demo__notice"><strong>Core provider:</strong> Platform Core 3.1+ can declare Analytics R work through Workspace. Core does not execute R. <br><strong>Connected-platform boundary:</strong> this browser companion maps the contract. It does not execute R, verify identity, persist institutional records, publish artifacts, or authorize decisions.</div>
 <form class="scar-demo__form" data-scar-form><div class="scar-demo__controls">
 <label><span>Platform title</span><input name="title" value="Sustainable Catalyst Connected Analytics" required></label>
@@ -33,7 +33,7 @@ function scar_demo_shortcode(){ ob_start(); ?>
 <article class="scar-demo__panel scar-demo__panel--wide"><div class="scar-demo__panel-header"><div><p>Graph</p><h4>Connected analytical path</h4></div><span class="scar-demo__badge">Contract 2.0.0</span></div><div class="scar-demo__path" data-scar-path></div></article>
 <article class="scar-demo__panel"><div class="scar-demo__panel-header"><div><p>Lineage</p><h4>Evidence to publication</h4></div></div><div class="scar-demo__ledger" data-scar-lineage></div></article>
 <article class="scar-demo__panel"><div class="scar-demo__panel-header"><div><p>Registries</p><h4>Federated records</h4></div></div><div class="scar-demo__checks" data-scar-registries></div></article>
-<article class="scar-demo__panel scar-demo__panel--wide"><div class="scar-demo__panel-header"><div><p>Platform Core</p><h4>Analytical runtime provider</h4></div><span class="scar-demo__badge">Core contract v1</span></div><div class="scar-demo__provider"><strong>catalystanalyticsr 2.1.0</strong><span>R runtime</span><span>Workspace execution host</span><span>12 governed capabilities</span></div></article>
+<article class="scar-demo__panel scar-demo__panel--wide"><div class="scar-demo__panel-header"><div><p>Platform Core</p><h4>Analytical runtime provider</h4></div><span class="scar-demo__badge">Core contract v1</span></div><div class="scar-demo__provider"><strong>catalystanalyticsr 2.2.0</strong><span>R runtime</span><span>Workspace execution host</span><span>12 governed capabilities</span><span>Diagnostics contract v1</span></div></article>
 <article class="scar-demo__panel scar-demo__panel--wide"><div class="scar-demo__panel-header"><div><p>Platform connections</p><h4>Governance and handoff</h4></div></div><div class="scar-demo__handoffs" data-scar-handoffs></div></article>
 </div></section>
 <?php return ob_get_clean(); }

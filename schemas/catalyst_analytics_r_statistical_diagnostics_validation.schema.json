@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_statistical_diagnostics_validation.schema.json",
+  "title": "Catalyst Analytics R statistical diagnostics and validation evidence",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "bundle_type",
+    "contract",
+    "id",
+    "analysis_ref",
+    "diagnostics",
+    "assumptions",
+    "robustness",
+    "comparisons",
+    "review_status",
+    "summary",
+    "provenance",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "bundle_type": {
+      "const": "statistical_validation_evidence"
+    },
+    "contract": {
+      "const": "sc.analytics-r.statistical-diagnostics-validation.v1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "analysis_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "record_type",
+          "id",
+          "diagnostic_type",
+          "name",
+          "boundary"
+        ],
+        "properties": {
+          "record_type": {
+            "const": "statistical_diagnostic"
+          },
+          "diagnostic_type": {
+            "enum": [
+              "fit_metric",
+              "residual",
+              "assumption_test",
+              "robustness",
+              "numerical",
+              "calibration",
+              "comparison"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "record_type",
+          "id",
+          "status"
+        ],
+        "properties": {
+          "record_type": {
+            "const": "statistical_assumption"
+          },
+          "status": {
+            "enum": [
+              "declared",
+              "supported",
+              "challenged",
+              "failed",
+              "not_assessed"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "robustness": {
+      "type": "array"
+    },
+    "comparisons": {
+      "type": "array"
+    },
+    "source_status": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "review_status": {
+      "enum": [
+        "unreviewed",
+        "in_review",
+        "reviewed"
+      ]
+    },
+    "summary": {
+      "type": "object"
+    },
+    "provenance": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object",
+      "required": [
+        "evidence_only",
+        "no_automatic_scientific_validity_certification",
+        "no_automatic_significance_conclusion",
+        "no_automatic_model_selection",
+        "human_review_required"
+      ],
+      "properties": {
+        "evidence_only": {
+          "const": true
+        },
+        "no_automatic_scientific_validity_certification": {
+          "const": true
+        },
+        "no_automatic_significance_conclusion": {
+          "const": true
+        },
+        "no_automatic_model_selection": {
+          "const": true
+        },
+        "human_review_required": {
+          "const": true
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

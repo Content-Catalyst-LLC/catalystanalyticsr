@@ -44,7 +44,7 @@
       "const": "catalystanalyticsr"
     },
     "provider_version": {
-      "const": "2.1.0"
+      "const": "2.2.0"
     },
     "runtime": {
       "const": "r"

@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "export_type": "browser_saved_workspace_and_scenario_library",
   "contract": {
-    "plugin_version": "2.1.0",
+    "plugin_version": "2.2.0",
     "compatible_repository_version": "1.1.0",
     "parity_status": "mapped_workspace_contract_not_r_execution"
   },

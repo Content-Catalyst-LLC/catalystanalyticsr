@@ -10,8 +10,8 @@ def load(path): return json.loads(read(path))
 
 def test_connected_platform_contract_files_and_versions():
     manifest = load("catalyst_analytics_r_manifest.json")
-    assert manifest["repository_version"] == "2.1.0"
-    assert manifest["wordpress_demo"]["version"] == "3.1.0"
+    assert manifest["repository_version"] == "2.2.0"
+    assert manifest["wordpress_demo"]["version"] == "3.2.0"
     assert manifest["contracts"]["connected_platform"]["version"] == "2.0.0"
     assert manifest["contracts"]["connected_platform_export"]["version"] == "2.0.0"
     assert manifest["contracts"]["connected_api"]["version"] == "2.0.0"
@@ -45,12 +45,12 @@ def test_connected_platform_r_api_and_boundaries():
 def test_browser_connected_platform_contract():
     php = read("wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php")
     js = read("wordpress/catalyst-analytics-r-demo/assets/catalyst-analytics-r-demo.js")
-    assert re.search(r"^ \* Version:\s*3\.1\.0$", php, re.M)
+    assert re.search(r"^ \* Version:\s*3\.2\.0$", php, re.M)
     for token in ["Connected Sustainability Analytics and Decision Platform", "Build connected platform", 'aria-live="polite"']:
         assert token in php
-    for token in ["compatible_repository_version:'2.1.0'", "mapped_connected_platform_contract_not_r_execution", "automated_decision_authorization:false", "automated_publication:false"]:
+    for token in ["compatible_repository_version:'2.2.0'", "mapped_connected_platform_contract_not_r_execution", "automated_decision_authorization:false", "automated_publication:false"]:
         assert token in js
-    with zipfile.ZipFile(ROOT / "dist/catalyst-analytics-r-demo-v3.1.0.zip") as archive:
+    with zipfile.ZipFile(ROOT / "dist/catalyst-analytics-r-demo-v3.2.0.zip") as archive:
         assert archive.testzip() is None
 
 
