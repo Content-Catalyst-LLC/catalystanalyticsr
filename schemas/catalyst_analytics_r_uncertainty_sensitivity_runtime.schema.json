@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_analytics_r_uncertainty_sensitivity_runtime.schema.json",
+  "title": "Catalyst Analytics R Uncertainty and Sensitivity Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_type",
+    "contract",
+    "analysis_ref",
+    "method",
+    "summary",
+    "sensitivity",
+    "source_refs",
+    "limitations",
+    "provenance",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "evidence_type": {
+      "const": "catalyst_uncertainty_sensitivity_evidence"
+    },
+    "contract": {
+      "const": "sc.analytics-r.uncertainty-sensitivity-runtime.v1"
+    },
+    "analysis_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "method": {
+      "enum": [
+        "monte_carlo",
+        "latin_hypercube",
+        "morris",
+        "sobol"
+      ]
+    },
+    "summary": {
+      "type": [
+        "array",
+        "object"
+      ]
+    },
+    "sensitivity": {
+      "type": [
+        "array",
+        "object"
+      ]
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "provider_key",
+        "provider_version",
+        "runtime",
+        "execution_host",
+        "created_at"
+      ],
+      "properties": {
+        "provider_key": {
+          "const": "catalystanalyticsr"
+        },
+        "provider_version": {
+          "const": "2.3.0"
+        },
+        "runtime": {
+          "const": "r"
+        },
+        "execution_host": {
+          "const": "workspace"
+        },
+        "created_at": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "boundary": {
+      "type": "object",
+      "required": [
+        "uncertainty_is_evidence_not_truth",
+        "sensitivity_does_not_establish_causality",
+        "no_automatic_policy_preference",
+        "no_automatic_scientific_validity_certification",
+        "human_review_required"
+      ],
+      "properties": {
+        "uncertainty_is_evidence_not_truth": {
+          "const": true
+        },
+        "sensitivity_does_not_establish_causality": {
+          "const": true
+        },
+        "no_automatic_policy_preference": {
+          "const": true
+        },
+        "no_automatic_scientific_validity_certification": {
+          "const": true
+        },
+        "human_review_required": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

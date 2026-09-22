@@ -158,3 +158,7 @@ Catalyst Analytics R implements `sc.core.analytical-runtime-provider.v1` as a Wo
 ## Statistical Diagnostics & Validation Contract (2.2.0)
 
 Use `statistical_validation_bundle()` and the conversion helpers to turn statistical diagnostics into provenance-aware evidence for Platform Core 3.2+. The contract records evidence without automatically certifying significance, validity, causality, or a preferred model.
+
+## v2.3.0 uncertainty and sensitivity runtime
+
+Catalyst Analytics R v2.3.0 adds a bounded Workspace-managed runtime for Monte Carlo, Latin hypercube, Morris screening, and Sobol sensitivity under `sc.analytics-r.uncertainty-sensitivity-runtime.v1`. Remote callers cannot dispatch arbitrary R functions; outputs are evidence requiring human interpretation.

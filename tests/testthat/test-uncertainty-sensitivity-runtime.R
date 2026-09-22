@@ -1,0 +1,11 @@
+test_that("uncertainty/sensitivity runtime exposes bounded contracts", {
+  manifest <- uncertainty_sensitivity_runtime_manifest()
+  expect_identical(manifest$contract, "sc.analytics-r.uncertainty-sensitivity-runtime.v1")
+  expect_identical(manifest$provider_version, "2.3.0")
+  expect_false(manifest$boundary$arbitrary_function_dispatch)
+  expect_true(manifest$boundary$canonical_scenario_execution_only)
+  expect_true(manifest$boundary$human_review_required)
+  provider <- catalyst_core_provider_manifest()
+  expect_identical(provider$uncertainty_sensitivity_contract, manifest$contract)
+  expect_identical(provider$core_minimum_release, "3.3.0")
+})

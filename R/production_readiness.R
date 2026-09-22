@@ -6,6 +6,7 @@
     models = c("new_catalyst_model", "register_catalyst_model", "list_catalyst_models", "get_catalyst_model", "catalyst_model_manifest"),
     comparison = c("run_scenarios", "compare_scenarios", "scenario_deltas", "scenario_rankings", "scenario_scorecard", "pareto_diagnostics"),
     uncertainty = c("uncertainty_spec", "run_uncertainty", "uncertainty_summary", "uncertainty_probabilities", "global_sensitivity", "local_sensitivity", "run_stress_tests"),
+    uncertainty_runtime = c("uncertainty_sensitivity_runtime_manifest", "uncertainty_sensitivity_runtime_request", "validate_uncertainty_sensitivity_runtime_request", "run_uncertainty_sensitivity_runtime", "morris_sensitivity", "sobol_sensitivity", "uncertainty_sensitivity_evidence_bundle", "validate_uncertainty_sensitivity_evidence_bundle", "uncertainty_sensitivity_to_json", "uncertainty_sensitivity_from_json"),
     data = c("as_catalyst_dataset", "read_catalyst_data", "validate_catalyst_dataset", "dataset_manifest", "new_catalyst_indicator", "calculate_indicator", "calculate_indicators"),
     accounting = c("climate_accounting", "inclusive_development_analysis", "model_validation_analysis"),
     projects = c("catalyst_project", "validate_catalyst_project", "project_add_run", "project_snapshot", "project_manifest", "export_project_publication"),
@@ -24,7 +25,7 @@
 
 #' Stable public API manifest
 #'
-#' Returns the v2.2.0 public API stability declaration.
+#' Returns the v2.3.0 public API stability declaration.
 #' @param include_experimental Include exported APIs not in the stable groups.
 #' @return A list describing stable, experimental, and deprecated APIs.
 #' @export
@@ -48,7 +49,7 @@ catalyst_api_manifest <- function(include_experimental = TRUE) {
       scenario = "1.0.0", comparison = "1.0.0", uncertainty = "1.0.0",
       dataset = "1.0.0", indicator = "1.0.0", climate_accounting = "1.0.0",
       inclusive_development = "1.0.0", model_validation = "1.0.0",
-      project = "1.0.0", analytical_publication = "1.0.0", workspace = "1.0.0", workspace_export = "1.0.0", regional_portfolio = "1.0.0", regional_portfolio_analysis = "1.0.0", policy_optimization = "1.0.0", policy_pathway = "1.0.0", policy_pathway_analysis = "1.0.0", econometric_evaluation = "1.0.0", policy_evaluation_analysis = "1.0.0", public_api = "1.0.0", api_request = "1.0.0", api_response = "1.0.0", platform_handoff = "1.0.0", platform_handoff_export = "1.0.0", institutional_governance = "1.0.0", institutional_governance_export = "1.0.0", connected_platform = "2.0.0", connected_platform_export = "2.0.0", connected_api = "2.0.0", core_provider = "1.0.0", core_execution_request = "1.0.0", core_execution_result = "1.0.0", workspace_core_execution = "1.0.0", statistical_diagnostics_validation = "1.0.0", release_readiness = "1.0.0"
+      project = "1.0.0", analytical_publication = "1.0.0", workspace = "1.0.0", workspace_export = "1.0.0", regional_portfolio = "1.0.0", regional_portfolio_analysis = "1.0.0", policy_optimization = "1.0.0", policy_pathway = "1.0.0", policy_pathway_analysis = "1.0.0", econometric_evaluation = "1.0.0", policy_evaluation_analysis = "1.0.0", public_api = "1.0.0", api_request = "1.0.0", api_response = "1.0.0", platform_handoff = "1.0.0", platform_handoff_export = "1.0.0", institutional_governance = "1.0.0", institutional_governance_export = "1.0.0", connected_platform = "2.0.0", connected_platform_export = "2.0.0", connected_api = "2.0.0", core_provider = "1.0.0", core_execution_request = "1.0.0", core_execution_result = "1.0.0", workspace_core_execution = "1.0.0", statistical_diagnostics_validation = "1.0.0", uncertainty_sensitivity_runtime = "1.0.0", release_readiness = "1.0.0"
     )
   )
   if (isTRUE(include_experimental)) result$experimental <- experimental
@@ -79,9 +80,10 @@ catalyst_compatibility_manifest <- function() {
       core_analytical_request = c("1.0.0"),
       core_analytical_result = c("1.0.0"),
       statistical_diagnostics_validation = c("1.0.0"),
+      uncertainty_sensitivity_runtime = c("1.0.0"),
       legacy_scenario_migrations = c("legacy_r", "browser_v1")
     ),
-    wordpress = list(plugin = "catalyst-analytics-r-demo", version = "3.2.0", compatible_repository_version = .catalyst_package_version()),
+    wordpress = list(plugin = "catalyst-analytics-r-demo", version = "3.3.0", compatible_repository_version = .catalyst_package_version()),
     boundaries = c("browser companion does not execute R", "reproducibility does not establish validity", "human review is required for publication and decisions")
   )
 }

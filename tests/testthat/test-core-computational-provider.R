@@ -1,7 +1,7 @@
 test_that("Core computational provider preserves runtime boundary", {
   provider <- catalyst_core_provider_manifest()
   expect_identical(provider$provider_key, "catalystanalyticsr")
-  expect_identical(provider$provider_version, "2.2.0")
+  expect_identical(provider$provider_version, "2.3.0")
   expect_identical(provider$runtime, "r")
   expect_identical(provider$execution_host, "workspace")
   expect_false(provider$boundary$core_executes_provider)

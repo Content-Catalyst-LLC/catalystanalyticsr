@@ -3,7 +3,7 @@
   "request_type": "sc.core.analytical-execution-request.v1",
   "request_key": "analysis-uncertainty-001",
   "provider_ref": "catalystanalyticsr",
-  "provider_version": "2.2.0",
+  "provider_version": "2.3.0",
   "analysis_type": "uncertainty_analysis",
   "method_ref": "run_uncertainty",
   "runtime": "r",

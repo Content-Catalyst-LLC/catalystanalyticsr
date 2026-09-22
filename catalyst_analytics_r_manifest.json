@@ -1,16 +1,16 @@
 {
-  "schema_version": "3.2.0",
+  "schema_version": "3.3.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "2.2.0",
+  "repository_version": "2.3.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "2.2.0"
+    "version": "2.3.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "3.2.0",
-    "compatible_repository_version": "2.2.0",
+    "version": "3.3.0",
+    "compatible_repository_version": "2.3.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -235,6 +235,15 @@
       "contract": "sc.analytics-r.statistical-diagnostics-validation.v1",
       "core_minimum_release": "3.2.0",
       "workspace_minimum_release": "3.5.0"
+    },
+    "uncertainty_sensitivity_runtime": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_uncertainty_sensitivity_runtime.schema.json",
+      "contract": "sc.analytics-r.uncertainty-sensitivity-runtime.v1",
+      "core_minimum_release": "3.3.0",
+      "core_uncertainty_evidence_target_release": "3.4.0",
+      "workspace_validated_release": "3.9.1",
+      "production_workspace_provider_at_build": "2.2.0"
     }
   },
   "models": [
@@ -378,7 +387,8 @@
     "governed connected workflows",
     "connected public API v2",
     "portable connected-platform publication bundles",
-    "WordPress connected-platform companion"
+    "WordPress connected-platform companion",
+    "bounded Monte Carlo, Latin hypercube, Morris, and Sobol uncertainty/sensitivity runtime"
   ],
   "method_path": "question -> governed data and evidence -> models and scenarios -> uncertainty and evaluation -> connected lineage graph -> collaborative review -> decision record -> publication and cross-product handoff",
   "boundaries": [
@@ -399,7 +409,9 @@
     "statistical association is not causal proof",
     "parallel-trends and no-interference assumptions require review",
     "synthetic controls require placebo and support review",
-    "econometric outputs do not authorize policy"
+    "econometric outputs do not authorize policy",
+    "uncertainty distributions are evidence models rather than truth claims",
+    "sensitivity estimates do not establish causality or policy preference"
   ],
   "capabilities": [
     "versioned public API envelopes and endpoint discovery",
@@ -412,7 +424,10 @@
     "federated analytical registries",
     "evidence-backed decision records",
     "connected API v2",
-    "connected platform export bundles"
+    "connected platform export bundles",
+    "bounded uncertainty/sensitivity runtime contract",
+    "Morris elementary-effects screening",
+    "Sobol first-order and total-order sensitivity evidence"
   ],
   "known_boundaries": [
     "public API contract does not include an HTTP server",

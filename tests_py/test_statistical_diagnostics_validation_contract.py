@@ -3,9 +3,9 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 def load(p): return json.loads((ROOT/p).read_text())
 def test_release_identity_and_manifest():
-    assert re.search(r"^Version: 2\.2\.0$",(ROOT/'DESCRIPTION').read_text(),re.M)
+    assert re.search(r"^Version: 2\.3\.0$",(ROOT/'DESCRIPTION').read_text(),re.M)
     m=load('catalyst_analytics_r_manifest.json')
-    assert m['repository_version']=='2.2.0'
+    assert m['repository_version']=='2.3.0'
     c=m['contracts']['statistical_diagnostics_validation']
     assert c['contract']=='sc.analytics-r.statistical-diagnostics-validation.v1' and c['core_minimum_release']=='3.2.0'
 def test_schema_and_example_boundaries():
@@ -18,5 +18,5 @@ def test_source_contract_boundaries():
         assert token in s
 def test_provider_contract_remains_workspace_hosted():
     s=(ROOT/'R/core_computational_provider.R').read_text()
-    assert 'sc.core.analytical-runtime-provider.v1' in s and 'core_minimum_release = "3.2.0"' in s
+    assert 'sc.core.analytical-runtime-provider.v1' in s and 'core_minimum_release = "3.3.0"' in s
     assert 'workspace_controls_execution_environment = TRUE' in s and 'core_executes_provider = FALSE' in s

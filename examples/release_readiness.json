@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "package_version": "2.2.0",
-  "assessed_at": "2026-09-21T00:00:00Z",
+  "package_version": "2.3.0",
+  "assessed_at": "2026-09-22T00:00:00Z",
   "status": "ready",
   "checks": {
     "stable_api_declared": true,
@@ -17,7 +17,7 @@
   },
   "failed_checks": [],
   "evidence": {
-    "release_contract": "v2.2.0 contract repair",
+    "release_contract": "v2.3.0 uncertainty/sensitivity runtime",
     "r_cmd_check": "required before commit",
     "accessibility_review": "docs/production-readiness.md"
   },

@@ -1,0 +1,23 @@
+CATALYST ANALYTICS R v2.3.0 - UNCERTAINTY & SENSITIVITY RUNTIME
+
+GIT PUSH (MAC)
+cd ~/Downloads
+rm -rf catalyst-analytics-r-v2.3.0-tiny-patch
+unzip -q catalyst-analytics-r-v2.3.0-tiny-patch.zip -d catalyst-analytics-r-v2.3.0-tiny-patch
+cd catalyst-analytics-r-v2.3.0-tiny-patch
+chmod +x apply_and_push_catalyst_analytics_r_v2_3_0_macos.sh
+./apply_and_push_catalyst_analytics_r_v2_3_0_macos.sh "$HOME/Downloads/catalystanalyticsr"
+
+BACKEND / RUNTIME VALIDATION (CONTABO)
+ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes catalystadmin@94.72.113.77
+cd /opt/sustainable-catalyst/catalystanalyticsr
+git fetch origin --tags
+git checkout v2.3.0
+chmod +x scripts/deploy_v2_3_0_workspace_r_runtime.sh
+WORKSPACE_BACKEND=/opt/sustainable-catalyst/sustainable-catalyst-workspace-backend-v3.9.1 \
+./scripts/deploy_v2_3_0_workspace_r_runtime.sh /opt/sustainable-catalyst/catalystanalyticsr validate
+
+EXPECTED
+CATALYST_ANALYTICS_R_V230_RUNTIME=PASS
+PASS - Catalyst Analytics R v2.3.0 backend/runtime compatibility validated
+NOTE - production Workspace image remains on provider 2.2.0 until the next Workspace adapter promotion

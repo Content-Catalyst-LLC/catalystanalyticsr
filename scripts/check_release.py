@@ -3,7 +3,7 @@ import json, os, re, subprocess, sys, zipfile
 from pathlib import Path
 import jsonschema
 ROOT=Path(__file__).resolve().parents[1]
-REPOSITORY_VERSION='2.2.0'; PLUGIN_VERSION='3.2.0'; MANIFEST_VERSION='3.2.0'
+REPOSITORY_VERSION='2.3.0'; PLUGIN_VERSION='3.3.0'; MANIFEST_VERSION='3.3.0'
 def fail(message): raise AssertionError(message)
 def read(path): return (ROOT/path).read_text(encoding='utf-8')
 def load(path): return json.loads(read(path))
@@ -12,40 +12,44 @@ def validator(path):
 def run(command):
     env=dict(os.environ); env['PYTHONDONTWRITEBYTECODE']='1'; env['PYTEST_DISABLE_PLUGIN_AUTOLOAD']='1'; subprocess.run(command,cwd=ROOT,check=True,env=env)
 def main():
-    if not re.search(r'^Version:\s*2\.2\.0$',read('DESCRIPTION'),re.M): fail('DESCRIPTION version mismatch')
+    if not re.search(r'^Version:\s*2\.3\.0$',read('DESCRIPTION'),re.M): fail('DESCRIPTION version mismatch')
     manifest=load('catalyst_analytics_r_manifest.json')
     if manifest['schema_version']!=MANIFEST_VERSION or manifest['repository_version']!=REPOSITORY_VERSION or manifest['r_package']['version']!=REPOSITORY_VERSION: fail('Manifest version mismatch')
     if manifest['wordpress_demo']['version']!=PLUGIN_VERSION or manifest['wordpress_demo']['compatible_repository_version']!=REPOSITORY_VERSION: fail('WordPress compatibility mismatch')
     for name in ('connected_platform','connected_platform_export','connected_api'):
         if manifest['contracts'][name]['version']!='2.0.0': fail(f'{name} protocol contract changed unexpectedly')
-    for name in ('core_provider','core_execution_request','core_execution_result','workspace_core_execution','statistical_diagnostics_validation'):
+    for name in ('core_provider','core_execution_request','core_execution_result','workspace_core_execution','statistical_diagnostics_validation','uncertainty_sensitivity_runtime'):
         if manifest['contracts'][name]['version']!='1.0.0': fail(f'{name} contract mismatch')
-    required=['R/core_computational_provider.R','R/statistical_diagnostics_validation.R','man/statistical_diagnostics_validation.Rd','schemas/catalyst_analytics_r_statistical_diagnostics_validation.schema.json','examples/statistical_diagnostics_validation.json','tests/testthat/test-statistical-diagnostics-validation.R','tests_py/test_statistical_diagnostics_validation_contract.py','docs/statistical-diagnostics-validation-contract.md','docs/releases/v2.2.0.md',f'dist/catalyst-analytics-r-demo-v{PLUGIN_VERSION}.zip']
+    runtime_contract=manifest['contracts']['uncertainty_sensitivity_runtime']
+    if runtime_contract['contract']!='sc.analytics-r.uncertainty-sensitivity-runtime.v1': fail('Uncertainty runtime contract mismatch')
+    if runtime_contract['core_minimum_release']!='3.3.0' or runtime_contract['workspace_validated_release']!='3.9.1': fail('Uncertainty runtime integration baseline mismatch')
+    required=['R/core_computational_provider.R','R/statistical_diagnostics_validation.R','R/uncertainty_sensitivity_runtime.R','man/uncertainty_sensitivity_runtime.Rd','schemas/catalyst_analytics_r_uncertainty_sensitivity_runtime.schema.json','examples/uncertainty_sensitivity_runtime.json','tests/testthat/test-uncertainty-sensitivity-runtime.R','tests_py/test_uncertainty_sensitivity_runtime_contract.py','docs/uncertainty-sensitivity-runtime-contract.md','docs/releases/v2.3.0.md',f'dist/catalyst-analytics-r-demo-v{PLUGIN_VERSION}.zip']
     missing=[p for p in required if not (ROOT/p).exists()]
-    if missing: fail(f'Missing v2.2.0 files: {missing}')
-    source=read('R/statistical_diagnostics_validation.R')
-    for token in ('sc.analytics-r.statistical-diagnostics-validation.v1','diagnostics_are_evidence = TRUE','p_values_do_not_certify_validity = TRUE','model_comparison_does_not_select_a_winner = TRUE','no_automatic_scientific_validity_certification = TRUE','human_review_required = TRUE'):
-        if token not in source: fail(f'Diagnostics boundary missing: {token}')
+    if missing: fail(f'Missing v2.3.0 files: {missing}')
+    source=read('R/uncertainty_sensitivity_runtime.R')
+    for token in ('sc.analytics-r.uncertainty-sensitivity-runtime.v1','monte_carlo','latin_hypercube','morris_sensitivity','sobol_sensitivity','arbitrary_function_dispatch = FALSE','canonical_scenario_execution_only = TRUE','sensitivity_does_not_establish_causality = TRUE','human_review_required = TRUE'):
+        if token not in source: fail(f'Uncertainty runtime boundary missing: {token}')
     provider=load('examples/core_provider_manifest.json')
-    if provider['provider_key']!='catalystanalyticsr' or provider['provider_version']!='2.2.0' or provider['runtime']!='r' or provider['execution_host']!='workspace': fail('Provider identity mismatch')
+    if provider['provider_key']!='catalystanalyticsr' or provider['provider_version']!='2.3.0' or provider['runtime']!='r' or provider['execution_host']!='workspace': fail('Provider identity mismatch')
+    if provider.get('uncertainty_sensitivity_contract')!='sc.analytics-r.uncertainty-sensitivity-runtime.v1': fail('Provider uncertainty runtime contract missing')
     if provider['boundary']['core_executes_provider'] is not False or provider['boundary']['arbitrary_function_dispatch'] is not False: fail('Provider runtime boundary mismatch')
-    schemas=[('schemas/catalyst_analytics_r_statistical_diagnostics_validation.schema.json','examples/statistical_diagnostics_validation.json'),('schemas/catalyst_analytics_r_core_provider.schema.json','examples/core_provider_manifest.json'),('schemas/catalyst_analytics_r_core_request.schema.json','examples/core_analytical_request.json'),('schemas/catalyst_analytics_r_workspace_core_execution.schema.json','examples/workspace_core_execution_envelope.json'),('schemas/catalyst_analytics_r_core_result.schema.json','examples/core_analytical_result.json'),('schemas/catalyst_analytics_r_release_readiness.schema.json','examples/release_readiness.json')]
+    schemas=[('schemas/catalyst_analytics_r_uncertainty_sensitivity_runtime.schema.json','examples/uncertainty_sensitivity_runtime.json'),('schemas/catalyst_analytics_r_statistical_diagnostics_validation.schema.json','examples/statistical_diagnostics_validation.json'),('schemas/catalyst_analytics_r_core_provider.schema.json','examples/core_provider_manifest.json'),('schemas/catalyst_analytics_r_core_request.schema.json','examples/core_analytical_request.json'),('schemas/catalyst_analytics_r_workspace_core_execution.schema.json','examples/workspace_core_execution_envelope.json'),('schemas/catalyst_analytics_r_core_result.schema.json','examples/core_analytical_result.json'),('schemas/catalyst_analytics_r_release_readiness.schema.json','examples/release_readiness.json')]
     for schema,payload in schemas: validator(schema).validate(load(payload))
     namespace=read('NAMESPACE'); aliases='\n'.join(p.read_text(encoding='utf-8') for p in (ROOT/'man').glob('*.Rd'))
-    apis=('statistical_diagnostics_manifest','statistical_diagnostic','statistical_assumption','statistical_robustness_evidence','statistical_model_comparison','statistical_validation_bundle','validate_statistical_validation_bundle','statistical_validation_from_model','statistical_validation_from_regression','statistical_validation_to_json','statistical_validation_from_json')
+    apis=('uncertainty_sensitivity_runtime_manifest','uncertainty_sensitivity_runtime_request','validate_uncertainty_sensitivity_runtime_request','run_uncertainty_sensitivity_runtime','morris_sensitivity','sobol_sensitivity','uncertainty_sensitivity_evidence_bundle','validate_uncertainty_sensitivity_evidence_bundle','uncertainty_sensitivity_to_json','uncertainty_sensitivity_from_json')
     for name in apis:
-        if f'export({name})' not in namespace or f'\\alias{{{name}}}' not in aliases: fail(f'Diagnostics API documentation missing: {name}')
+        if f'export({name})' not in namespace or f'\\alias{{{name}}}' not in aliases: fail(f'Uncertainty runtime API documentation missing: {name}')
     for path in sorted((ROOT/'R').glob('*.R')):
         try: path.read_bytes().decode('ascii')
         except UnicodeDecodeError as exc: raise AssertionError(f'Non-ASCII R source: {path.relative_to(ROOT)}') from exc
     json_files=sorted(ROOT.rglob('*.json'))
     for path in json_files: json.loads(path.read_text(encoding='utf-8'))
     php=read('wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php'); js=read('wordpress/catalyst-analytics-r-demo/assets/catalyst-analytics-r-demo.js'); css=read('wordpress/catalyst-analytics-r-demo/assets/catalyst-analytics-r-demo.css')
-    if not re.search(r'^ \* Version:\s*3\.2\.0$',php,re.M): fail('Plugin version mismatch')
-    for token in ('Catalyst Analytics R v2.2.0','Diagnostics contract v1','catalystanalyticsr 2.2.0'):
+    if not re.search(r'^ \* Version:\s*3\.3\.0$',php,re.M): fail('Plugin version mismatch')
+    for token in ('Catalyst Analytics R v2.3.0','Uncertainty runtime v1','catalystanalyticsr 2.3.0'):
         if token not in php: fail(f'Plugin UI missing: {token}')
-    for token in ("compatible_repository_version:'2.2.0'","statistical_diagnostics_contract:'sc.analytics-r.statistical-diagnostics-validation.v1'","core_executes_provider:false"):
-        if token not in js: fail(f'Browser diagnostics contract missing: {token}')
+    for token in ("compatible_repository_version:'2.3.0'","statistical_diagnostics_contract:'sc.analytics-r.statistical-diagnostics-validation.v1'","uncertainty_sensitivity_contract:'sc.analytics-r.uncertainty-sensitivity-runtime.v1'","core_executes_provider:false"):
+        if token not in js: fail(f'Browser uncertainty contract missing: {token}')
     if ':focus-visible' not in css: fail('Focus visibility contract missing')
     with zipfile.ZipFile(ROOT/f'dist/catalyst-analytics-r-demo-v{PLUGIN_VERSION}.zip') as archive:
         if archive.testzip() is not None: fail('Plugin ZIP integrity failure')
@@ -54,7 +58,7 @@ def main():
     if subprocess.run(['bash','-lc','command -v php >/dev/null'],cwd=ROOT).returncode==0: run(['php','-l','wordpress/catalyst-analytics-r-demo/catalyst-analytics-r-demo.php'])
     debris=[p for p in ROOT.rglob('*') if p.name in {'.pytest_cache','__pycache__'} or p.name.endswith('.Rcheck')]
     if debris: fail(f'Generated debris remains: {debris}')
-    print('Catalyst Analytics R v2.2.0 release contract passed.')
-    print(f'Validated {len(json_files)} JSON files, diagnostics/validation contract, Core provider compatibility, WordPress mapping, documentation aliases, and repository tests.')
+    print('Catalyst Analytics R v2.3.0 release contract passed.')
+    print(f'Validated {len(json_files)} JSON files, uncertainty/sensitivity runtime contract, diagnostics compatibility, Core provider integration, WordPress mapping, documentation aliases, and repository tests.')
     return 0
 if __name__=='__main__': raise SystemExit(main())
