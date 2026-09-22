@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "public_api_and_sustainable_catalyst_handoffs",
-  "repository_version": "2.0.0",
+  "repository_version": "2.0.1",
   "api_version": "v1",
   "targets": [
     "site_intelligence",
@@ -9,7 +9,8 @@
     "workbench",
     "catalyst_canvas",
     "decision_studio",
-    "knowledge_library"
+    "knowledge_library",
+    "workspace"
   ],
   "required_boundaries": [
     "host platform supplies transport and authentication",

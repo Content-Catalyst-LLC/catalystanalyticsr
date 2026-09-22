@@ -9,10 +9,10 @@
 #' @return Named generated paths.
 #' @export
 export_platform_handoffs <- function(project, dir = ".", prefix = "catalyst-platform-handoffs",
-                                     targets = c("site_intelligence", "research_lab", "workbench", "catalyst_canvas", "decision_studio", "knowledge_library"),
+                                     targets = c("site_intelligence", "research_lab", "workbench", "catalyst_canvas", "decision_studio", "knowledge_library", "workspace"),
                                      options = list(), zip_bundle = TRUE) {
   validate_catalyst_project(project); .assert_single_string(dir, "dir"); .assert_single_string(prefix, "prefix"); .assert_flag(zip_bundle, "zip_bundle")
-  valid_targets <- c("site_intelligence", "research_lab", "workbench", "catalyst_canvas", "decision_studio", "knowledge_library")
+  valid_targets <- c("site_intelligence", "research_lab", "workbench", "catalyst_canvas", "decision_studio", "knowledge_library", "workspace")
   if (!is.character(targets) || !length(targets) || anyNA(targets) || length(setdiff(targets, valid_targets))) stop("`targets` contains unsupported platform products.", call. = FALSE)
   if (!is.list(options)) stop("`options` must be a list.", call. = FALSE)
   targets <- unique(targets)

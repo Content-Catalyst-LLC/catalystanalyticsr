@@ -15,7 +15,7 @@ function scar_demo_assets(){
 add_action('wp_enqueue_scripts','scar_demo_assets');
 function scar_demo_shortcode(){ ob_start(); ?>
 <section class="scar-demo" data-scar-demo>
-<header class="scar-demo__hero"><p class="scar-demo__eyebrow">Catalyst Analytics R v2.0.0 / WordPress v3.0.0</p><h3>Connected Sustainability Analytics and Decision Platform</h3><p>Map workspaces, evidence, models, decisions, governance, publications, and first-party handoffs into one reviewable analytical graph.</p></header>
+<header class="scar-demo__hero"><p class="scar-demo__eyebrow">Catalyst Analytics R v2.0.1 / WordPress v3.0.0</p><h3>Connected Sustainability Analytics and Decision Platform</h3><p>Map workspaces, evidence, models, decisions, governance, publications, and first-party handoffs into one reviewable analytical graph.</p></header>
 <div class="scar-demo__notice"><strong>Connected-platform boundary:</strong> this browser companion maps the contract. It does not execute R, verify identity, persist institutional records, publish artifacts, or authorize decisions.</div>
 <form class="scar-demo__form" data-scar-form><div class="scar-demo__controls">
 <label><span>Platform title</span><input name="title" value="Sustainable Catalyst Connected Analytics" required></label>

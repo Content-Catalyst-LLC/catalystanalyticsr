@@ -29,7 +29,8 @@
         "workbench",
         "catalyst_canvas",
         "decision_studio",
-        "knowledge_library"
+        "knowledge_library",
+        "workspace"
       ]
     },
     "project_id": {

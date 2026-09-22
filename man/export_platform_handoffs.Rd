@@ -8,7 +8,7 @@
 export_platform_handoffs(project, dir = ".",
   prefix = "catalyst-platform-handoffs",
   targets = c("site_intelligence", "research_lab", "workbench",
-    "catalyst_canvas", "decision_studio", "knowledge_library"),
+    "catalyst_canvas", "decision_studio", "knowledge_library", "workspace"),
   options = list(), zip_bundle = TRUE)
 
 workspace_add_platform_handoff(workspace, handoff, replace = FALSE)

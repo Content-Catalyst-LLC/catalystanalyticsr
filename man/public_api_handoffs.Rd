@@ -10,6 +10,7 @@
 \alias{research_lab_handoff}
 \alias{workbench_handoff}
 \alias{catalyst_canvas_handoff}
+\alias{workspace_handoff}
 \alias{platform_handoff}
 \alias{validate_platform_handoff}
 \alias{handoff_to_json}
@@ -53,9 +54,12 @@ workbench_handoff(project, formulas = list(), calculators = list())
 
 catalyst_canvas_handoff(project, objectives = list(), stakeholders = list())
 
+workspace_handoff(project, runtime = "r", provider = "catalystanalyticsr",
+  resources = list(), execution_policy = list())
+
 platform_handoff(project,
   target = c("site_intelligence", "research_lab", "workbench",
-    "catalyst_canvas", "decision_studio", "knowledge_library"),
+    "catalyst_canvas", "decision_studio", "knowledge_library", "workspace"),
   options = list())
 
 validate_platform_handoff(handoff)
@@ -103,6 +107,9 @@ handoff_from_json(json)
   \item{calculators}{Optional calculator records.}
   \item{objectives}{Canvas objectives.}
   \item{stakeholders}{Canvas stakeholder records.}
+  \item{runtime}{Workspace runtime language identifier.}
+  \item{provider}{Workspace analytical provider identifier.}
+  \item{execution_policy}{Workspace execution-policy metadata.}
   \item{target}{Sustainable Catalyst target product.}
   \item{options}{Target-specific options.}
   \item{handoff}{Platform handoff record.}

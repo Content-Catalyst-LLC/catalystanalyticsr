@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.0.1 — Release Contract Repair
+
+- Repaired the stale release-readiness schema and example package version from 1.3.0 to 2.0.1.
+- Aligned repository, package, public API, compatibility, WordPress mapping, fixtures, and release checks with package v2.0.1.
+- Added Sustainable Catalyst Workspace as a governed first-party handoff target.
+- Added `workspace_handoff()` for host-managed R execution requests while preserving the package boundary: no HTTP transport, authentication, durable job queue, or remote execution is implemented here.
+- Preserved Connected Platform, connected API, and all other protocol/schema contract versions; this patch changes release identity, not protocol majors.
+- Added regression coverage for Workspace handoffs and release-version drift.
+
 ## 2.0.0
 
 - Added the Connected Sustainability Analytics and Decision Platform.

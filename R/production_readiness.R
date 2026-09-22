@@ -14,7 +14,7 @@
     econometrics = c("causal_assumption", "regression_spec", "fit_policy_regression", "panel_regression", "difference_in_differences", "event_study", "interrupted_time_series", "synthetic_control", "policy_evaluation_analysis", "export_policy_evaluation"),
     policy_optimization = c("decision_variable", "policy_objective", "policy_constraint", "policy_optimization_spec", "evaluate_policy_candidates", "optimize_policy", "policy_pareto_frontier", "policy_feasible_region", "target_seeking_scenario", "cost_effectiveness_analysis", "marginal_abatement_curve", "adaptive_trigger", "policy_stage", "policy_pathway", "evaluate_policy_pathway", "robust_pathway_analysis", "policy_pathway_analysis", "export_policy_pathway_analysis"),
     governance = c("model_governance_record", "transition_model_status", "model_governance_summary", "institutional_role", "governance_actor", "institutional_template", "restricted_access_policy", "institutional_governance_workflow", "validate_institutional_governance", "assign_institutional_review", "add_review_comment", "submit_change_request", "resolve_change_request", "record_governance_approval", "sign_analytical_release", "archive_governance_workflow", "governance_summary", "export_institutional_governance"),
-    platform_api = c("api_endpoint", "catalyst_public_api_manifest", "api_request", "validate_api_request", "api_response", "validate_api_response", "dispatch_api_request", "site_intelligence_handoff", "research_lab_handoff", "workbench_handoff", "catalyst_canvas_handoff", "platform_handoff", "validate_platform_handoff", "handoff_to_json", "handoff_from_json", "export_platform_handoffs"),
+    platform_api = c("api_endpoint", "catalyst_public_api_manifest", "api_request", "validate_api_request", "api_response", "validate_api_response", "dispatch_api_request", "site_intelligence_handoff", "research_lab_handoff", "workbench_handoff", "catalyst_canvas_handoff", "workspace_handoff", "platform_handoff", "validate_platform_handoff", "handoff_to_json", "handoff_from_json", "export_platform_handoffs"),
     connected_platform = c("connected_sustainability_platform", "validate_connected_platform", "platform_add_workspace", "platform_add_project", "platform_register_records", "platform_add_decision", "platform_add_publication", "platform_add_governance", "platform_add_handoff", "platform_add_workflow", "platform_lineage", "connected_platform_manifest", "export_connected_platform", "catalyst_connected_api_manifest", "dispatch_connected_api_request"),
     release = c("catalyst_api_manifest", "catalyst_release_readiness", "validate_release_readiness", "catalyst_compatibility_manifest")
   )
@@ -22,7 +22,7 @@
 
 #' Stable public API manifest
 #'
-#' Returns the v2.0.0 public API stability declaration.
+#' Returns the v2.0.1 public API stability declaration.
 #' @param include_experimental Include exported APIs not in the stable groups.
 #' @return A list describing stable, experimental, and deprecated APIs.
 #' @export
@@ -33,7 +33,7 @@ catalyst_api_manifest <- function(include_experimental = TRUE) {
   experimental <- sort(setdiff(exports, stable))
   result <- list(
     schema_version = "1.0.0",
-    package = list(name = "catalystanalyticsr", version = "2.0.0"),
+    package = list(name = "catalystanalyticsr", version = .catalyst_package_version()),
     stability_policy = list(
       stable = "Stable 1.x analytical contracts remain supported through documented compatibility adapters in the 2.x series unless a security or correctness defect requires a documented exception.",
       experimental = "May evolve in a minor release with migration notes.",
@@ -61,7 +61,7 @@ catalyst_api_manifest <- function(include_experimental = TRUE) {
 catalyst_compatibility_manifest <- function() {
   list(
     schema_version = "1.0.0",
-    package_version = "2.0.0",
+    package_version = .catalyst_package_version(),
     r_version = list(minimum = "4.1.0", tested_policy = "current and previous R release in CI"),
     contract_policy = list(
       major = "Breaking schema changes require a new contract major version and migration function.",
@@ -76,7 +76,7 @@ catalyst_compatibility_manifest <- function() {
       connected_platform = c("2.0.0"),
       legacy_scenario_migrations = c("legacy_r", "browser_v1")
     ),
-    wordpress = list(plugin = "catalyst-analytics-r-demo", version = "3.0.0", compatible_repository_version = "2.0.0"),
+    wordpress = list(plugin = "catalyst-analytics-r-demo", version = "3.0.0", compatible_repository_version = .catalyst_package_version()),
     boundaries = c("browser companion does not execute R", "reproducibility does not establish validity", "human review is required for publication and decisions")
   )
 }
@@ -109,7 +109,7 @@ catalyst_release_readiness <- function(checks = NULL, evidence = list()) {
   failed <- names(defaults)[!defaults | is.na(defaults)]
   result <- list(
     schema_version = "1.0.0",
-    package_version = "2.0.0",
+    package_version = .catalyst_package_version(),
     assessed_at = format(Sys.time(), tz = "UTC", usetz = TRUE),
     status = if (length(failed)) "not_ready" else "ready",
     checks = as.list(defaults),

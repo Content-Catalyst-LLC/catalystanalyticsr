@@ -13,7 +13,7 @@ test_that("API request and response envelopes validate and round trip through di
   response <- dispatch_api_request(request)
   expect_s3_class(response, "catalyst_api_response")
   expect_identical(response$status, "ok")
-  expect_identical(response$data$package_version, "2.0.0")
+  expect_identical(response$data$package_version, "2.0.1")
   expect_true(response$boundary$human_review_required)
 })
 
@@ -39,16 +39,17 @@ test_that("all first-party handoffs preserve provenance and review boundaries", 
     site_intelligence = list(indicators = c("emissions")),
     research_lab = list(job_type = "batch_simulation"),
     workbench = list(formulas = list(carbon_intensity = "emissions / gdp")),
-    catalyst_canvas = list(objectives = list(list(id = "reduce-emissions", title = "Reduce emissions")))
+    catalyst_canvas = list(objectives = list(list(id = "reduce-emissions", title = "Reduce emissions"))),
+    workspace = list(runtime = "r", provider = "catalystanalyticsr", resources = list(cpu = 2))
   )
-  targets <- c("site_intelligence", "research_lab", "workbench", "catalyst_canvas", "decision_studio", "knowledge_library")
+  targets <- c("site_intelligence", "research_lab", "workbench", "catalyst_canvas", "decision_studio", "knowledge_library", "workspace")
   for (target in targets) {
     handoff <- platform_handoff(project, target, if (is.null(options[[target]])) list() else options[[target]])
     expect_s3_class(handoff, "catalyst_platform_handoff")
     expect_identical(handoff$target, target)
     expect_true(handoff$review$human_reviewer_required)
     expect_true(handoff$boundary$human_review_required)
-    expect_identical(handoff$package_version, "2.0.0")
+    expect_identical(handoff$package_version, "2.0.1")
     restored <- handoff_from_json(handoff_to_json(handoff))
     expect_identical(restored$handoff_type, handoff$handoff_type)
   }
@@ -59,9 +60,9 @@ test_that("platform handoff export writes all target artifacts and integrity man
   out <- tempfile("platform-handoffs-")
   paths <- export_platform_handoffs(project, out, zip_bundle = FALSE)
   expect_true(file.exists(paths$manifest)); expect_true(file.exists(paths$index)); expect_true(file.exists(paths$api_manifest))
-  expect_true(all(vapply(c("site_intelligence", "research_lab", "workbench", "catalyst_canvas", "decision_studio", "knowledge_library"), function(target) file.exists(paths[[target]]), logical(1))))
+  expect_true(all(vapply(c("site_intelligence", "research_lab", "workbench", "catalyst_canvas", "decision_studio", "knowledge_library", "workspace"), function(target) file.exists(paths[[target]]), logical(1))))
   manifest <- jsonlite::fromJSON(paths$manifest, simplifyVector = FALSE)
-  expect_identical(manifest$package$version, "2.0.0")
+  expect_identical(manifest$package$version, "2.0.1")
   expect_gte(manifest$file_count, 9L)
   expect_false(manifest$boundary$automated_platform_action)
 })
@@ -73,4 +74,17 @@ test_that("workspaces retain reusable platform handoffs", {
   stored <- workspace_get_platform_handoff(workspace, paste(project$id, "site_intelligence", sep = "--"))
   expect_identical(stored$target, "site_intelligence")
   expect_identical(workspace_manifest(workspace)$counts$platform_handoffs, 1L)
+})
+
+
+test_that("Workspace runtime handoff is host-governed", {
+  project <- project_fixture()
+  handoff <- workspace_handoff(project, resources = list(cpu = 2L), execution_policy = list(network = "restricted"))
+  expect_identical(handoff$target, "workspace")
+  expect_identical(handoff$handoff_type, "workspace_runtime_request")
+  expect_identical(handoff$payload$runtime$language, "r")
+  expect_identical(handoff$payload$runtime$provider, "catalystanalyticsr")
+  expect_true(handoff$boundary$workspace_controls_execution_environment)
+  expect_true(handoff$boundary$runtime_execution_not_performed_by_package)
+  expect_true(handoff$boundary$returned_results_require_validation)
 })

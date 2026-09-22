@@ -299,6 +299,41 @@ catalyst_canvas_handoff <- function(project, objectives = list(), stakeholders =
     list(canvas_does_not_validate_assumptions = TRUE, evidence_gaps_require_review = TRUE, strategic_framing_not_decision_authority = TRUE, human_review_required = TRUE))
 }
 
+#' Build a Workspace runtime handoff
+#'
+#' Creates a governed request for Sustainable Catalyst Workspace to host an R
+#' execution using Catalyst Analytics R. The package does not execute or queue
+#' the remote job itself; Workspace remains responsible for runtime isolation,
+#' resource policy, authentication, persistence, and job lifecycle management.
+#'
+#' @param project A project.
+#' @param runtime Runtime language identifier.
+#' @param provider Analytical provider identifier.
+#' @param resources Requested runtime resource metadata.
+#' @param execution_policy Workspace execution-policy metadata.
+#' @return Governed Workspace runtime handoff.
+#' @export
+workspace_handoff <- function(project, runtime = "r", provider = "catalystanalyticsr", resources = list(), execution_policy = list()) {
+  validate_catalyst_project(project)
+  .assert_single_string(runtime, "runtime"); .assert_single_string(provider, "provider")
+  if (!is.list(resources) || !is.list(execution_policy)) stop("`resources` and `execution_policy` must be lists.", call. = FALSE)
+  .platform_common(project, "workspace", "workspace_runtime_request", paste0(project$title, " - Workspace R runtime request"),
+    list(
+      project = project_manifest(project),
+      runtime = list(language = runtime, provider = provider, provider_version = .catalyst_package_version()),
+      resources = resources,
+      execution_policy = execution_policy,
+      return_contract = "catalyst_workspace_execution_result@1.0.0"
+    ),
+    list(
+      workspace_controls_execution_environment = TRUE,
+      runtime_execution_not_performed_by_package = TRUE,
+      returned_results_require_validation = TRUE,
+      durable_storage_and_authentication_by_host = TRUE,
+      human_review_required = TRUE
+    ))
+}
+
 #' Build a first-party Sustainable Catalyst handoff
 #'
 #' @param project A project.
@@ -306,7 +341,7 @@ catalyst_canvas_handoff <- function(project, objectives = list(), stakeholders =
 #' @param options Target-specific options.
 #' @return A governed platform handoff.
 #' @export
-platform_handoff <- function(project, target = c("site_intelligence", "research_lab", "workbench", "catalyst_canvas", "decision_studio", "knowledge_library"), options = list()) {
+platform_handoff <- function(project, target = c("site_intelligence", "research_lab", "workbench", "catalyst_canvas", "decision_studio", "knowledge_library", "workspace"), options = list()) {
   validate_catalyst_project(project); target <- match.arg(target)
   if (!is.list(options)) stop("`options` must be a list.", call. = FALSE)
   call_with <- function(fun) do.call(fun, c(list(project = project), options))
@@ -316,7 +351,8 @@ platform_handoff <- function(project, target = c("site_intelligence", "research_
     workbench = call_with(workbench_handoff),
     catalyst_canvas = call_with(catalyst_canvas_handoff),
     decision_studio = decision_studio_handoff(project),
-    knowledge_library = knowledge_library_handoff(project)
+    knowledge_library = knowledge_library_handoff(project),
+    workspace = call_with(workspace_handoff)
   )
   validate_platform_handoff(result)
   result
@@ -332,7 +368,7 @@ validate_platform_handoff <- function(handoff) {
   required <- c("schema_version", "handoff_type", "target", "project_id", "project_fingerprint", "title", "payload", "provenance", "review", "boundary", "created_at", "package_version")
   missing <- setdiff(required, names(handoff)); if (length(missing)) stop("Platform handoff is missing fields: ", paste(missing, collapse = ", "), call. = FALSE)
   if (!identical(handoff$schema_version, "1.0.0")) stop("Unsupported platform handoff schema.", call. = FALSE)
-  targets <- c("site_intelligence", "research_lab", "workbench", "catalyst_canvas", "decision_studio", "knowledge_library")
+  targets <- c("site_intelligence", "research_lab", "workbench", "catalyst_canvas", "decision_studio", "knowledge_library", "workspace")
   if (!handoff$target %in% targets) stop("Unsupported platform handoff target.", call. = FALSE)
   .project_id(handoff$project_id, "handoff$project_id")
   if (!is.character(handoff$project_fingerprint) || length(handoff$project_fingerprint) != 1L || !grepl("^[a-f0-9]{32}$", handoff$project_fingerprint)) stop("Invalid project fingerprint.", call. = FALSE)

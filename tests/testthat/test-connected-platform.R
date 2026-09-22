@@ -33,7 +33,7 @@ test_that("connected platform JSON and publication bundles preserve contracts", 
   paths <- export_connected_platform(platform, out, zip_bundle = FALSE)
   expect_true(all(file.exists(unlist(paths))))
   manifest <- jsonlite::read_json(paths$integrity, simplifyVector = TRUE)
-  expect_identical(manifest$package$version, "2.0.0")
+  expect_identical(manifest$package$version, "2.0.1")
   expect_gte(manifest$file_count, 9L)
 })
 

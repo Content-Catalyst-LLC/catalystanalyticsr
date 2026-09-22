@@ -21,3 +21,8 @@ The package performs local computation and file export. Projects may contain sen
 ## Compatibility
 
 Scenario, model, comparison, uncertainty, dataset, accounting, governance, project, publication, and release-readiness contracts are versioned independently. The compatibility manifest documents supported inputs and WordPress mapping.
+
+
+## v2.0.1 patch repair
+
+Release identity, release-readiness validation, and Workspace handoff support are aligned at package v2.0.1. Connected Platform contract versions remain v2.0.0.

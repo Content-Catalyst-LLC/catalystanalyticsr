@@ -1,5 +1,7 @@
 # Catalyst Analytics R
 
+Current package release: **2.0.1** (release-contract repair; Connected Platform contract remains 2.0.0).
+
 Catalyst Analytics R is the reproducible statistical, scenario-modeling, uncertainty-analysis, sustainability-accounting, model-governance, and analytical-publication engine for the Sustainable Catalyst platform.
 
 **Current release:** `1.4.0`  

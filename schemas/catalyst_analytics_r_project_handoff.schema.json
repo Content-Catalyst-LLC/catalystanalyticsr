@@ -23,7 +23,8 @@
         "workbench_formula_package",
         "catalyst_canvas_assumption_package",
         "decision_studio_analytical_project",
-        "knowledge_library_methodology_package"
+        "knowledge_library_methodology_package",
+        "workspace_runtime_request"
       ]
     },
     "project_id": {
