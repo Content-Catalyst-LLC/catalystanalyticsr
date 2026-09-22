@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0.0",
+  "provider_type": "core_analytical_runtime_provider",
+  "provider_key": "catalystanalyticsr",
+  "provider_version": "2.1.0",
+  "core_contract": "sc.core.analytical-runtime-provider.v1",
+  "core_minimum_release": "3.1.0",
+  "core_registry_baseline_provider_version": "2.0.1",
+  "runtime": "r",
+  "execution_host": "workspace",
+  "transport_mode": "hosted",
+  "invocation_mode": "workspace-managed",
+  "capabilities": [
+    {
+      "capability_key": "scenario_simulation",
+      "method_refs": [
+        "run_catalyst_scenario",
+        "run_scenarios"
+      ],
+      "execution_status": "available"
+    },
+    {
+      "capability_key": "uncertainty_analysis",
+      "method_refs": [
+        "run_uncertainty",
+        "uncertainty_summary",
+        "uncertainty_probabilities"
+      ],
+      "execution_status": "available"
+    },
+    {
+      "capability_key": "sensitivity_analysis",
+      "method_refs": [
+        "local_sensitivity",
+        "global_sensitivity",
+        "sensitivity_jacobian"
+      ],
+      "execution_status": "available"
+    },
+    {
+      "capability_key": "econometrics",
+      "method_refs": [
+        "fit_policy_regression",
+        "panel_regression"
+      ],
+      "execution_status": "available"
+    },
+    {
+      "capability_key": "causal_inference",
+      "method_refs": [
+        "difference_in_differences",
+        "event_study",
+        "interrupted_time_series",
+        "synthetic_control"
+      ],
+      "execution_status": "available"
+    },
+    {
+      "capability_key": "policy_evaluation",
+      "method_refs": [
+        "policy_evaluation_analysis",
+        "policy_effect_summary"
+      ],
+      "execution_status": "available"
+    },
+    {
+      "capability_key": "forecasting",
+      "method_refs": [
+        "scenario_projection"
+      ],
+      "execution_status": "projection_only"
+    },
+    {
+      "capability_key": "model_validation",
+      "method_refs": [
+        "validate_model_fit",
+        "model_validation_analysis",
+        "solver_benchmark",
+        "stability_assessment"
+      ],
+      "execution_status": "available"
+    },
+    {
+      "capability_key": "climate_accounting",
+      "method_refs": [
+        "climate_accounting"
+      ],
+      "execution_status": "available"
+    },
+    {
+      "capability_key": "natural_capital",
+      "method_refs": [
+        "natural_capital_account"
+      ],
+      "execution_status": "available"
+    },
+    {
+      "capability_key": "inclusive_wealth",
+      "method_refs": [
+        "inclusive_wealth_account"
+      ],
+      "execution_status": "available"
+    },
+    {
+      "capability_key": "distribution_analysis",
+      "method_refs": [
+        "distributional_analysis",
+        "intergenerational_analysis"
+      ],
+      "execution_status": "available"
+    }
+  ],
+  "boundary": {
+    "core_executes_provider": false,
+    "workspace_controls_execution_environment": true,
+    "arbitrary_function_dispatch": false,
+    "runtime_execution_not_performed_by_transport_contract": true,
+    "statistical_significance_not_inferred_by_core": true,
+    "scientific_validity_not_certified_by_core": true,
+    "human_review_required": true
+  }
+}

@@ -1,0 +1,30 @@
+test_that("Core computational provider preserves runtime boundary", {
+  provider <- catalyst_core_provider_manifest()
+  expect_identical(provider$provider_key, "catalystanalyticsr")
+  expect_identical(provider$provider_version, "2.1.0")
+  expect_identical(provider$runtime, "r")
+  expect_identical(provider$execution_host, "workspace")
+  expect_false(provider$boundary$core_executes_provider)
+  expect_false(provider$boundary$arbitrary_function_dispatch)
+})
+
+test_that("Core request, plan, Workspace envelope, and result round-trip", {
+  request <- core_analytical_request("analysis-1", "uncertainty_analysis", c("scenario:1"), parameters=list(samples=100L), reproducibility=list(seed=42L), method_ref="run_uncertainty", visibility="public")
+  expect_true(validate_core_analytical_request(request))
+  plan <- core_execution_plan(request)
+  expect_identical(plan$selected_method_ref, "run_uncertainty")
+  envelope <- workspace_core_execution_envelope(request)
+  expect_true(envelope$boundary$workspace_controls_execution)
+  result <- core_analytical_result(request, "result:1", output_refs=c("object:1"), uncertainty_refs=c("uncertainty:1"), environment_ref="env:r:1", external_execution_ref="workspace-run:1", status="completed")
+  expect_true(validate_core_analytical_result(result))
+  expect_identical(core_request_from_json(core_request_to_json(request))$request_key, request$request_key)
+  expect_identical(core_result_from_json(core_result_to_json(result))$result_ref, result$result_ref)
+})
+
+test_that("Core request guards capability and method registry", {
+  expect_error(core_analytical_request("bad", "not_declared"), "Unsupported analytical capability")
+  req <- core_analytical_request("forecast", "forecasting")
+  expect_error(validate_core_analytical_request(req, require_executable=TRUE), "Generic forecasting")
+  req2 <- core_analytical_request("bad-method", "uncertainty_analysis", method_ref="system")
+  expect_error(core_execution_plan(req2), "not registered")
+})

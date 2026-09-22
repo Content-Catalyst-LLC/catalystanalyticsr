@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-core-provider-v1.json",
+  "title": "Catalyst Analytics R Platform Core provider",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "provider_type",
+    "provider_key",
+    "provider_version",
+    "core_contract",
+    "runtime",
+    "execution_host",
+    "capabilities",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "provider_type": {
+      "const": "core_analytical_runtime_provider"
+    },
+    "provider_key": {
+      "const": "catalystanalyticsr"
+    },
+    "provider_version": {
+      "const": "2.1.0"
+    },
+    "core_contract": {
+      "const": "sc.core.analytical-runtime-provider.v1"
+    },
+    "runtime": {
+      "const": "r"
+    },
+    "execution_host": {
+      "const": "workspace"
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 12,
+      "items": {
+        "type": "object",
+        "required": [
+          "capability_key",
+          "method_refs",
+          "execution_status"
+        ]
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "required": [
+        "core_executes_provider",
+        "workspace_controls_execution_environment",
+        "arbitrary_function_dispatch",
+        "human_review_required"
+      ],
+      "properties": {
+        "core_executes_provider": {
+          "const": false
+        },
+        "workspace_controls_execution_environment": {
+          "const": true
+        },
+        "arbitrary_function_dispatch": {
+          "const": false
+        },
+        "human_review_required": {
+          "const": true
+        }
+      }
+    }
+  }
+}

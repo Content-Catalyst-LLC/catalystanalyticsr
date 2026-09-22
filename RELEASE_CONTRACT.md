@@ -1,3 +1,9 @@
+# Catalyst Analytics R v2.1.0 Release Contract
+
+The release is valid only when package and repository identity report 2.1.0; the Core provider, Core request, Core result, and Workspace execution-envelope schemas validate; the provider declares runtime `r`, execution host `workspace`, and `core_executes_provider=false`; all twelve Platform Core 3.1 analytical capabilities are declared; arbitrary function dispatch is forbidden; Connected Platform protocol contracts remain 2.0.0; the WordPress v3.1.0 companion maps repository 2.1.0; repository tests and JSON-schema validation pass; and archive integrity passes. Human review remains mandatory for decisions and publication.
+
+Platform Core 3.1.0's seeded provider version 2.0.1 is treated as a registry baseline, not as permission to mutate Core's release seed. Analytics R 2.1.0 reports its real package version in provider/result provenance; Core should update its provider registry in the next integration release.
+
 # Catalyst Analytics R v2.0.1 Release Contract
 
 The release is valid only when package and repository identity report 2.0.1, the release-readiness schema accepts 2.0.1, Workspace is a governed first-party handoff target, Connected Platform protocol contracts remain at 2.0.0, the WordPress v3.0.0 companion maps repository 2.0.1, repository tests and JSON-schema validation pass, and archive integrity passes. Human review remains mandatory for decisions and publication.

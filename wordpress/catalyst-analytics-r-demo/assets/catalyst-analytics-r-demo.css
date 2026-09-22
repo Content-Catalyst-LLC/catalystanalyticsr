@@ -12,3 +12,5 @@
 .scar-demo__handoffs article strong{color:var(--accent)} .scar-demo__notice strong,.scar-demo__readiness strong{font-weight:800}
 
 .scar-demo__path span{min-width:112px}.scar-demo__path i{font-style:normal;opacity:.55}.scar-demo__handoffs article{border-left:3px solid currentColor}.scar-demo__panel--wide{grid-column:1/-1}
+
+.scar-demo__provider{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.scar-demo__provider strong{margin-right:auto}.scar-demo__provider span{padding:7px 10px;border-radius:999px;background:var(--soft);font-size:11px;font-weight:700}

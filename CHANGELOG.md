@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.0
+
+- Added Platform Core 3.1+ computational-provider contract.
+- Added governed Core request/result envelopes and Workspace execution envelope.
+- Added whitelisted analytical capability/method registry with explicit Core/Workspace boundaries.
+- Added Core-provider public API discovery and request validation.
+- Added WordPress companion 3.1.0 mapping for provider-contract visibility.
+
 ## 2.0.1 — Release Contract Repair
 
 - Repaired the stale release-readiness schema and example package version from 1.3.0 to 2.0.1.

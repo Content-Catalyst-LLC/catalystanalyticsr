@@ -1,0 +1,213 @@
+{
+  "schema_version": "1.0.0",
+  "envelope_type": "catalyst_workspace_core_analytical_execution",
+  "request_key": "analysis-uncertainty-001",
+  "provider": {
+    "schema_version": "1.0.0",
+    "provider_type": "core_analytical_runtime_provider",
+    "provider_key": "catalystanalyticsr",
+    "provider_version": "2.1.0",
+    "core_contract": "sc.core.analytical-runtime-provider.v1",
+    "core_minimum_release": "3.1.0",
+    "core_registry_baseline_provider_version": "2.0.1",
+    "runtime": "r",
+    "execution_host": "workspace",
+    "transport_mode": "hosted",
+    "invocation_mode": "workspace-managed",
+    "capabilities": [
+      {
+        "capability_key": "scenario_simulation",
+        "method_refs": [
+          "run_catalyst_scenario",
+          "run_scenarios"
+        ],
+        "execution_status": "available"
+      },
+      {
+        "capability_key": "uncertainty_analysis",
+        "method_refs": [
+          "run_uncertainty",
+          "uncertainty_summary",
+          "uncertainty_probabilities"
+        ],
+        "execution_status": "available"
+      },
+      {
+        "capability_key": "sensitivity_analysis",
+        "method_refs": [
+          "local_sensitivity",
+          "global_sensitivity",
+          "sensitivity_jacobian"
+        ],
+        "execution_status": "available"
+      },
+      {
+        "capability_key": "econometrics",
+        "method_refs": [
+          "fit_policy_regression",
+          "panel_regression"
+        ],
+        "execution_status": "available"
+      },
+      {
+        "capability_key": "causal_inference",
+        "method_refs": [
+          "difference_in_differences",
+          "event_study",
+          "interrupted_time_series",
+          "synthetic_control"
+        ],
+        "execution_status": "available"
+      },
+      {
+        "capability_key": "policy_evaluation",
+        "method_refs": [
+          "policy_evaluation_analysis",
+          "policy_effect_summary"
+        ],
+        "execution_status": "available"
+      },
+      {
+        "capability_key": "forecasting",
+        "method_refs": [
+          "scenario_projection"
+        ],
+        "execution_status": "projection_only"
+      },
+      {
+        "capability_key": "model_validation",
+        "method_refs": [
+          "validate_model_fit",
+          "model_validation_analysis",
+          "solver_benchmark",
+          "stability_assessment"
+        ],
+        "execution_status": "available"
+      },
+      {
+        "capability_key": "climate_accounting",
+        "method_refs": [
+          "climate_accounting"
+        ],
+        "execution_status": "available"
+      },
+      {
+        "capability_key": "natural_capital",
+        "method_refs": [
+          "natural_capital_account"
+        ],
+        "execution_status": "available"
+      },
+      {
+        "capability_key": "inclusive_wealth",
+        "method_refs": [
+          "inclusive_wealth_account"
+        ],
+        "execution_status": "available"
+      },
+      {
+        "capability_key": "distribution_analysis",
+        "method_refs": [
+          "distributional_analysis",
+          "intergenerational_analysis"
+        ],
+        "execution_status": "available"
+      }
+    ],
+    "boundary": {
+      "core_executes_provider": false,
+      "workspace_controls_execution_environment": true,
+      "arbitrary_function_dispatch": false,
+      "runtime_execution_not_performed_by_transport_contract": true,
+      "statistical_significance_not_inferred_by_core": true,
+      "scientific_validity_not_certified_by_core": true,
+      "human_review_required": true
+    }
+  },
+  "plan": {
+    "schema_version": "1.0.0",
+    "plan_type": "catalyst_analytics_r_core_execution_plan",
+    "request_key": "analysis-uncertainty-001",
+    "provider_ref": "catalystanalyticsr",
+    "provider_version": "2.1.0",
+    "core_contract": "sc.core.analytical-runtime-provider.v1",
+    "runtime": "r",
+    "execution_host": "workspace",
+    "analysis_type": "uncertainty_analysis",
+    "selected_method_ref": "run_uncertainty",
+    "allowed_method_refs": [
+      "run_uncertainty",
+      "uncertainty_summary",
+      "uncertainty_probabilities"
+    ],
+    "execution_status": "available",
+    "input_refs": [
+      "scenario:baseline",
+      "uncertainty-spec:transition"
+    ],
+    "package_entrypoint": "run_uncertainty",
+    "boundary": {
+      "arbitrary_function_dispatch": false,
+      "plan_does_not_execute": true,
+      "workspace_must_resolve_input_refs": true,
+      "workspace_must_capture_environment": true,
+      "human_review_required": true
+    }
+  },
+  "request": {
+    "schema_version": "1.0.0",
+    "request_type": "sc.core.analytical-execution-request.v1",
+    "request_key": "analysis-uncertainty-001",
+    "provider_ref": "catalystanalyticsr",
+    "provider_version": "2.1.0",
+    "analysis_type": "uncertainty_analysis",
+    "method_ref": "run_uncertainty",
+    "runtime": "r",
+    "execution_host": "workspace",
+    "input_refs": [
+      "scenario:baseline",
+      "uncertainty-spec:transition"
+    ],
+    "parameters": {
+      "samples": 1000
+    },
+    "reproducibility": {
+      "seed": 42,
+      "input_snapshot_refs": [
+        "snapshot:baseline-001"
+      ]
+    },
+    "session_ref": "research-session:001",
+    "external_execution_ref": null,
+    "status": "declared",
+    "visibility": "public",
+    "provenance": {
+      "source": "platform-core-3.1.0"
+    },
+    "submitted_at": "2026-09-21T20:00:00Z",
+    "boundary": {
+      "core_executes_provider": false,
+      "workspace_executes_provider": true,
+      "human_review_required": true
+    }
+  },
+  "resource_policy": {
+    "cpu": "workspace-policy",
+    "memory": "workspace-policy"
+  },
+  "environment_request": {
+    "capture_r_version": true,
+    "capture_package_versions": true,
+    "capture_lockfile_ref": true,
+    "capture_container_ref": true,
+    "capture_code_ref": true
+  },
+  "return_contract": "catalyst_analytics_r_core_result@1.0.0",
+  "boundary": {
+    "workspace_controls_execution": true,
+    "workspace_controls_authentication": true,
+    "workspace_controls_persistence": true,
+    "package_does_not_queue_remote_jobs": true,
+    "human_review_required": true
+  }
+}

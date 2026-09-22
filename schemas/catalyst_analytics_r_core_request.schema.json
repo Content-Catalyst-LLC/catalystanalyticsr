@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-core-request-v1.json",
+  "title": "Catalyst Analytics R Core analytical request",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "request_type",
+    "request_key",
+    "provider_ref",
+    "analysis_type",
+    "runtime",
+    "execution_host",
+    "input_refs",
+    "parameters",
+    "reproducibility",
+    "visibility",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "request_type": {
+      "const": "sc.core.analytical-execution-request.v1"
+    },
+    "request_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provider_ref": {
+      "const": "catalystanalyticsr"
+    },
+    "provider_version": {
+      "type": "string"
+    },
+    "analysis_type": {
+      "enum": [
+        "scenario_simulation",
+        "uncertainty_analysis",
+        "sensitivity_analysis",
+        "econometrics",
+        "causal_inference",
+        "policy_evaluation",
+        "forecasting",
+        "model_validation",
+        "climate_accounting",
+        "natural_capital",
+        "inclusive_wealth",
+        "distribution_analysis"
+      ]
+    },
+    "method_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "runtime": {
+      "const": "r"
+    },
+    "execution_host": {
+      "const": "workspace"
+    },
+    "input_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "parameters": {
+      "type": "object"
+    },
+    "reproducibility": {
+      "type": "object"
+    },
+    "visibility": {
+      "enum": [
+        "internal",
+        "public"
+      ]
+    },
+    "boundary": {
+      "type": "object",
+      "required": [
+        "core_executes_provider",
+        "workspace_executes_provider",
+        "human_review_required"
+      ],
+      "properties": {
+        "core_executes_provider": {
+          "const": false
+        },
+        "workspace_executes_provider": {
+          "const": true
+        },
+        "human_review_required": {
+          "const": true
+        }
+      }
+    }
+  }
+}

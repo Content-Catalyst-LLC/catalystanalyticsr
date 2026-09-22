@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-core-result-v1.json",
+  "title": "Catalyst Analytics R Core analytical result",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "result_type",
+    "core_contract",
+    "request_ref",
+    "result_ref",
+    "provider_ref",
+    "provider_version",
+    "runtime",
+    "execution_host",
+    "analysis_type",
+    "status",
+    "output_refs",
+    "estimate_refs",
+    "uncertainty_refs",
+    "diagnostic_refs",
+    "artifact_refs",
+    "provenance",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "result_type": {
+      "const": "catalyst_analytics_r_core_result"
+    },
+    "core_contract": {
+      "const": "sc.core.analytical-runtime-provider.v1"
+    },
+    "request_ref": {
+      "type": "string"
+    },
+    "result_ref": {
+      "type": "string"
+    },
+    "provider_ref": {
+      "const": "catalystanalyticsr"
+    },
+    "provider_version": {
+      "const": "2.1.0"
+    },
+    "runtime": {
+      "const": "r"
+    },
+    "execution_host": {
+      "const": "workspace"
+    },
+    "analysis_type": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "recorded",
+        "completed",
+        "failed"
+      ]
+    },
+    "output_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "estimate_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "uncertainty_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "diagnostic_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "artifact_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "type": "object"
+    },
+    "boundary": {
+      "type": "object",
+      "required": [
+        "core_records_result_but_does_not_execute",
+        "workspace_execution_required",
+        "human_review_required"
+      ],
+      "properties": {
+        "core_records_result_but_does_not_execute": {
+          "const": true
+        },
+        "workspace_execution_required": {
+          "const": true
+        },
+        "human_review_required": {
+          "const": true
+        }
+      }
+    }
+  }
+}

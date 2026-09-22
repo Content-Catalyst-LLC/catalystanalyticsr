@@ -1,16 +1,16 @@
 {
-  "schema_version": "3.0.0",
+  "schema_version": "3.1.0",
   "repository": "catalystanalyticsr",
   "platform_module": "Catalyst Analytics R",
-  "repository_version": "2.0.1",
+  "repository_version": "2.1.0",
   "r_package": {
     "name": "catalystanalyticsr",
-    "version": "2.0.1"
+    "version": "2.1.0"
   },
   "wordpress_demo": {
     "plugin": "catalyst-analytics-r-demo",
-    "version": "3.0.0",
-    "compatible_repository_version": "2.0.1",
+    "version": "3.1.0",
+    "compatible_repository_version": "2.1.0",
     "shortcode": "[catalyst_analytics_r_demo]"
   },
   "contracts": {
@@ -211,6 +211,23 @@
     "connected_api": {
       "version": "2.0.0",
       "manifest": "catalyst_connected_api_manifest"
+    },
+    "core_provider": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_core_provider.schema.json",
+      "core_contract": "sc.core.analytical-runtime-provider.v1"
+    },
+    "core_execution_request": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_core_request.schema.json"
+    },
+    "core_execution_result": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_core_result.schema.json"
+    },
+    "workspace_core_execution": {
+      "version": "1.0.0",
+      "schema": "schemas/catalyst_analytics_r_workspace_core_execution.schema.json"
     }
   },
   "models": [
@@ -277,7 +294,11 @@
     "connected_platform_input": "examples/connected_platform_input.json",
     "connected_platform_export": "outputs/example_connected_platform_export.json",
     "browser_connected_platform_export": "outputs/example_browser_connected_platform_export.json",
-    "connected_platform_contract": "tests/fixtures/connected_platform_contract_v2.json"
+    "connected_platform_contract": "tests/fixtures/connected_platform_contract_v2.json",
+    "core_provider_manifest": "examples/core_provider_manifest.json",
+    "core_execution_request": "examples/core_analytical_request.json",
+    "workspace_core_execution": "examples/workspace_core_execution_envelope.json",
+    "core_execution_result": "examples/core_analytical_result.json"
   },
   "github": "https://github.com/Content-Catalyst-LLC/catalystanalyticsr",
   "layers": [

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "package_version": "2.0.1",
+  "package_version": "2.1.0",
   "assessed_at": "2026-09-21T00:00:00Z",
   "status": "ready",
   "checks": {
@@ -17,7 +17,7 @@
   },
   "failed_checks": [],
   "evidence": {
-    "release_contract": "v2.0.1 contract repair",
+    "release_contract": "v2.1.0 contract repair",
     "r_cmd_check": "required before commit",
     "accessibility_review": "docs/production-readiness.md"
   },

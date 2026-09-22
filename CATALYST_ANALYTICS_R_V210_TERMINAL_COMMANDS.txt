@@ -1,0 +1,17 @@
+MAC PATCH / GITHUB
+
+cd ~/Downloads
+rm -rf catalyst-analytics-r-v2.1.0-tiny-patch
+unzip -q catalyst-analytics-r-v2.1.0-tiny-patch.zip
+cd catalyst-analytics-r-v2.1.0-tiny-patch
+chmod +x apply_and_push_catalyst_analytics_r_v2_1_0_macos.sh
+./apply_and_push_catalyst_analytics_r_v2_1_0_macos.sh "$HOME/Downloads/catalystanalyticsr"
+
+WORKSPACE R RUNTIME / VPS
+
+ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes catalystadmin@94.72.113.77
+cd /opt/sustainable-catalyst/catalystanalyticsr
+git fetch origin --tags
+git checkout v2.1.0
+chmod +x scripts/deploy_v2_1_0_workspace_r_runtime.sh
+./scripts/deploy_v2_1_0_workspace_r_runtime.sh /opt/sustainable-catalyst/catalystanalyticsr

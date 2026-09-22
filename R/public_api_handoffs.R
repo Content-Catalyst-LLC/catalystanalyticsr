@@ -54,7 +54,9 @@ api_endpoint <- function(id, method, path, title, description = "", request_sche
     scenario_run = api_endpoint("scenario.run", "POST", "/v1/scenarios/run", "Run scenario", "Execute a canonical scenario with the registered R model.", "catalyst_scenario_run_request@1.0.0", access = "authenticated"),
     project_manifest = api_endpoint("project.manifest", "POST", "/v1/projects/manifest", "Project manifest", "Return a reproducibility manifest for a supplied project.", "catalyst_project@1.0.0"),
     workspace_manifest = api_endpoint("workspace.manifest", "POST", "/v1/workspaces/manifest", "Workspace manifest", "Return a manifest for a supplied workspace.", "catalyst_workspace@1.0.0"),
-    handoff_build = api_endpoint("handoff.build", "POST", "/v1/handoffs", "Build platform handoff", "Build a governed first-party platform handoff.", "catalyst_platform_handoff_request@1.0.0", access = "authenticated")
+    handoff_build = api_endpoint("handoff.build", "POST", "/v1/handoffs", "Build platform handoff", "Build a governed first-party platform handoff.", "catalyst_platform_handoff_request@1.0.0", access = "authenticated"),
+    core_provider = api_endpoint("core.provider", "GET", "/v1/core/provider", "Platform Core provider manifest", "Return the governed Catalyst Analytics R provider contract for Platform Core 3.1+."),
+    core_request_validate = api_endpoint("core.request.validate", "POST", "/v1/core/requests/validate", "Validate Platform Core request", "Validate and normalize a Platform Core analytical execution request.", "catalyst_analytics_r_core_request@1.0.0", access = "authenticated")
   )
 }
 
@@ -72,7 +74,8 @@ catalyst_public_api_manifest <- function() {
       request = "catalyst_api_request@1.0.0", response = "catalyst_api_response@1.0.0",
       platform_handoff = "catalyst_platform_handoff@1.0.0",
       scenario = "catalyst_scenario@1.0.0", project = "catalyst_project@1.0.0",
-      workspace = "catalyst_workspace@1.0.0"
+      workspace = "catalyst_workspace@1.0.0",
+      core_provider = "catalyst_analytics_r_core_provider@1.0.0", core_request = "catalyst_analytics_r_core_request@1.0.0", core_result = "catalyst_analytics_r_core_result@1.0.0"
     ),
     guarantees = list(
       additive_minor_releases = TRUE, explicit_contract_versions = TRUE,
@@ -203,6 +206,8 @@ dispatch_api_request <- function(request, stop_on_error = FALSE) {
       project.manifest = project_manifest(payload$project),
       workspace.manifest = workspace_manifest(payload$workspace),
       handoff.build = platform_handoff(payload$project, payload$target, options = if (is.null(payload$options)) list() else payload$options),
+      core.provider = catalyst_core_provider_manifest(),
+      core.request.validate = { normalized <- as_core_analytical_request(payload$request); list(valid = TRUE, request = unclass(normalized), execution_plan = core_execution_plan(normalized)) },
       stop("Unsupported public API endpoint.", call. = FALSE)
     )
   }

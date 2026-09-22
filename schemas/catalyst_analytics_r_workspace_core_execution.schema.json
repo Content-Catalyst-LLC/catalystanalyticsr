@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst-analytics-r-workspace-core-execution-v1.json",
+  "title": "Workspace Core analytical execution envelope",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "envelope_type",
+    "request_key",
+    "provider",
+    "plan",
+    "request",
+    "resource_policy",
+    "environment_request",
+    "return_contract",
+    "boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "envelope_type": {
+      "const": "catalyst_workspace_core_analytical_execution"
+    },
+    "request_key": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "object"
+    },
+    "plan": {
+      "type": "object"
+    },
+    "request": {
+      "type": "object"
+    },
+    "resource_policy": {
+      "type": "object"
+    },
+    "environment_request": {
+      "type": "object"
+    },
+    "return_contract": {
+      "const": "catalyst_analytics_r_core_result@1.0.0"
+    },
+    "boundary": {
+      "type": "object",
+      "required": [
+        "workspace_controls_execution",
+        "workspace_controls_authentication",
+        "workspace_controls_persistence",
+        "package_does_not_queue_remote_jobs",
+        "human_review_required"
+      ],
+      "properties": {
+        "workspace_controls_execution": {
+          "const": true
+        },
+        "workspace_controls_authentication": {
+          "const": true
+        },
+        "workspace_controls_persistence": {
+          "const": true
+        },
+        "package_does_not_queue_remote_jobs": {
+          "const": true
+        },
+        "human_review_required": {
+          "const": true
+        }
+      }
+    }
+  }
+}

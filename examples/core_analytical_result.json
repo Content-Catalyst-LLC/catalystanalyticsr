@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "result_type": "catalyst_analytics_r_core_result",
+  "core_contract": "sc.core.analytical-runtime-provider.v1",
+  "request_ref": "analysis-uncertainty-001",
+  "request_key": "analysis-uncertainty-001",
+  "result_ref": "result:uncertainty-001",
+  "provider_ref": "catalystanalyticsr",
+  "provider_version": "2.1.0",
+  "runtime": "r",
+  "execution_host": "workspace",
+  "analysis_type": "uncertainty_analysis",
+  "method_ref": "run_uncertainty",
+  "external_execution_ref": "workspace-run:001",
+  "environment_ref": "env:r:001",
+  "status": "completed",
+  "output_refs": [
+    "object:uncertainty:001"
+  ],
+  "estimate_refs": [],
+  "uncertainty_refs": [
+    "uncertainty:001"
+  ],
+  "diagnostic_refs": [
+    "diagnostic:uncertainty:001"
+  ],
+  "artifact_refs": [
+    "artifact:uncertainty-json:001"
+  ],
+  "native_result": {
+    "summary": "provider-native result remains subordinate to governed references"
+  },
+  "warnings": [],
+  "errors": [],
+  "provenance": {
+    "package": {
+      "name": "catalystanalyticsr",
+      "version": "2.1.0"
+    },
+    "core_contract": "sc.core.analytical-runtime-provider.v1"
+  },
+  "completed_at": "2026-09-21T20:01:00Z",
+  "boundary": {
+    "core_records_result_but_does_not_execute": true,
+    "workspace_execution_required": true,
+    "result_does_not_certify_scientific_validity": true,
+    "human_review_required": true
+  }
+}

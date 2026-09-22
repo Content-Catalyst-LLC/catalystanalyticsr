@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "request_type": "sc.core.analytical-execution-request.v1",
+  "request_key": "analysis-uncertainty-001",
+  "provider_ref": "catalystanalyticsr",
+  "provider_version": "2.1.0",
+  "analysis_type": "uncertainty_analysis",
+  "method_ref": "run_uncertainty",
+  "runtime": "r",
+  "execution_host": "workspace",
+  "input_refs": [
+    "scenario:baseline",
+    "uncertainty-spec:transition"
+  ],
+  "parameters": {
+    "samples": 1000
+  },
+  "reproducibility": {
+    "seed": 42,
+    "input_snapshot_refs": [
+      "snapshot:baseline-001"
+    ]
+  },
+  "session_ref": "research-session:001",
+  "external_execution_ref": null,
+  "status": "declared",
+  "visibility": "public",
+  "provenance": {
+    "source": "platform-core-3.1.0"
+  },
+  "submitted_at": "2026-09-21T20:00:00Z",
+  "boundary": {
+    "core_executes_provider": false,
+    "workspace_executes_provider": true,
+    "human_review_required": true
+  }
+}
