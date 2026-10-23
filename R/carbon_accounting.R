@@ -17,6 +17,10 @@
   as.numeric(budget[[label]])
 }
 
+# Period totals accumulate directly. Rate-based inventories use trapezoidal
+# integration: each adjacent mean rate is multiplied by elapsed numeric time
+# (or elapsed days after Date conversion). The caller must make rate/time units
+# compatible; this helper does not infer years from dates or validate field CDR.
 .cumulative_inventory_values <- function(time, values, accounting_basis) {
   if (accounting_basis == "period_total") return(cumsum(values))
   if (length(time) < 2L) return(rep(0, length(time)))
@@ -34,6 +38,10 @@
 #' Calculates gross, removal, and net emissions trajectories together with
 #' cumulative use of a declared carbon budget, overshoot timing, recovery, and
 #' target-year diagnostics.
+#' @details Gross and removal inputs retain the inventory's declared units;
+#'   rate-based pathways integrate over the supplied time units. A budget must
+#'   use the resulting cumulative emissions units. These are accounting/model
+#'   trajectories, not independently verified removal measurements.
 #'
 #' @param inventory A `catalyst_emissions_inventory`.
 #' @param budget Non-negative scalar budget or named vector keyed by group label.
