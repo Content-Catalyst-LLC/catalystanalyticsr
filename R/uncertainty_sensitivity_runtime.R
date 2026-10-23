@@ -65,6 +65,10 @@ uncertainty_sensitivity_runtime_manifest <- function() {
 #' @param max_evaluations Maximum allowed model evaluations for structured designs.
 #' @param continue_on_error Whether ensemble execution records failed samples.
 #' @return A validated runtime request.
+#' @details The seed supports repeatable sampling for the same scenario and
+#'   runtime version. Distribution choices and metric units remain scientific
+#'   assumptions; sensitivity estimates do not establish causality or
+#'   calibrated prediction accuracy.
 #' @export
 uncertainty_sensitivity_runtime_request <- function(
   scenario,
